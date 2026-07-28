@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>Plymouth Blitz Digital Archive</title>
+<meta name="description" content="Interactive WW2 bomb raid map for Plymouth — historical archive and live incident cordon tool." />
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<!-- Map Canvas -->
+<div id="map"></div>
+
+<!-- Top Bar -->
+<header class="top-bar" id="topBar">
+  <div class="top-bar-inner">
+    <div class="brand">
+      <svg class="brand-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M12 2 2 7l10 5 10-5-10-5Z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>
+      </svg>
+      <div class="brand-text">
+        <span class="brand-title">Plymouth Blitz Digital Archive</span>
+        <span class="brand-subtitle">1940&ndash;1944 Incident Map</span>
+      </div>
+    </div>
+
+    <div class="stats-pills" id="statsPills">
+      <div class="pill">
+        <span class="pill-label">Bombs Plotted</span>
+        <span class="pill-value" id="statTotalBombs">&mdash;</span>
+      </div>
+      <div class="pill">
+        <span class="pill-label">Active Raids</span>
+        <span class="pill-value" id="statActiveRaids">&mdash;</span>
+      </div>
+    </div>
+
+    <div class="live-toggle-group">
+      <span class="live-toggle-label">Live Incident Mode</span>
+      <button id="liveModeToggle" class="live-toggle" role="switch" aria-checked="false" aria-label="Toggle Live Incident Mode">
+        <span class="live-toggle-knob"></span>
+      </button>
+    </div>
+
+    <button id="sidebarToggle" class="icon-btn sidebar-mobile-toggle" aria-label="Open filters">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="20" y2="18"/>
+      </svg>
+    </button>
+  </div>
+</header>
+
+<!-- Cordon Active Alert Badge -->
+<div id="cordonBadge" class="cordon-badge hidden">
+  <span class="cordon-pulse"></span>
+  CORDON ACTIVE
+</div>
+
+<!-- Sidebar / Drawer -->
+<aside id="sidebar" class="sidebar">
+  <div class="sidebar-scroll">
+
+    <section class="panel">
+      <label class="panel-label" for="searchInput">Search location</label>
+      <div class="search-row">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="search-icon">
+          <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+        </svg>
+        <input id="searchInput" type="text" placeholder="Postcode or street name&hellip;" autocomplete="off" />
+      </div>
+      <div id="searchResults" class="search-results hidden"></div>
+    </section>
+
+    <section class="panel">
+      <span class="panel-label">Incident Type</span>
+      <div class="filter-pills" id="filterPills">
+        <button class="filter-pill active" data-type="HE">
+          <span class="dot dot-he"></span> High Explosive
+        </button>
+        <button class="filter-pill active" data-type="INC">
+          <span class="dot dot-inc"></span> Incendiary
+        </button>
+        <button class="filter-pill active" data-type="MINE">
+          <span class="dot dot-mine"></span> Parachute Mine
+        </button>
+        <button class="filter-pill active" data-type="UXO">
+          <span class="dot dot-uxo"></span> UXO / Unexploded
+        </button>
+      </div>
+    </section>
+
+    <section class="panel">
+      <span class="panel-label">Timeline</span>
+      <div class="timeline-row">
+        <input id="dateSlider" type="range" min="0" max="0" value="0" step="1" />
+        <span id="dateSliderLabel" class="timeline-label">All raids</span>
+      </div>
+    </section>
+
+    <section class="panel" id="cordonPanel">
+      <span class="panel-label">Live Cordon</span>
+      <p class="panel-hint">Toggle Live Incident Mode, then click the map or search a postcode to drop a 300m evacuation buffer.</p>
+    </section>
+
+  </div>
+</aside>
+
+<div id="sidebarScrim" class="sidebar-scrim hidden"></div>
+
+<!-- Raid Info Drawer (populated on marker click) -->
+<div id="raidDrawer" class="raid-drawer hidden">
+  <button id="raidDrawerClose" class="icon-btn raid-drawer-close" aria-label="Close">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+  </button>
+  <div id="raidDrawerContent"></div>
+</div>
+
+<!-- Cordon Safety Check Card -->
+<div id="cordonCard" class="cordon-card hidden">
+  <div class="cordon-card-header">
+    <span>Am I inside the evacuation radius?</span>
+    <button id="cordonCardClose" class="icon-btn" aria-label="Close">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="cordon-card-body">
+    <input id="cordonAddressInput" type="text" placeholder="Enter your postcode&hellip;" />
+    <div id="cordonResult" class="cordon-result"></div>
+    <p class="cordon-hint">Or click any point on the map to check its distance from the cordon centre.</p>
+  </div>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
