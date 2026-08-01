@@ -2619,7 +2619,7 @@ if (mapDisclaimer) {
    Paste a Buy Me a Coffee / Ko-fi URL here and the footer button appears.
    Left empty, the button stays hidden rather than linking to "#".
 ------------------------------------------------------------------- */
-const COFFEE_URL = "";
+const COFFEE_URL = "https://buymeacoffee.com/stewartps";
 const coffeeBtn = document.getElementById("coffeeBtn");
 if (coffeeBtn && COFFEE_URL) {
   coffeeBtn.href = COFFEE_URL;
