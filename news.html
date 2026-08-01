@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Latest updates — Plymouth Bomb Map</title>
+    <meta name="description" content="Live updates during unexploded ordnance incidents in Plymouth, alongside the interactive WWII bombing map.">
+    <link rel="canonical" href="https://stewartps.github.io/Plymouth-Bomb-Website/news.html">
+
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Latest updates — Plymouth Bomb Map">
+    <meta property="og:description" content="Live updates during unexploded ordnance incidents in Plymouth.">
+    <meta property="og:locale" content="en_GB">
+    <meta name="twitter:card" content="summary_large_image">
+
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='15' fill='%230b0f17'/%3E%3Ccircle cx='16' cy='16' r='10' fill='none' stroke='%2300f2fe' stroke-width='2' opacity='.5'/%3E%3Ccircle cx='16' cy='16' r='5.5' fill='none' stroke='%2300f2fe' stroke-width='2'/%3E%3Ccircle cx='16' cy='16' r='2' fill='%23ff5252'/%3E%3C/svg%3E">
+    <meta name="theme-color" content="#f7f4ec" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#0b0f17" media="(prefers-color-scheme: dark)">
+
+    <!-- Same pre-paint theme bootstrap as index.html — without it, navigating
+         between the two pages flashes light on a dark-mode device. -->
+    <script>
+      (function () {
+        var stored = null;
+        try { stored = localStorage.getItem("pbm-theme"); } catch (e) { /* private mode */ }
+        var pref = stored === "light" || stored === "dark" ? stored : null;
+        var resolved = pref || (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+        document.documentElement.setAttribute("data-theme", resolved);
+        document.documentElement.setAttribute("data-theme-pref", pref || "system");
+      })();
+    </script>
+
+    <link rel="stylesheet" href="css/style.css">
+  </head>
+  <body>
+    <header class="site-header">
+      <nav class="nav" aria-label="Primary">
+        <a class="brand" href="index.html#top" aria-label="Plymouth Bomb Map home">
+          <span class="brand-mark"></span>
+          <span>Plymouth Bomb Map</span>
+        </a>
+        <div class="nav-links">
+          <a href="index.html#map-section">Map</a>
+          <a href="index.html#facts">Timeline</a>
+          <a href="news.html" aria-current="page">News</a>
+          <a href="index.html#sources">Sources</a>
+        </div>
+      </nav>
+    </header>
+
+    <main class="news-page" id="top">
+      <!-- Everything below is rendered by js/news.js from data/incident.json.
+           The noscript block and the loading state mean the page is never
+           blank, whatever happens. -->
+      <div class="news-shell" id="newsShell">
+        <p class="news-loading" id="newsLoading">Loading latest updates&hellip;</p>
+      </div>
+
+      <noscript>
+        <div class="news-empty">
+          <h1>Latest updates</h1>
+          <p>This page needs JavaScript to show live incident updates. For official
+             information during an incident, follow
+             <a href="https://www.plymouth.gov.uk/news/major-incident-updates" target="_blank" rel="noopener">Plymouth City Council</a>
+             and <a href="https://www.devon-cornwall.police.uk/news/" target="_blank" rel="noopener">Devon &amp; Cornwall Police</a>.</p>
+        </div>
+      </noscript>
+    </main>
+
+    <footer class="site-footer">
+      <p>Created by Stewart PS</p>
+      <a class="coffee-btn" id="coffeeBtn" href="https://buymeacoffee.com/stewartps" target="_blank" rel="noopener" aria-label="Buy me a coffee">
+        <span class="coffee-emoji" aria-hidden="true">&#9749;</span> Buy me a coffee
+      </a>
+    </footer>
+
+    <script src="js/news.js"></script>
+  </body>
+</html>

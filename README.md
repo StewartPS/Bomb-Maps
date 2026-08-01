@@ -1,3 +1,71 @@
+# Plymouth Bomb Map — v1.8
+
+## v1.8 highlights
+
+### Live incidents are published from a data file, not a switch on the page
+
+The old header toggle let any visitor flip the site into "Live Incident" mode,
+which meant it could never be a real alert. Incident state now comes from
+**`data/incident.json`**:
+
+```jsonc
+{ "active": true, "headline": "…", "status": "…",
+  "lat": 50.36875, "lng": -4.15093, "cordonRadiusM": 400,
+  "updated": "2026-08-01T14:20:00Z", "updates": [ … ] }
+```
+
+Edit that file on github.com, set `"active": true`, commit. The map picks it
+up on the next load and re-polls every five minutes for anyone who left the
+page open. Set it back to `false` and everything disappears.
+
+- **Failure is silent.** Missing, malformed or blocked feed → the site behaves
+  as though nothing is happening. A broken alert bar is worse than none.
+  (Opening `index.html` from disk over `file://` blocks the fetch, so incident
+  mode only appears when served over http — locally or on Pages.)
+- **Rehearsals are visibly different.** `?preview=1` restores the toggle, but a
+  preview banner is amber, flagged "Preview", says it's a rehearsal, and hides
+  the news link. It cannot be mistaken for a genuine alert.
+- **Visitors can't end a published incident** — only the JSON can.
+- **Feed content is escaped, never injected.** Everything goes through
+  `textContent`, and `javascript:` URLs in the links list are rejected.
+
+### Breaking news page
+
+New **`news.html`**, rendered from the same JSON by `js/news.js`, with a
+running update log (newest first, regardless of file order), cordon details,
+official-source links and a prominent note that the page is context rather
+than an emergency authority. Three explicit states: active, quiet, and
+feed-error — so it never looks broken or abandoned. Linked from the main nav
+and from the alert banner.
+
+### Alert banner restyled
+
+The flat red "Test cordon active" strip is gone. The replacement uses the
+site's own editorial language — glass panel, off-white type, gold and red
+accents — and carries the headline, status, relative timestamp and a link
+through to the news page.
+
+### Mobile and tablet
+
+- **Header height is measured, not assumed.** Sticky offsets were hard-coded
+  to 66px, which is only true on desktop; the nav wraps to two rows on a
+  phone, so the banner tucked under the header. Now published as `--header-h`
+  and kept current on resize, rotation and font load.
+- **`svh` instead of `vh`**, so the layout doesn't jump as mobile Safari's URL
+  bar shows and hides.
+- **Record detail and cordon checker become bottom sheets** below 900px —
+  fixed to the viewport with a grab handle and `safe-area-inset` padding,
+  rather than floating cards anchored to a hero that is now much taller than
+  the map.
+- **Touch targets keyed to `pointer: coarse`**, not width, so touchscreen
+  laptops benefit and narrow desktop windows aren't affected. 44px minimum;
+  the "i" tooltips keep their small look but get a finger-sized hit area;
+  inputs are 16px so iOS doesn't zoom the page on focus.
+- **Leaflet re-measures on resize and rotation** — without `invalidateSize()`
+  it kept drawing at the old container size and left grey strips.
+- Breakpoints: 1024 (iPad landscape), 900 (stacked layout), 640 (phone),
+  420 (small phone), plus `pointer: coarse`.
+
 # Plymouth Bomb Map — v1.7
 
 A full-page interactive site about WW2 bombing and UXO (unexploded ordnance) history in Plymouth and the wider South West: hero section, headline stats, an interactive map with filters/timeline/record details, "small facts" section, and a sources list. Includes a test-phase live incident cordon toggle.

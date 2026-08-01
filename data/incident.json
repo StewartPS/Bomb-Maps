@@ -1,0 +1,29 @@
+{
+  "_readme": "EDIT THIS FILE ON GITHUB.COM TO PUT A LIVE INCIDENT ON THE SITE. Set active to true, fill in the details, commit. The site picks it up within about a minute. Set active back to false when it is over — everything else can stay as it is, it will simply be ignored.",
+
+  "active": false,
+
+  "headline": "Suspected wartime device found at Bath Street, Millbay",
+  "status": "Cordon in place",
+  "severity": "alert",
+  "place": "Millbay, Plymouth",
+
+  "lat": 50.36875,
+  "lng": -4.15093,
+  "cordonRadiusM": 400,
+
+  "updated": "2026-08-01T14:20:00Z",
+
+  "summary": "A suspected unexploded Second World War device has been found on a building site at Bath Street. A cordon is in place and nearby properties have been evacuated. Follow Plymouth City Council and Devon & Cornwall Police for official instructions.",
+
+  "officialLinks": [
+    { "label": "Plymouth City Council — incident updates", "url": "https://www.plymouth.gov.uk/news/major-incident-updates" },
+    { "label": "Devon & Cornwall Police — news", "url": "https://www.devon-cornwall.police.uk/news/" }
+  ],
+
+  "updates": [
+    { "time": "2026-08-01T14:20:00Z", "text": "Cordon extended from 300m to 400m. A further 120 properties are affected." },
+    { "time": "2026-08-01T11:05:00Z", "text": "Device confirmed as a German SC50 high-explosive bomb. Royal Navy EOD team on scene." },
+    { "time": "2026-08-01T09:40:00Z", "text": "Major incident declared. An initial 100m cordon is in place and an evacuation centre has opened." }
+  ]
+}

@@ -2105,7 +2105,11 @@ function initTimeline() {
 ------------------------------------------------------------------ */
 const incidentToggle = document.getElementById("incidentToggle");
 
-const cordonBadge = document.getElementById("cordonBadge");
+const incidentAlert = document.getElementById("incidentAlert");
+const incidentHeadline = document.getElementById("incidentHeadline");
+const incidentStatus = document.getElementById("incidentStatus");
+const incidentUpdated = document.getElementById("incidentUpdated");
+const incidentFlagLabel = document.getElementById("incidentFlagLabel");
 const cordonCard = document.getElementById("cordonCard");
 const cordonCardTitle = document.getElementById("cordonCardTitle");
 const cordonCardIntro = document.getElementById("cordonCardIntro");
@@ -2121,6 +2125,15 @@ let liveIncident = false;
 let cordonCircle = null;
 let cordonCenterMarker = null;
 let cordonCheckMarker = null;
+
+// Radius currently in force. Overwritten by the value in incident.json when a
+// real incident is published; 300m is the default used for rehearsals.
+let cordonRadiusM = 300;
+
+// ?preview=1 exposes the rehearsal toggle in the header. Nothing else about
+// the page changes, and normal visitors never see it.
+const previewMode = new URLSearchParams(location.search).has("preview");
+if (previewMode && incidentToggle) incidentToggle.hidden = false;
 
 function haversineMeters(lat1, lon1, lat2, lon2) {
   const R = 6371000;
@@ -2146,20 +2159,21 @@ function clearCordon(resetResult = true) {
   if (resetResult) cordonResult.hidden = true;
 }
 
-function placeCordon(lat, lng) {
+function placeCordon(lat, lng, radiusM) {
   clearCordon();
+  if (typeof radiusM === "number" && radiusM > 0) cordonRadiusM = radiusM;
   const color = liveIncident ? "#7a1f16" : "#4169a8";
   cordonCenterMarker = L.circleMarker([lat, lng], {
     radius: 6, color, fillColor: color, fillOpacity: 1, weight: 2
   }).addTo(map);
   cordonCircle = L.circle([lat, lng], {
-    radius: 300, color, weight: 1.5, fillColor: color, fillOpacity: 0.12,
+    radius: cordonRadiusM, color, weight: 1.5, fillColor: color, fillOpacity: 0.12,
     dashArray: liveIncident ? null : "4 6",
     className: liveIncident ? "cordon-pulse" : ""
   }).addTo(map);
   map.flyTo([lat, lng], Math.max(map.getZoom(), 14), { duration: 0.7 });
   setCordonResult(
-    liveIncident ? "Live cordon set — 300m evacuation radius." : "Simulated cordon set — 300m evacuation radius.",
+    `${liveIncident ? "Live" : "Simulated"} cordon set — ${cordonRadiusM}m evacuation radius.`,
     "neutral"
   );
 }
@@ -2186,7 +2200,7 @@ async function checkCordonAddress() {
   }
   const center = cordonCircle.getLatLng();
   const distance = haversineMeters(center.lat, center.lng, loc.lat, loc.lng);
-  const inside = distance <= 300;
+  const inside = distance <= cordonRadiusM;
 
   if (cordonCheckMarker) map.removeLayer(cordonCheckMarker);
   cordonCheckMarker = L.circleMarker([loc.lat, loc.lng], {
@@ -2201,25 +2215,62 @@ async function checkCordonAddress() {
   );
 }
 
-function startLiveIncident() {
+/* ---------- Incident mode ----------
+   Two ways in, and they are deliberately different:
+
+   1. A published incident — data/incident.json has "active": true. This is
+      the real thing: the alert banner carries the headline and links to the
+      news page, and the cordon is drawn automatically at the recorded
+      location. Nothing on the page can turn it on or off.
+   2. A rehearsal — the ?preview=1 toggle. No headline, no news link, and the
+      banner says so, so a rehearsal can never be mistaken for a real alert.
+------------------------------------------------------------------- */
+function startLiveIncident(data) {
   liveIncident = true;
+  const published = !!data;
 
   siteHeader.classList.add("incident-active");
-  cordonBadge.hidden = false;
+
+  if (incidentAlert) {
+    incidentAlert.hidden = false;
+    incidentAlert.classList.toggle("is-preview", !published);
+    if (incidentFlagLabel) incidentFlagLabel.textContent = published ? "Live" : "Preview";
+    if (incidentHeadline) {
+      incidentHeadline.textContent = published
+        ? (data.headline || "Live incident")
+        : "Preview mode — this is a rehearsal, not a real incident";
+    }
+    if (incidentStatus) incidentStatus.textContent = published ? (data.status || "") : "Simulated cordon";
+    if (incidentUpdated) incidentUpdated.textContent = published ? formatUpdated(data.updated) : "";
+    // The news link is meaningless during a rehearsal — there is nothing to read.
+    const link = incidentAlert.querySelector(".incident-alert-link");
+    if (link) link.hidden = !published;
+  }
+
   cordonCard.hidden = false;
   cordonCard.classList.add("cordon-live");
-  cordonCardTitle.textContent = "Live evacuation cordon (test)";
-  cordonCardIntro.textContent = "Test phase: this simulates a live UXO cordon. Click the map or check a postcode to see if an address falls inside the 300m radius.";
-  endLiveIncidentBtn.hidden = false;
+  cordonCardTitle.textContent = published ? "Am I inside the evacuation cordon?" : "Evacuation cordon (preview)";
+  cordonCardIntro.textContent = published
+    ? `Check whether an address falls inside the ${data.cordonRadiusM || cordonRadiusM}m cordon. Always follow official instructions from the police and council — this map is a guide, not an authority.`
+    : "Rehearsal only. Click the map or check a postcode to see how the cordon tool behaves during a real incident.";
+
+  // Only offer "end incident" during a rehearsal. A published incident ends
+  // when the JSON says it does, not because a visitor clicked something.
+  endLiveIncidentBtn.hidden = published;
   mapEl.classList.add("cordon-cursor");
   incidentToggle.setAttribute("aria-pressed", "true");
+
+  if (published && typeof data.lat === "number" && typeof data.lng === "number") {
+    placeCordon(data.lat, data.lng, data.cordonRadiusM);
+  }
 }
 
 function endLiveIncident() {
   liveIncident = false;
   siteHeader.classList.remove("incident-active");
-  cordonBadge.hidden = true;
+  if (incidentAlert) incidentAlert.hidden = true;
   cordonCard.hidden = true;
+  cordonCard.classList.remove("cordon-live");
   mapEl.classList.remove("cordon-cursor");
   incidentToggle.setAttribute("aria-pressed", "false");
   clearCordon();
@@ -2242,10 +2293,71 @@ cordonSearchInput.addEventListener("keydown", (e) => {
   if (e.key === "Enter") checkCordonAddress();
 });
 
-/* ---------- Live incident toggle (test phase, no passcode) ---------- */
+/* ---------- Rehearsal toggle (only present with ?preview=1) ---------- */
 incidentToggle.addEventListener("click", () => {
   if (liveIncident) endLiveIncident(); else startLiveIncident();
 });
+
+/* ---------- Published incident feed ----------
+   data/incident.json is the single switch for a real alert. Edit it on
+   github.com, set "active": true, commit — the site picks it up on the next
+   load, and again every 5 minutes for anyone who leaves the page open.
+
+   Failure is silent by design. If the file is missing, malformed, or blocked
+   (opening index.html straight off disk with file:// will block the fetch),
+   the site simply behaves as though no incident is running. A broken alert
+   banner would be worse than none at all.
+------------------------------------------------------------------- */
+const INCIDENT_FEED = "data/incident.json";
+const INCIDENT_POLL_MS = 5 * 60 * 1000;
+let lastIncidentStamp = null;
+
+function formatUpdated(iso) {
+  if (!iso) return "";
+  const d = new Date(iso);
+  if (isNaN(d)) return "";
+  const mins = Math.round((Date.now() - d.getTime()) / 60000);
+  if (mins < 1) return "updated just now";
+  if (mins < 60) return `updated ${mins} min ago`;
+  const hrs = Math.round(mins / 60);
+  if (hrs < 24) return `updated ${hrs} hour${hrs === 1 ? "" : "s"} ago`;
+  return `updated ${d.toLocaleDateString("en-GB", { day: "numeric", month: "short" })}`;
+}
+
+async function fetchIncident() {
+  try {
+    const res = await fetch(`${INCIDENT_FEED}?t=${Date.now()}`, { cache: "no-store" });
+    if (!res.ok) return null;
+    return await res.json();
+  } catch (e) {
+    return null;
+  }
+}
+
+async function refreshIncident() {
+  const data = await fetchIncident();
+  const isActive = !!(data && data.active === true);
+
+  if (!isActive) {
+    // Only tear down a published incident. A rehearsal in preview mode is the
+    // visitor's own doing and shouldn't be cancelled by a poll.
+    if (liveIncident && lastIncidentStamp !== null) {
+      lastIncidentStamp = null;
+      endLiveIncident();
+    }
+    return;
+  }
+
+  // Re-render only when something actually changed, so the cordon doesn't
+  // re-fly the map every five minutes.
+  const stamp = JSON.stringify([data.headline, data.status, data.updated, data.lat, data.lng, data.cordonRadiusM]);
+  if (stamp === lastIncidentStamp) return;
+  lastIncidentStamp = stamp;
+  startLiveIncident(data);
+}
+
+refreshIncident();
+setInterval(refreshIncident, INCIDENT_POLL_MS);
 
 filterButtons.forEach((button) => {
   button.addEventListener("click", () => {
@@ -2453,6 +2565,53 @@ function switchRegion(region) {
 }
 
 initLocationMenu();
+
+/* ---------- Header height ----------
+   Several sticky offsets keyed off a hard-coded 66px header, which is only
+   true on desktop: the nav wraps to two or three rows on a phone, so the
+   incident banner used to tuck underneath it and the hero came up short.
+   Measuring it once and publishing it as --header-h keeps CSS honest at any
+   width, including after an orientation change.
+------------------------------------------------------------------- */
+(function trackHeaderHeight() {
+  const header = document.querySelector(".site-header");
+  if (!header) return;
+
+  function apply() {
+    const h = Math.round(header.getBoundingClientRect().height);
+    if (h > 0) document.documentElement.style.setProperty("--header-h", `${h}px`);
+  }
+
+  apply();
+  window.addEventListener("resize", apply);
+  window.addEventListener("orientationchange", apply);
+  // Web fonts land after first paint and can change the nav's height.
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(apply);
+  if (typeof ResizeObserver === "function") new ResizeObserver(apply).observe(header);
+})();
+
+/* ---------- Keep Leaflet in step with its container ----------
+   Leaflet caches the map's pixel size. When the container changes — rotating
+   a phone, the mobile URL bar collapsing, or crossing the 900px breakpoint
+   where the map switches from full-bleed to a fixed-height block — it keeps
+   drawing at the old size and leaves grey strips along the edges.
+   invalidateSize() forces a re-measure.
+------------------------------------------------------------------- */
+(function keepMapSized() {
+  const container = document.getElementById("map");
+  if (!container || !map) return;
+
+  let pending = null;
+  function resize() {
+    clearTimeout(pending);
+    // Debounced: iOS fires a burst of resize events as the URL bar animates.
+    pending = setTimeout(() => map.invalidateSize({ animate: false }), 150);
+  }
+
+  window.addEventListener("resize", resize);
+  window.addEventListener("orientationchange", resize);
+  if (typeof ResizeObserver === "function") new ResizeObserver(resize).observe(container);
+})();
 
 /* ---------- Sidebar info tooltips ----------
    Each control's explanatory copy lives on an "i" button's data-tip. The

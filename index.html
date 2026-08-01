@@ -50,6 +50,7 @@
         <div class="nav-links">
           <a href="#map-section">Map</a>
           <a href="#facts">Timeline</a>
+          <a href="news.html">News</a>
           <a href="#sources">Sources</a>
         </div>
 
@@ -72,17 +73,38 @@
           </button>
         </div>
 
-        <button class="incident-toggle" id="incidentToggle" type="button" aria-pressed="false" aria-label="Toggle live incident mode (test phase)" title="Test phase: toggle live incident mode">
+        <!-- Rehearsal control only. Hidden unless the page is opened with
+             ?preview=1 — a real incident is switched on by editing
+             data/incident.json, not by anything a visitor can click. -->
+        <button class="incident-toggle" id="incidentToggle" type="button" aria-pressed="false" aria-label="Preview live incident mode" title="Preview mode: simulate a live incident" hidden>
           <span class="incident-dot"></span>
-          <span class="incident-label">Live Incident</span>
+          <span class="incident-label">Preview incident</span>
           <span class="switch" id="incidentSwitch"><span class="switch-knob"></span></span>
         </button>
       </nav>
     </header>
 
-    <div class="cordon-badge" id="cordonBadge" hidden>
-      <span class="cordon-badge-dot"></span>
-      Test cordon active
+    <!-- Populated from data/incident.json. Stays hidden unless that file has
+         "active": true, so there is nothing to dismiss in normal use. -->
+    <div class="incident-alert" id="incidentAlert" role="region" aria-label="Live incident" hidden>
+      <div class="incident-alert-inner">
+        <span class="incident-alert-flag">
+          <span class="incident-alert-pulse" aria-hidden="true"></span>
+          <span id="incidentFlagLabel">Live</span>
+        </span>
+        <div class="incident-alert-body">
+          <p class="incident-alert-headline" id="incidentHeadline"></p>
+          <p class="incident-alert-meta">
+            <span id="incidentStatus"></span>
+            <span class="incident-alert-sep" aria-hidden="true">&middot;</span>
+            <span id="incidentUpdated"></span>
+          </p>
+        </div>
+        <a class="incident-alert-link" href="news.html">
+          Latest updates
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+      </div>
     </div>
 
     <main id="top">
