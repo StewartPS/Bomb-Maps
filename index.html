@@ -1,144 +1,527 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-<title>Plymouth Blitz Digital Archive</title>
-<meta name="description" content="Interactive WW2 bomb raid map for Plymouth — historical archive and live incident cordon tool." />
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Plymouth Bomb Map — WWII Blitz and UXO records</title>
+    <meta name="description" content="An interactive map of Second World War bombing and unexploded-ordnance records across Plymouth and Exeter, drawn from the Town Clerk's wartime bomb book, council incident reports and digitised bomb census maps.">
+    <link rel="canonical" href="https://stewartps.github.io/Plymouth-Bomb-Website/">
 
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-<script src="https://cdn.tailwindcss.com"></script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Social preview. Replace og:image with a real 1200x630 screenshot of the
+         map before sharing publicly — without it, links unfurl as bare text. -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Plymouth Bomb Map — WWII Blitz and UXO records">
+    <meta property="og:description" content="Where the bombs fell on Plymouth, 1940–44 — and where unexploded ordnance still surfaces today.">
+    <meta property="og:locale" content="en_GB">
+    <meta name="twitter:card" content="summary_large_image">
 
-<link rel="stylesheet" href="css/style.css" />
-</head>
-<body>
+    <!-- Inline SVG favicon: a target/bullseye echoing the map markers. No extra
+         request, no binary file to keep in the repo. -->
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='15' fill='%230b0f17'/%3E%3Ccircle cx='16' cy='16' r='10' fill='none' stroke='%2300f2fe' stroke-width='2' opacity='.5'/%3E%3Ccircle cx='16' cy='16' r='5.5' fill='none' stroke='%2300f2fe' stroke-width='2'/%3E%3Ccircle cx='16' cy='16' r='2' fill='%23ff5252'/%3E%3C/svg%3E">
+    <meta name="theme-color" content="#f7f4ec" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#0b0f17" media="(prefers-color-scheme: dark)">
 
-<!-- Map Canvas -->
-<div id="map"></div>
+    <!-- Theme bootstrap. Must run before first paint and before the stylesheet
+         resolves, otherwise a dark-mode visitor gets a flash of the light page
+         ("FOUC") on every navigation. Kept tiny and inline for that reason. -->
+    <script>
+      (function () {
+        var stored = null;
+        try { stored = localStorage.getItem("pbm-theme"); } catch (e) { /* private mode */ }
+        var pref = stored === "light" || stored === "dark" ? stored : null;
+        var resolved = pref || (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+        document.documentElement.setAttribute("data-theme", resolved);
+        document.documentElement.setAttribute("data-theme-pref", pref || "system");
+      })();
+    </script>
 
-<!-- Top Bar -->
-<header class="top-bar" id="topBar">
-  <div class="top-bar-inner">
-    <div class="brand">
-      <svg class="brand-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M12 2 2 7l10 5 10-5-10-5Z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>
-      </svg>
-      <div class="brand-text">
-        <span class="brand-title">Plymouth Blitz Digital Archive</span>
-        <span class="brand-subtitle">1940&ndash;1944 Incident Map</span>
-      </div>
+    <link rel="preconnect" href="https://unpkg.com">
+    <link rel="preconnect" href="https://a.basemaps.cartocdn.com" crossorigin>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+    <link rel="stylesheet" href="css/style.css">
+  </head>
+  <body>
+    <header class="site-header">
+      <nav class="nav" aria-label="Primary">
+        <a class="brand" href="#top" aria-label="Plymouth Bomb Map home">
+          <span class="brand-mark"></span>
+          <span>Plymouth Bomb Map</span>
+        </a>
+        <div class="nav-links">
+          <a href="#map-section">Map</a>
+          <a href="#facts">Timeline</a>
+          <a href="#sources">Sources</a>
+        </div>
+
+        <!-- Three-state theme control. Radiogroup rather than a checkbox
+             because "System" is a real third choice, not the absence of one:
+             it means "keep following the OS", which a two-state switch can't
+             express once the visitor has touched it. -->
+        <div class="theme-toggle" id="themeToggle" role="radiogroup" aria-label="Colour theme">
+          <button type="button" class="theme-opt" data-theme-set="light" role="radio" aria-checked="false" title="Light theme">
+            <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+            <span class="sr-only">Light</span>
+          </button>
+          <button type="button" class="theme-opt" data-theme-set="system" role="radio" aria-checked="true" title="Match system setting">
+            <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+            <span class="sr-only">System</span>
+          </button>
+          <button type="button" class="theme-opt" data-theme-set="dark" role="radio" aria-checked="false" title="Dark theme">
+            <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+            <span class="sr-only">Dark</span>
+          </button>
+        </div>
+
+        <button class="incident-toggle" id="incidentToggle" type="button" aria-pressed="false" aria-label="Toggle live incident mode (test phase)" title="Test phase: toggle live incident mode">
+          <span class="incident-dot"></span>
+          <span class="incident-label">Live Incident</span>
+          <span class="switch" id="incidentSwitch"><span class="switch-knob"></span></span>
+        </button>
+      </nav>
+    </header>
+
+    <div class="cordon-badge" id="cordonBadge" hidden>
+      <span class="cordon-badge-dot"></span>
+      Test cordon active
     </div>
 
-    <div class="stats-pills" id="statsPills">
-      <div class="pill">
-        <span class="pill-label">Bombs Plotted</span>
-        <span class="pill-value" id="statTotalBombs">&mdash;</span>
-      </div>
-      <div class="pill">
-        <span class="pill-label">Active Raids</span>
-        <span class="pill-value" id="statActiveRaids">&mdash;</span>
-      </div>
-    </div>
+    <main id="top">
+      <section id="map-section" class="hero" aria-labelledby="map-title">
+        <div id="map" class="hero-map" role="application" aria-label="Map of Plymouth bombing and UXO records"></div>
+        <div class="hero-scrim" aria-hidden="true"></div>
 
-    <div class="live-toggle-group">
-      <span class="live-toggle-label">Live Incident Mode</span>
-      <button id="liveModeToggle" class="live-toggle" role="switch" aria-checked="false" aria-label="Toggle Live Incident Mode">
-        <span class="live-toggle-knob"></span>
-      </button>
-    </div>
+        <div class="map-stats" id="mapStats" aria-label="Live map totals">
+          <div class="pill">
+            <span class="pill-label">Bombs Plotted</span>
+            <span class="pill-value" id="statTotalBombs">&mdash;</span>
+          </div>
+          <div class="pill">
+            <span class="pill-label">Raid Nights</span>
+            <span class="pill-value" id="statRaidNights">&mdash;</span>
+          </div>
+        </div>
 
-    <button id="sidebarToggle" class="icon-btn sidebar-mobile-toggle" aria-label="Open filters">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="20" y2="18"/>
-      </svg>
-    </button>
-  </div>
-</header>
+        <!-- One compact trigger; the grouped town list is built from
+             regionData at runtime so the markup never falls out of sync with
+             the data. See initLocationMenu() in js/app.js. -->
+        <div class="location-select" id="locationSelect">
+          <button class="location-trigger" id="locationTrigger" type="button"
+                  aria-haspopup="listbox" aria-expanded="false" aria-controls="locationMenu">
+            <span class="dot" id="locationTriggerDot"></span>
+            <span class="location-trigger-label" id="locationTriggerLabel">Plymouth, Devon</span>
+            <svg class="location-caret" viewBox="0 0 24 24" width="14" height="14" fill="none"
+                 stroke="currentColor" stroke-width="2.4" stroke-linecap="round"
+                 stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+          <div class="location-menu" id="locationMenu" role="listbox"
+               aria-label="Choose a town or city" hidden></div>
+        </div>
 
-<!-- Cordon Active Alert Badge -->
-<div id="cordonBadge" class="cordon-badge hidden">
-  <span class="cordon-pulse"></span>
-  CORDON ACTIVE
-</div>
+        <div class="hero-overlay">
+          <div class="hero-intro">
+            <p class="eyebrow" id="heroEyebrow">Plymouth, Devon</p>
+            <h1 id="map-title">Bombing and UXO locations</h1>
+          </div>
 
-<!-- Sidebar / Drawer -->
-<aside id="sidebar" class="sidebar">
-  <div class="sidebar-scroll">
+          <aside class="control-panel" aria-label="Map controls">
+            <div class="filter-group" aria-label="Record filters">
+              <button class="filter active" type="button" data-filter="all">
+                <span class="dot all"></span>All
+              </button>
+              <button class="filter" type="button" data-filter="found">
+                <span class="dot found"></span>Found
+              </button>
+              <button class="filter" type="button" data-filter="reported">
+                <span class="dot reported"></span>Reported
+              </button>
+              <button class="filter" type="button" data-filter="historic">
+                <span class="dot historic"></span>Historic area
+              </button>
+            </div>
 
-    <section class="panel">
-      <label class="panel-label" for="searchInput">Search location</label>
-      <div class="search-row">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="search-icon">
-          <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
-        </svg>
-        <input id="searchInput" type="text" placeholder="Postcode or street name&hellip;" autocomplete="off" />
-      </div>
-      <div id="searchResults" class="search-results hidden"></div>
-    </section>
+            <div class="heatmap-group" aria-label="Heatmap layer">
+              <div class="group-head">
+                <label class="potential-toggle">
+                  <input type="checkbox" id="heatmapToggle">
+                  <span class="dot heatmap-dot"></span>
+                  <span>Heatmap view</span>
+                </label>
+                <button type="button" class="info-tip" aria-label="About the heatmap view"
+                        data-tip="Blends confirmed records with the potential-sites layer into a density surface — the fastest way to see which neighbourhoods took the worst of it, at a glance.">i</button>
+              </div>
+              <div class="heatmap-legend" id="heatmapLegend" hidden>
+                <span class="heatmap-gradient" aria-hidden="true"></span>
+                <span>Fewer records</span>
+                <span class="heatmap-legend-spacer" aria-hidden="true"></span>
+                <span>Heaviest concentration</span>
+              </div>
+            </div>
 
-    <section class="panel">
-      <span class="panel-label">Incident Type</span>
-      <div class="filter-pills" id="filterPills">
-        <button class="filter-pill active" data-type="HE">
-          <span class="dot dot-he"></span> High Explosive
-        </button>
-        <button class="filter-pill active" data-type="INC">
-          <span class="dot dot-inc"></span> Incendiary
-        </button>
-        <button class="filter-pill active" data-type="MINE">
-          <span class="dot dot-mine"></span> Parachute Mine
-        </button>
-        <button class="filter-pill active" data-type="UXO">
-          <span class="dot dot-uxo"></span> UXO / Unexploded
-        </button>
-      </div>
-    </section>
+            <div class="timeline-group" aria-label="Timeline">
+              <div class="timeline-head">
+                <span class="head-label">
+                  Timeline
+                  <button type="button" class="info-tip" aria-label="About the timeline"
+                          data-tip="Reveals records chronologically, earliest raids to recent finds.">i</button>
+                </span>
+                <span class="timeline-value" id="timelineValue">All years</span>
+              </div>
+              <div class="timeline-row">
+                <button class="timeline-play" id="timelinePlay" type="button" aria-label="Play timeline">▶</button>
+                <input type="range" id="timelineSlider" min="0" max="0" value="0" step="1" aria-label="Reveal records up to year">
+              </div>
+            </div>
 
-    <section class="panel">
-      <span class="panel-label">Timeline</span>
-      <div class="timeline-row">
-        <input id="dateSlider" type="range" min="0" max="0" value="0" step="1" />
-        <span id="dateSliderLabel" class="timeline-label">All raids</span>
-      </div>
-    </section>
+            <div class="potential-group" aria-label="Potential bomb sites layer">
+              <div class="group-head">
+                <label class="potential-toggle">
+                  <input type="checkbox" id="potentialToggle" checked>
+                  <span class="dot potential"></span>
+                  <span>Potential sites (<span id="potentialCount">&hellip;</span>)</span>
+                </label>
+                <button type="button" class="info-tip" aria-label="About the potential-sites layer"
+                        data-tip="Digitised from City of Plymouth — Where the Bombs Fell (Geographia Ltd, Home Office bomb census) plus a second overlay source. Approximate positions, not individually verified.">i</button>
+              </div>
+              <div class="potential-legend">
+                <span><span class="dot potential-he"></span>High explosive</span>
+                <span><span class="dot potential-incendiary"></span>Incendiary</span>
+                <span><span class="dot potential-unknown"></span>Unknown type</span>
+                <span><span class="dot potential-undiff"></span>Undifferentiated</span>
+              </div>
 
-    <section class="panel" id="cordonPanel">
-      <span class="panel-label">Live Cordon</span>
-      <p class="panel-hint">Toggle Live Incident Mode, then click the map or search a postcode to drop a 300m evacuation buffer.</p>
-    </section>
+              <!-- Collapsed by default: the full methodology matters for
+                   transparency but shouldn't make the panel taller than the map. -->
+              <details class="panel-note">
+                <summary>How this layer was built</summary>
+                <p>
+                  2,397 points come from an original scan of the census map,
+                  georeferenced against three checkable landmarks. A further 646
+                  come from a second overlay source, after 308 that fell within
+                  40m of a census point were removed as probable duplicates.
+                </p>
+                <p>
+                  The Dockyard basins show almost no dots on the census map &mdash;
+                  most likely a wartime security omission on the original
+                  document rather than a gap here.
+                </p>
+                <p>
+                  No point carries an individual date, so each is assigned a
+                  modelled year (1940&ndash;44) weighted by documented raid
+                  intensity. That drives the timeline; it is not a claim about
+                  any single point.
+                </p>
+                <p>
+                  Wider archive context and the Town Clerk&rsquo;s wartime bomb book
+                  are held by <a href="https://www.theboxplymouth.com/collections/archives-and-local-studies" target="_blank" rel="noopener">The Box, Plymouth</a>.
+                </p>
+              </details>
+              <div class="year-breakdown" id="yearBreakdown" aria-label="Estimated potential-site count by year" hidden></div>
+            </div>
 
-  </div>
-</aside>
+            <div class="weight-group" aria-label="Bomb weight filter">
+              <div class="timeline-head">
+                <span class="head-label">
+                  Bomb weight
+                  <button type="button" class="info-tip" aria-label="About the bomb weight filter"
+                          data-tip="Filters confirmed records by recorded weight. The potential-sites layer carries no per-point weight, so it can only drop devices the source rules out as high explosive — see note below when a band is active.">i</button>
+                </span>
+                <span class="timeline-value" id="weightValue">All</span>
+              </div>
+              <div class="weight-pills" id="weightPills">
+                <button class="weight-pill active" type="button" data-weight="all">All</button>
+                <button class="weight-pill" type="button" data-weight="0-99">&lt;100kg</button>
+                <button class="weight-pill" type="button" data-weight="100-249">100&ndash;249kg</button>
+                <button class="weight-pill" type="button" data-weight="250-499">250&ndash;499kg</button>
+                <button class="weight-pill" type="button" data-weight="500-99999">500kg+</button>
+              </div>
+              <p class="weight-caveat" id="weightCaveat" hidden></p>
+            </div>
+          </aside>
+        </div>
 
-<div id="sidebarScrim" class="sidebar-scrim hidden"></div>
+        <!-- Dismissible, and centred so it doesn't collide with the control
+             panel on the left. The same wording lives permanently in the
+             Sources section, so closing this never loses the caveat. -->
+        <div class="map-disclaimer" id="mapDisclaimer" role="note" hidden>
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+          <p>Indicative positions from wartime census mapping and archive records &mdash; not survey-grade, and not for assessing risk at a specific address.</p>
+          <button type="button" id="mapDisclaimerClose" aria-label="Dismiss accuracy notice">&times;</button>
+        </div>
 
-<!-- Raid Info Drawer (populated on marker click) -->
-<div id="raidDrawer" class="raid-drawer hidden">
-  <button id="raidDrawerClose" class="icon-btn raid-drawer-close" aria-label="Close">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-  </button>
-  <div id="raidDrawerContent"></div>
-</div>
+        <aside class="detail-panel" id="detailPanel" hidden aria-label="Bomb record detail">
+          <button type="button" class="detail-close" id="detailClose" aria-label="Close record detail">&times;</button>
+          <div class="detail-body" id="detailBody"></div>
+        </aside>
 
-<!-- Cordon Safety Check Card -->
-<div id="cordonCard" class="cordon-card hidden">
-  <div class="cordon-card-header">
-    <span>Am I inside the evacuation radius?</span>
-    <button id="cordonCardClose" class="icon-btn" aria-label="Close">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-    </button>
-  </div>
-  <div class="cordon-card-body">
-    <input id="cordonAddressInput" type="text" placeholder="Enter your postcode&hellip;" />
-    <div id="cordonResult" class="cordon-result"></div>
-    <p class="cordon-hint">Or click any point on the map to check its distance from the cordon centre.</p>
-  </div>
-</div>
+        <div class="cordon-card" id="cordonCard" hidden>
+          <h3 id="cordonCardTitle">Am I inside the evacuation radius?</h3>
+          <p id="cordonCardIntro">Click anywhere on the map to simulate a 300m UXO cordon, or check a specific address below.</p>
+          <div class="cordon-search">
+            <input type="text" id="cordonSearchInput" placeholder="Enter a postcode or street">
+            <button type="button" id="cordonSearchBtn" aria-label="Check address">Check</button>
+          </div>
+          <div class="cordon-result" id="cordonResult" hidden></div>
+          <button type="button" class="cordon-clear" id="endLiveIncidentBtn" hidden>End test incident</button>
+          <button type="button" class="cordon-clear" id="cordonClear">Close</button>
+        </div>
+      </section>
 
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<script src="js/data.js"></script>
-<script src="js/app.js"></script>
-</body>
+      <section class="stats-band" aria-label="Plymouth Blitz headline figures">
+        <article>
+          <strong>59</strong>
+          <span>bombing raids from July 1940 to April 1944</span>
+        </article>
+        <article>
+          <strong>602</strong>
+          <span>air raid alerts heard across the city</span>
+        </article>
+        <article>
+          <strong>1,174</strong>
+          <span>civilians killed during the Plymouth Blitz period</span>
+        </article>
+        <article>
+          <strong>205k</strong>
+          <span>incendiaries dropped during seven of the heaviest nights</span>
+        </article>
+      </section>
+
+      <section id="facts" class="timeline-section" aria-labelledby="facts-title">
+        <div class="section-heading timeline-heading">
+          <p class="eyebrow">Local context</p>
+          <h2 id="facts-title">From first bomb to bomb book closed</h2>
+          <p>Eighty-odd years of the same city, told in eleven moments — from the first raid in 1940 to devices still surfacing today.</p>
+        </div>
+
+        <div class="timeline-wrap">
+        <div class="timeline-progress" id="timelineProgress" aria-hidden="true"></div>
+        <ol class="timeline" id="eventsTimeline">
+          <li class="timeline-item category-historic">
+            <div class="timeline-card">
+              <button class="timeline-toggle" type="button" aria-expanded="false">
+                <span class="timeline-date">6 July 1940</span>
+                <span class="timeline-badge">Historic</span>
+                <h3>The war arrives</h3>
+                <p class="timeline-summary">The first bombs fall on a block of Corporation houses in Swilly Road, killing three residents — the city's first civilian casualties of the war.</p>
+                <span class="timeline-expand-icon" aria-hidden="true">+</span>
+              </button>
+              <div class="timeline-detail">
+                <p>This is the opening entry in the Town Clerk's wartime "bomb book", now held at The Box, Plymouth.</p>
+              </div>
+            </div>
+            <div class="timeline-dot-col"><span class="timeline-dot"></span></div>
+          </li>
+
+          <li class="timeline-item category-historic">
+            <div class="timeline-card">
+              <button class="timeline-toggle" type="button" aria-expanded="false">
+                <span class="timeline-date">20 March 1941</span>
+                <span class="timeline-badge">Historic</span>
+                <h3>The King visits, hours too soon</h3>
+                <p class="timeline-summary">George VI and Queen Elizabeth tour the bomb damage in the city. That same night, sirens sound for one of the war's most destructive raids on Plymouth.</p>
+                <span class="timeline-expand-icon" aria-hidden="true">+</span>
+              </button>
+              <div class="timeline-detail">
+                <p>The heaviest nights of the Blitz followed almost immediately — a grim coincidence of timing that local accounts still note today.</p>
+              </div>
+            </div>
+            <div class="timeline-dot-col"><span class="timeline-dot"></span></div>
+          </li>
+
+          <li class="timeline-item category-historic">
+            <div class="timeline-card">
+              <button class="timeline-toggle" type="button" aria-expanded="false">
+                <span class="timeline-date">20–21 March 1941</span>
+                <span class="timeline-badge">Historic</span>
+                <h3>Charles Church gutted by fire</h3>
+                <p class="timeline-summary">Incendiary bombs destroy Plymouth's second-oldest church on the Blitz's heaviest night; nearby water mains had already been cut, so the fire couldn't be fought.</p>
+                <span class="timeline-expand-icon" aria-hidden="true">+</span>
+              </button>
+              <div class="timeline-detail">
+                <p>Rather than rebuild it, the city preserved the shell as a permanent memorial — it still stands roofless on its traffic island at Charles Cross today.</p>
+              </div>
+            </div>
+            <div class="timeline-dot-col"><span class="timeline-dot"></span></div>
+          </li>
+
+          <li class="timeline-item category-historic timeline-item--severe">
+            <div class="timeline-card">
+              <button class="timeline-toggle" type="button" aria-expanded="false">
+                <span class="timeline-date">22 April 1941</span>
+                <span class="timeline-badge">Historic</span>
+                <h3>Portland Square: the single worst night</h3>
+                <p class="timeline-summary">A communal air-raid shelter takes a direct hit, killing 76 people — the single greatest loss of civilian life in the Plymouth Blitz. Only three in the shelter survived.</p>
+                <span class="timeline-expand-icon" aria-hidden="true">+</span>
+              </button>
+              <div class="timeline-detail">
+                <p>The University of Plymouth later named a building on the site after the incident and commissioned a memorial artwork; the victims are listed on the Imperial War Museum's War Memorials register.</p>
+              </div>
+            </div>
+            <div class="timeline-dot-col"><span class="timeline-dot"></span></div>
+          </li>
+
+          <li class="timeline-item category-historic">
+            <div class="timeline-card">
+              <button class="timeline-toggle" type="button" aria-expanded="false">
+                <span class="timeline-date">March–April 1941</span>
+                <span class="timeline-badge">Historic</span>
+                <h3>Seven nights, a city remade</h3>
+                <p class="timeline-summary">Across the seven heaviest nights of the Blitz, more than 6,000 high-explosive bombs and 205,000 incendiaries fall on the city — the scale the Council still cites as the defining figure of the Blitz.</p>
+                <span class="timeline-expand-icon" aria-hidden="true">+</span>
+              </button>
+              <div class="timeline-detail">
+                <p>By the end, 1,174 civilians had been killed, 3,209 injured, and over 4,000 properties destroyed outright across the whole Blitz period.</p>
+              </div>
+            </div>
+            <div class="timeline-dot-col"><span class="timeline-dot"></span></div>
+          </li>
+
+          <li class="timeline-item category-historic">
+            <div class="timeline-card">
+              <button class="timeline-toggle" type="button" aria-expanded="false">
+                <span class="timeline-date">30 April 1944</span>
+                <span class="timeline-badge">Historic</span>
+                <h3>The bomb book closes</h3>
+                <p class="timeline-summary">The Town Clerk's wartime log records its 59th and final raid, closing a four-year written record of the city under fire.</p>
+                <span class="timeline-expand-icon" aria-hidden="true">+</span>
+              </button>
+              <div class="timeline-detail">
+                <p>A digitised copy of the bomb book is on display at The Box, Plymouth — page by page, it's the closest thing to a master record this map has to work from.</p>
+              </div>
+            </div>
+            <div class="timeline-dot-col"><span class="timeline-dot"></span></div>
+          </li>
+
+          <li class="timeline-item category-recovery">
+            <div class="timeline-card">
+              <button class="timeline-toggle" type="button" aria-expanded="false">
+                <span class="timeline-date">30 November 1957</span>
+                <span class="timeline-badge">Recovery</span>
+                <h3>Resurgam: St Andrew's rises again</h3>
+                <p class="timeline-summary">Burnt out in 1941, Plymouth's civic parish church is reconsecrated on St Andrew's Day — the "I shall rise again" sign is still remembered as the city's motto of recovery.</p>
+                <span class="timeline-expand-icon" aria-hidden="true">+</span>
+              </button>
+              <div class="timeline-detail">
+                <p>The door is still known as the Resurgam door, marked today by a carved granite plaque.</p>
+              </div>
+            </div>
+            <div class="timeline-dot-col"><span class="timeline-dot"></span></div>
+          </li>
+
+          <li class="timeline-item category-modern">
+            <div class="timeline-card">
+              <button class="timeline-toggle" type="button" aria-expanded="false">
+                <span class="timeline-date">11 November 2010</span>
+                <span class="timeline-badge">Modern</span>
+                <h3>Notte Street: the war resurfaces</h3>
+                <p class="timeline-summary">A 70kg WWII bomb is uncovered at a building site. A 300m cordon evacuates nearby hotels before it's taken out to Cawsand Bay and detonated at sea.</p>
+                <span class="timeline-expand-icon" aria-hidden="true">+</span>
+              </button>
+              <div class="timeline-detail">
+                <p>A second device turned up at the same site the following February — more than one wartime bomb can lie beneath a single redevelopment site.</p>
+              </div>
+            </div>
+            <div class="timeline-dot-col"><span class="timeline-dot"></span></div>
+          </li>
+
+          <li class="timeline-item category-modern">
+            <div class="timeline-card">
+              <button class="timeline-toggle" type="button" aria-expanded="false">
+                <span class="timeline-date">20–23 February 2024</span>
+                <span class="timeline-badge">Modern</span>
+                <h3>Keyham: thousands evacuated</h3>
+                <p class="timeline-summary">A 500kg bomb found in a back garden triggers one of the largest peacetime evacuations in UK history — an estimated 3,250 people and 4,300 properties.</p>
+                <span class="timeline-expand-icon" aria-hidden="true">+</span>
+              </button>
+              <div class="timeline-detail">
+                <p>The device was moved by military convoy to the Torpoint Ferry slipway, then disposed of at sea.</p>
+              </div>
+            </div>
+            <div class="timeline-dot-col"><span class="timeline-dot"></span></div>
+          </li>
+
+          <li class="timeline-item category-modern">
+            <div class="timeline-card">
+              <button class="timeline-toggle" type="button" aria-expanded="false">
+                <span class="timeline-date">14–15 January 2026</span>
+                <span class="timeline-badge">Modern</span>
+                <h3>Millbay: the cordon grows</h3>
+                <p class="timeline-summary">A German SC50 bomb buried 4.3m deep on Bath Street widens the cordon from 100m to 400m, covering homes, businesses, hotels and a school.</p>
+                <span class="timeline-expand-icon" aria-hidden="true">+</span>
+              </button>
+              <div class="timeline-detail">
+                <p>Investigators returned in May and again in July 2026 to check for further buried ordnance before construction could resume.</p>
+              </div>
+            </div>
+            <div class="timeline-dot-col"><span class="timeline-dot"></span></div>
+          </li>
+
+          <li class="timeline-item category-modern">
+            <div class="timeline-card">
+              <button class="timeline-toggle" type="button" aria-expanded="false">
+                <span class="timeline-date">29 April – 1 May 2026</span>
+                <span class="timeline-badge">Modern</span>
+                <h3>Southway: destroyed in situ</h3>
+                <p class="timeline-summary">Judged too unstable to move, a 250kg SC250 bomb is safely destroyed behind a sand mitigation structure after a 400m cordon and evacuation.</p>
+                <span class="timeline-expand-icon" aria-hidden="true">+</span>
+              </button>
+              <div class="timeline-detail">
+                <p>The evacuation centre at Southway Youth and Community Centre supported more than 50 residents, with 25 households in temporary accommodation.</p>
+              </div>
+            </div>
+            <div class="timeline-dot-col"><span class="timeline-dot"></span></div>
+          </li>
+        </ol>
+        </div>
+      </section>
+
+      <section id="sources" class="sources-section" aria-labelledby="sources-title">
+        <div class="section-heading">
+          <p class="eyebrow">Transparency</p>
+          <h2 id="sources-title">Sources and next steps</h2>
+          <p>
+            Headline figures come from Plymouth City Council's public record. Archive context comes from
+            The Box, Plymouth (which now holds the former Plymouth &amp; West Devon Record Office collections).
+            Recent incident details are drawn from council updates and contemporary news coverage. Historic
+            area points remain approximate and should be replaced with archive-backed coordinates before publication.
+          </p>
+          <p class="accuracy-note">
+            <strong>On accuracy:</strong> positions here are indicative rather than
+            survey-grade. Confirmed records are geocoded to the street named in the
+            record; the potential-sites layer is digitised from printed bomb census
+            mapping, where a single dot covers roughly 35&ndash;45m of ground. Treat every
+            point as &ldquo;somewhere in this area&rdquo;. Nothing on this site should be used
+            to assess unexploded-ordnance risk at a specific address &mdash; if you have a
+            genuine concern, contact Plymouth City Council or the police.
+          </p>
+        </div>
+        <ul class="source-list">
+          <li><a href="https://www.plymouth.gov.uk/deathdestruction" target="_blank" rel="noopener">Plymouth City Council: Death / Destruction</a></li>
+          <li><a href="https://www.theboxplymouth.com/blog/archives/blitz-80-the-bomb-book" target="_blank" rel="noopener">The Box: Blitz 80 — The Bomb Book</a></li>
+          <li><a href="https://www.theboxplymouth.com/blog/history/blitz-80-archive-images" target="_blank" rel="noopener">The Box: Blitz 80 — Images from the archives</a></li>
+          <li><a href="https://www.theboxplymouth.com/collections/archives-and-local-studies" target="_blank" rel="noopener">The Box: Archives &amp; Local Studies (formerly Plymouth &amp; West Devon Record Office)</a></li>
+          <li><a href="https://www.plymouth.gov.uk/news/major-incident-updates" target="_blank" rel="noopener">Plymouth City Council: St Michael Avenue / Keyham incident updates</a></li>
+          <li><a href="https://www.plymouth.gov.uk/news/unexploded-ordnance-millbay-building-site" target="_blank" rel="noopener">Plymouth City Council: Millbay UXO incident</a></li>
+          <li><a href="https://www.plymouth.gov.uk/news/southway-emergency-incident" target="_blank" rel="noopener">Plymouth City Council: Southway emergency incident</a></li>
+          <li><a href="https://www.itv.com/news/westcountry/2026-05-01/stay-away-from-area-warning-as-ww2-bomb-to-be-blown-up-where-it-was-found" target="_blank" rel="noopener">ITV News West Country: Southway bomb detonated in situ</a></li>
+          <li><a href="https://www.heart.co.uk/plymouth/news/local/unexploded-ww2-bomb-made-safe/" target="_blank" rel="noopener">Heart Plymouth: Notte Street bomb made safe (2010)</a></li>
+          <li><a href="https://www.cornish-times.co.uk/news/saltash-pays-tribute-to-nine-killed-in-blitz-horror-85-years-ago-901579" target="_blank" rel="noopener">Cornish Times: Saltash pays tribute to nine killed in Blitz horror, 85 years on</a></li>
+          <li><a href="https://www.cornish-times.co.uk/news/restored-graves-unveiled-for-firefighters-killed-in-wartime-tragedy-900335" target="_blank" rel="noopener">Cornish Times: Restored graves unveiled for firefighters killed in wartime tragedy</a></li>
+        </ul>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <p>Created by Stewart PS</p>
+      <!-- Hidden until COFFEE_URL is set in js/app.js — a live button pointing
+           at "#" reads as a broken link, which is worse than no button. -->
+      <a class="coffee-btn" id="coffeeBtn" href="#" target="_blank" rel="noopener" aria-label="Buy me a coffee" hidden>
+        <span class="coffee-emoji" aria-hidden="true">☕</span> Buy me a coffee
+      </a>
+    </footer>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet.heat@0.2.0/dist/leaflet-heat.js"></script>
+    <script src="data/potential-bomb-sites.js"></script>
+    <script src="js/app.js"></script>
+  </body>
 </html>
