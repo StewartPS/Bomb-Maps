@@ -38,7 +38,18 @@
     <link rel="preconnect" href="https://unpkg.com">
     <link rel="preconnect" href="https://a.basemaps.cartocdn.com" crossorigin>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-    <link rel="stylesheet" href="css/style.css">
+    <!-- ============================================================
+         CACHE BUSTING — bump ?v= on every release
+         ------------------------------------------------------------
+         GitHub Pages tells browsers to hang on to CSS and JS, so a push
+         alone doesn't reach anyone who has already visited: they keep the
+         old files until the cache expires. Changing the query string makes
+         the URL new, so the browser has no choice but to fetch it.
+
+         To release: find and replace ?v=1.8.1 with the next number in BOTH
+         index.html and news.html. Nothing else needs touching.
+         ============================================================ -->
+    <link rel="stylesheet" href="css/style.css?v=1.8.1">
   </head>
   <body>
     <header class="site-header">
@@ -97,6 +108,8 @@
           <p class="incident-alert-meta">
             <span id="incidentStatus"></span>
             <span class="incident-alert-sep" aria-hidden="true">&middot;</span>
+            <span id="incidentRadius"></span>
+            <span class="incident-alert-sep" aria-hidden="true">&middot;</span>
             <span id="incidentUpdated"></span>
           </p>
         </div>
@@ -104,6 +117,16 @@
           Latest updates
           <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
         </a>
+      </div>
+
+      <!-- Rolling update ticker. Built by renderIncidentTicker() in js/app.js
+           from the same update log as the news page. Falls back to a single
+           static line when the visitor prefers reduced motion. -->
+      <div class="incident-ticker" id="incidentTicker" hidden>
+        <span class="incident-ticker-label" aria-hidden="true">Latest</span>
+        <div class="incident-ticker-viewport">
+          <div class="incident-ticker-track" id="incidentTickerTrack"></div>
+        </div>
       </div>
     </div>
 
@@ -276,6 +299,15 @@
         </aside>
 
         <div class="cordon-card" id="cordonCard" hidden>
+          <!-- Collapsed state. On a phone the cordon checker and a record
+               detail are both bottom sheets and would sit on top of each
+               other, so the checker shrinks to this bar instead of closing —
+               during an incident it must stay one tap away. -->
+          <button type="button" class="cordon-peek" id="cordonPeek">
+            <span class="cordon-peek-dot" aria-hidden="true"></span>
+            <span>Am I inside the cordon?</span>
+            <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 15l-6-6-6 6"/></svg>
+          </button>
           <h3 id="cordonCardTitle">Am I inside the evacuation radius?</h3>
           <p id="cordonCardIntro">Click anywhere on the map to simulate a 300m UXO cordon, or check a specific address below.</p>
           <div class="cordon-search">
@@ -543,7 +575,7 @@
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="https://unpkg.com/leaflet.heat@0.2.0/dist/leaflet-heat.js"></script>
-    <script src="data/potential-bomb-sites.js"></script>
-    <script src="js/app.js"></script>
+    <script src="data/potential-bomb-sites.js?v=1.8.1"></script>
+    <script src="js/app.js?v=1.8.1"></script>
   </body>
 </html>

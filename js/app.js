@@ -1976,15 +1976,60 @@ function drawDetailCordon(record) {
   }).addTo(map);
 }
 
+/* ---------- Panel stacking ----------
+   The record detail and the cordon checker are both anchored bottom-right on
+   desktop and both become full-width bottom sheets below 900px, so with an
+   incident running they landed on top of each other.
+
+   Desktop: the detail panel's lower edge lifts clear of the cordon card.
+   Phone/tablet: two stacked sheets would swallow the screen, so the cordon
+   checker collapses to a one-line bar. It collapses rather than closing
+   because during a live incident "am I inside the cordon?" has to stay
+   reachable — it's the one genuinely urgent thing on the page.
+------------------------------------------------------------------- */
+const cordonPeek = document.getElementById("cordonPeek");
+const stackedSheets = window.matchMedia("(max-width: 900px)");
+
+function syncPanelStacking() {
+  const cordonOpen = cordonCard && !cordonCard.hidden;
+  const detailOpen = detailPanel && !detailPanel.hidden;
+
+  document.body.classList.toggle("has-cordon", !!cordonOpen);
+
+  if (cordonCard) {
+    // Only collapse when both are competing for the bottom of a small screen.
+    const shouldCompact = !!(cordonOpen && detailOpen && stackedSheets.matches);
+    cordonCard.classList.toggle("is-compact", shouldCompact);
+  }
+
+  // Publish the cordon card's height so the detail panel can sit above it.
+  const h = cordonOpen ? Math.round(cordonCard.getBoundingClientRect().height) : 0;
+  document.documentElement.style.setProperty("--cordon-h", `${h}px`);
+}
+
 function openDetailPanel(record) {
   detailBody.innerHTML = detailContent(record);
   detailPanel.hidden = false;
+  syncPanelStacking();
 }
 
 function closeDetailPanel() {
   detailPanel.hidden = true;
   clearDetailCordon();
+  syncPanelStacking();
 }
+
+if (cordonPeek) {
+  cordonPeek.addEventListener("click", () => {
+    // Expanding the checker gives it the bottom of the screen back.
+    closeDetailPanel();
+    cordonCard.classList.remove("is-compact");
+    syncPanelStacking();
+  });
+}
+
+stackedSheets.addEventListener("change", syncPanelStacking);
+window.addEventListener("resize", syncPanelStacking);
 
 if (detailClose) detailClose.addEventListener("click", closeDetailPanel);
 
@@ -2110,6 +2155,9 @@ const incidentHeadline = document.getElementById("incidentHeadline");
 const incidentStatus = document.getElementById("incidentStatus");
 const incidentUpdated = document.getElementById("incidentUpdated");
 const incidentFlagLabel = document.getElementById("incidentFlagLabel");
+const incidentRadius = document.getElementById("incidentRadius");
+const incidentTicker = document.getElementById("incidentTicker");
+const incidentTickerTrack = document.getElementById("incidentTickerTrack");
 const cordonCard = document.getElementById("cordonCard");
 const cordonCardTitle = document.getElementById("cordonCardTitle");
 const cordonCardIntro = document.getElementById("cordonCardIntro");
@@ -2241,10 +2289,15 @@ function startLiveIncident(data) {
         : "Preview mode — this is a rehearsal, not a real incident";
     }
     if (incidentStatus) incidentStatus.textContent = published ? (data.status || "") : "Simulated cordon";
+    if (incidentRadius) {
+      const r = published ? data.cordonRadiusM : cordonRadiusM;
+      incidentRadius.textContent = r ? `${r}m cordon` : "";
+    }
     if (incidentUpdated) incidentUpdated.textContent = published ? formatUpdated(data.updated) : "";
     // The news link is meaningless during a rehearsal — there is nothing to read.
     const link = incidentAlert.querySelector(".incident-alert-link");
     if (link) link.hidden = !published;
+    renderIncidentTicker(published ? data.updates : null);
   }
 
   cordonCard.hidden = false;
@@ -2259,26 +2312,113 @@ function startLiveIncident(data) {
   endLiveIncidentBtn.hidden = published;
   mapEl.classList.add("cordon-cursor");
   incidentToggle.setAttribute("aria-pressed", "true");
+  syncPanelStacking();
 
   if (published && typeof data.lat === "number" && typeof data.lng === "number") {
     placeCordon(data.lat, data.lng, data.cordonRadiusM);
   }
 }
 
+/* ---------- Update ticker ----------
+   A rolling line of the latest updates, the way a rolling news channel runs
+   them along the bottom of the screen. Two deliberate constraints:
+
+   - The track is duplicated so the loop is seamless. The clone is
+     aria-hidden, otherwise a screen reader announces every update twice.
+   - Motion is opt-out. With prefers-reduced-motion the ticker doesn't scroll
+     at all; it shows the single most recent update as static text. A moving
+     strip of red text is exactly the kind of thing that triggers migraine
+     and vestibular symptoms, and this banner appears when people are already
+     stressed.
+------------------------------------------------------------------- */
+const prefersReducedMotion =
+  window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+function tickerItems(updates) {
+  return (Array.isArray(updates) ? updates : [])
+    .filter((u) => u && u.text)
+    .slice()
+    .sort((a, b) => {
+      const da = new Date(a.time), db = new Date(b.time);
+      if (isNaN(da) || isNaN(db)) return 0;
+      return db - da;
+    });
+}
+
+function tickerTime(iso) {
+  const d = new Date(iso);
+  if (isNaN(d)) return "";
+  return d.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" });
+}
+
+function buildTickerRun(items, hidden) {
+  const run = document.createElement("div");
+  run.className = "incident-ticker-run";
+  if (hidden) run.setAttribute("aria-hidden", "true");
+  items.forEach((u) => {
+    const item = document.createElement("span");
+    item.className = "incident-ticker-item";
+    const stamp = tickerTime(u.time);
+    if (stamp) {
+      const t = document.createElement("span");
+      t.className = "incident-ticker-time";
+      t.textContent = stamp;
+      item.appendChild(t);
+    }
+    item.appendChild(document.createTextNode(u.text));
+    run.appendChild(item);
+  });
+  return run;
+}
+
+function renderIncidentTicker(updates) {
+  if (!incidentTicker || !incidentTickerTrack) return;
+  const items = tickerItems(updates);
+
+  incidentTickerTrack.innerHTML = "";
+  incidentTickerTrack.classList.remove("is-scrolling");
+  incidentTicker.hidden = items.length === 0;
+  if (!items.length) return;
+
+  if (prefersReducedMotion) {
+    // Static: newest update only, no animation.
+    incidentTickerTrack.appendChild(buildTickerRun(items.slice(0, 1), false));
+    return;
+  }
+
+  incidentTickerTrack.appendChild(buildTickerRun(items, false));
+  incidentTickerTrack.appendChild(buildTickerRun(items, true));
+
+  // Pace it by content length rather than a fixed duration, so a long log
+  // doesn't fly past and a short one doesn't crawl. ~55px per second.
+  requestAnimationFrame(() => {
+    const run = incidentTickerTrack.firstElementChild;
+    const width = run ? run.getBoundingClientRect().width : 0;
+    if (!width) return;
+    incidentTickerTrack.style.setProperty("--ticker-distance", `${Math.round(width)}px`);
+    incidentTickerTrack.style.setProperty("--ticker-duration", `${Math.max(18, Math.round(width / 55))}s`);
+    incidentTickerTrack.classList.add("is-scrolling");
+  });
+}
+
 function endLiveIncident() {
   liveIncident = false;
   siteHeader.classList.remove("incident-active");
   if (incidentAlert) incidentAlert.hidden = true;
+  renderIncidentTicker(null);
   cordonCard.hidden = true;
   cordonCard.classList.remove("cordon-live");
   mapEl.classList.remove("cordon-cursor");
   incidentToggle.setAttribute("aria-pressed", "false");
   clearCordon();
+  syncPanelStacking();
 }
 
 cordonClear.addEventListener("click", () => {
-  // Visitors can dismiss the card, the incident itself stays active/badged.
+  // Visitors can dismiss the card; the incident itself stays active and the
+  // banner stays up, so the checker can be reopened from the news page.
   cordonCard.hidden = true;
+  syncPanelStacking();
 });
 
 endLiveIncidentBtn.addEventListener("click", endLiveIncident);

@@ -1,3 +1,41 @@
+# Plymouth Bomb Map — v1.8.1
+
+## Releasing a change
+
+**Bump `?v=` in `index.html` and `news.html` before you push.** Find and
+replace `?v=1.8.1` with the next number in both files.
+
+GitHub Pages tells browsers to hold on to CSS and JS, so pushing alone doesn't
+reach anyone who has visited before — they keep the old files until their
+cache expires, which is why every update seemed to need a manual cache clear.
+Changing the query string makes the URL new, so the browser must re-fetch.
+There is no build step here, so this is a manual step; skipping it means
+returning visitors see stale styling.
+
+`data/incident.json` is exempt — it is fetched with `cache: "no-store"` and a
+timestamp, so a live incident goes out immediately without a version bump.
+
+## v1.8.1 fixes
+
+- **Map disclaimer covered the map on phones.** The mobile override sat
+  *before* the base rule in the stylesheet; at equal specificity the later
+  unconditional rule won, so the desktop centring survived onto mobile and
+  the note rendered as a tall narrow column. Moved after the base rule.
+- **Header was three tall rows on a phone.** `align-items: stretch` in a
+  column nav stretched the theme picker to full width. Now a two-row grid:
+  brand and theme picker, then links.
+- **Alert banner ate a third of the screen.** Flag and updates link now share
+  a row, with headline and meta beneath.
+- **Detail panel and cordon checker overlapped.** Both were anchored
+  bottom-right on desktop and both became full-width bottom sheets below
+  900px. The detail panel now lifts clear on desktop; on phones the cordon
+  checker collapses to a one-line bar rather than closing, because during a
+  live incident it must stay reachable.
+- **Rolling ticker** added to the alert banner — update log, gold
+  timestamps, seamless loop, pauses on hover or focus. The duplicated track
+  is `aria-hidden` so screen readers don't hear every update twice, and
+  `prefers-reduced-motion` replaces the scroll with a single static line.
+
 # Plymouth Bomb Map — v1.8
 
 ## v1.8 highlights

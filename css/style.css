@@ -387,6 +387,65 @@ a {
   .incident-label { display: none; }
 }
 
+/* ---------- Cordon card: collapsed "peek" bar ---------- */
+.cordon-peek {
+  display: none;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 15px 18px;
+  border: none;
+  background: transparent;
+  color: var(--fg);
+  font: inherit;
+  font-size: 0.95rem;
+  font-weight: 800;
+  text-align: left;
+  cursor: pointer;
+}
+
+.cordon-peek svg {
+  margin-left: auto;
+  opacity: 0.6;
+}
+
+.cordon-peek-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--red);
+  animation: cordon-pulse 1.5s ease-in-out infinite;
+}
+
+.cordon-card.is-compact {
+  padding: 0;
+  overflow: hidden;
+}
+
+.cordon-card.is-compact .cordon-peek {
+  display: flex;
+}
+
+/* Everything except the bar folds away. */
+.cordon-card.is-compact > *:not(.cordon-peek) {
+  display: none;
+}
+
+/* The grab handle belongs to the expanded sheet, not the bar. */
+.cordon-card.is-compact::before {
+  display: none;
+}
+
+/* ---------- Keeping the two panels off each other ----------
+   Desktop: both are anchored bottom-right, so the detail panel's lower edge
+   lifts by the cordon card's measured height (--cordon-h, set in app.js). */
+body.has-cordon .detail-panel {
+  /* max() is insurance: if the measurement ever fails --cordon-h is 0px, and
+     without a floor the panel would drop straight back onto the card. The
+     expanded card is never shorter than ~200px. */
+  bottom: calc(30px + max(var(--cordon-h, 0px), 200px));
+}
+
 .cordon-card.cordon-live {
   border-color: var(--red-dark);
   box-shadow: 0 16px 40px rgba(122, 31, 22, 0.32);
@@ -402,11 +461,12 @@ a {
   top: var(--header-h, 66px);
   /* Directly beneath the header: above the map overlays, below the header. */
   z-index: 899;
-  border-bottom: 1px solid rgba(201, 79, 61, 0.4);
-  background: linear-gradient(180deg, rgba(122, 31, 22, 0.96), rgba(90, 22, 16, 0.96));
-  -webkit-backdrop-filter: blur(14px);
-  backdrop-filter: blur(14px);
-  box-shadow: 0 10px 30px rgba(122, 31, 22, 0.28);
+  /* --red-dark under --red, the same pairing used by the live cordon card
+     and the record detail panel. The previous maroon gradient was a hue
+     that appeared nowhere else on the site. */
+  border-bottom: 1px solid var(--red);
+  background: var(--red-dark);
+  box-shadow: 0 10px 30px rgba(24, 33, 31, 0.32);
   color: var(--paper);
   animation: incident-alert-in 0.3s ease-out;
 }
@@ -423,10 +483,10 @@ a {
 .incident-alert-inner {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 16px;
   max-width: 1180px;
   margin: 0 auto;
-  padding: 10px 24px;
+  padding: 14px 24px;
 }
 
 /* The "LIVE" flag. Kept small and typographic rather than a big red slab. */
@@ -434,12 +494,12 @@ a {
   display: inline-flex;
   flex-shrink: 0;
   align-items: center;
-  gap: 7px;
-  padding: 4px 10px;
-  border: 1px solid rgba(255, 255, 255, 0.28);
+  gap: 8px;
+  padding: 6px 13px;
+  border: 1px solid rgba(255, 255, 255, 0.34);
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.1);
-  font-size: 0.64rem;
+  background: rgba(255, 255, 255, 0.14);
+  font-size: 0.78rem;
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.14em;
@@ -458,19 +518,22 @@ a {
   min-width: 0;
 }
 
+/* Breaking-news weight. This is the loudest line on the page when it appears,
+   and it should look like it. */
 .incident-alert-headline {
   margin: 0;
-  font-size: 0.92rem;
-  font-weight: 700;
-  line-height: 1.35;
+  font-size: clamp(1.02rem, 1.5vw, 1.28rem);
+  font-weight: 800;
+  line-height: 1.28;
   letter-spacing: -0.01em;
 }
 
 .incident-alert-meta {
   margin: 2px 0 0;
   color: rgba(247, 244, 236, 0.72);
-  font-size: 0.76rem;
+  font-size: 0.82rem;
   font-weight: 600;
+  line-height: 1.5;
 }
 
 .incident-alert-sep {
@@ -508,12 +571,121 @@ a {
   display: none;
 }
 
+/* ---------- Rolling update ticker ----------
+   The second row of the banner. Sits on a darker band so it reads as a
+   distinct strip rather than more headline. */
+.incident-ticker {
+  display: flex;
+  align-items: stretch;
+  border-top: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(0, 0, 0, 0.22);
+  overflow: hidden;
+}
+
+.incident-ticker[hidden] {
+  display: none;
+}
+
+.incident-ticker-label {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  padding: 8px 14px;
+  background: rgba(0, 0, 0, 0.28);
+  color: var(--paper);
+  font-size: 0.68rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+}
+
+.incident-ticker-viewport {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  /* Fade both ends so items enter and leave rather than being chopped. */
+  mask-image: linear-gradient(90deg, transparent 0, #000 24px, #000 calc(100% - 24px), transparent 100%);
+}
+
+.incident-ticker-track {
+  display: flex;
+  width: max-content;
+}
+
+.incident-ticker-track.is-scrolling {
+  animation: incident-ticker-scroll var(--ticker-duration, 30s) linear infinite;
+}
+
+/* Courtesy pause — someone reading an update shouldn't have it slide away. */
+.incident-ticker:hover .incident-ticker-track.is-scrolling,
+.incident-ticker:focus-within .incident-ticker-track.is-scrolling {
+  animation-play-state: paused;
+}
+
+@keyframes incident-ticker-scroll {
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(calc(-1 * var(--ticker-distance, 100%)), 0, 0); }
+}
+
+.incident-ticker-run {
+  display: flex;
+  flex-shrink: 0;
+}
+
+.incident-ticker-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 8px 0;
+  margin-right: 40px;
+  color: rgba(247, 244, 236, 0.94);
+  font-size: 0.86rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* Bullet between items, drawn rather than typed so it can't be selected. */
+.incident-ticker-item::after {
+  content: "";
+  width: 4px;
+  height: 4px;
+  margin-left: 40px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0.45;
+}
+
+.incident-ticker-time {
+  color: var(--gold);
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Reduced motion: the track never gets .is-scrolling, and only one item is
+   rendered, so this just centres it comfortably. */
+@media (prefers-reduced-motion: reduce) {
+  .incident-ticker-viewport {
+    mask-image: none;
+  }
+
+  .incident-ticker-item {
+    white-space: normal;
+    margin-right: 0;
+    padding-left: 14px;
+  }
+
+  .incident-ticker-item::after {
+    display: none;
+  }
+}
+
 /* Rehearsals get muted, non-red styling so a preview can never read as a
    genuine emergency alert to someone glancing at the screen. */
 .incident-alert.is-preview {
-  border-bottom-color: rgba(214, 155, 45, 0.4);
-  background: linear-gradient(180deg, rgba(48, 40, 22, 0.96), rgba(38, 32, 18, 0.96));
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  border-bottom-color: var(--gold);
+  background: var(--obsidian);
+  box-shadow: 0 10px 30px rgba(24, 33, 31, 0.32);
 }
 
 .incident-alert.is-preview .incident-alert-flag {
@@ -524,6 +696,10 @@ a {
 
 .incident-alert.is-preview .incident-alert-pulse {
   background: var(--gold);
+}
+
+.incident-alert.is-preview .incident-ticker {
+  border-top-color: rgba(214, 155, 45, 0.3);
 }
 
 @keyframes cordon-pulse {
@@ -2041,20 +2217,28 @@ h3 {
 }
 
 /* ---------- Active incident ---------- */
+/* Matches .eyebrow — the site's standard label treatment. */
 .news-flag {
   display: inline-flex;
   align-items: center;
   gap: 8px;
   margin: 0 0 16px;
   padding: 5px 12px;
-  border: 1px solid rgba(201, 79, 61, 0.4);
+  border: 1px solid var(--red);
   border-radius: 999px;
   background: rgba(201, 79, 61, 0.12);
   color: var(--red);
-  font-size: 0.68rem;
-  font-weight: 800;
+  font-size: 0.78rem;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.12em;
+}
+
+/* --red on the light page is only 4.09:1 against paper — under AA for a
+   12.5px label. --red-dark takes it to 9.4:1. In dark mode the reverse is
+   true, so --red stays there. */
+:root[data-theme="light"] .news-flag {
+  color: var(--red-dark);
 }
 
 .news-flag-pulse {
@@ -2065,23 +2249,28 @@ h3 {
   animation: cordon-pulse 1.5s ease-in-out infinite;
 }
 
+/* The site's h2 step. Full h1 (up to 6.9rem) is a two-word display size and
+   swallows a sentence-length headline. */
 .news-headline {
-  margin: 0 0 10px;
-  font-size: clamp(1.7rem, 4vw, 2.4rem);
-  line-height: 1.15;
-  letter-spacing: -0.02em;
+  margin: 0 0 12px;
+  font-size: clamp(2rem, 4vw, 4.2rem);
+  line-height: 1;
 }
 
 .news-meta {
   margin: 0 0 24px;
   color: var(--fg-muted);
-  font-size: 0.9rem;
+  font-size: 0.78rem;
   font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
 }
 
+/* Matches .section-heading p, the site's standard lead paragraph. */
 .news-summary {
   margin: 0 0 24px;
-  font-size: 1.05rem;
+  max-width: 690px;
+  font-size: 1.08rem;
   line-height: 1.65;
 }
 
@@ -2097,9 +2286,9 @@ h3 {
 
 .news-advice p {
   margin: 0;
-  font-size: 0.92rem;
+  font-size: 0.95rem;
   font-weight: 600;
-  line-height: 1.55;
+  line-height: 1.6;
 }
 
 .news-facts {
@@ -2114,10 +2303,10 @@ h3 {
 
 .news-facts dt {
   color: var(--fg-muted);
-  font-size: 0.76rem;
-  font-weight: 800;
+  font-size: 0.78rem;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.12em;
 }
 
 .news-facts dd {
@@ -2149,11 +2338,11 @@ h3 {
 /* ---------- Update log ---------- */
 .news-log-title {
   margin: 32px 0 14px;
+  color: var(--green);
   font-size: 0.78rem;
-  font-weight: 800;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.12em;
-  color: var(--fg-muted);
 }
 
 .news-log {
@@ -2192,16 +2381,18 @@ h3 {
 
 .news-log-time {
   display: block;
-  margin-bottom: 3px;
+  margin-bottom: 4px;
   color: var(--fg-muted);
-  font-size: 0.76rem;
-  font-weight: 800;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
   font-variant-numeric: tabular-nums;
 }
 
 .news-log-text {
   margin: 0;
-  line-height: 1.6;
+  font-size: 1rem;
+  line-height: 1.65;
 }
 
 .news-links {
@@ -2221,19 +2412,21 @@ h3 {
 
 /* ---------- Quiet / error states ---------- */
 .news-empty h1 {
-  margin: 0 0 12px;
-  font-size: clamp(1.7rem, 4vw, 2.4rem);
-  line-height: 1.15;
-  letter-spacing: -0.02em;
+  margin: 0 0 14px;
+  font-size: clamp(2rem, 4vw, 4.2rem);
+  line-height: 1;
 }
 
 .news-empty-lead {
   margin: 0 0 12px;
-  font-size: 1.1rem;
+  max-width: 690px;
+  font-size: 1.08rem;
   font-weight: 700;
+  line-height: 1.65;
 }
 
 .news-empty p {
+  max-width: 690px;
   line-height: 1.65;
 }
 
@@ -2369,15 +2562,6 @@ h3 {
     z-index: 460;
   }
 
-  .map-disclaimer {
-    left: 12px;
-    right: 12px;
-    bottom: auto;
-    top: 124px;
-    width: auto;
-    transform: none;
-  }
-
   /* Record detail and the cordon checker become true bottom sheets: fixed to
      the viewport so they're reachable wherever the visitor has scrolled to,
      and clear of the iPhone home indicator. */
@@ -2421,17 +2605,59 @@ h3 {
     top: 14px;
     right: 14px;
   }
+
+  /* Stacked sheets: the detail sheet rests on top of the collapsed cordon
+     bar rather than covering it, and gives back the height it takes. */
+  body.has-cordon .detail-panel {
+    bottom: var(--cordon-h, 0px);
+    max-height: calc(72svh - var(--cordon-h, 0px));
+  }
+
+  /* The bar is the thing you must always be able to reach. */
+  .cordon-card {
+    z-index: 960;
+  }
+
+  .cordon-card.is-compact {
+    border-radius: 14px 14px 0 0;
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
 }
 
 /* ---------- Phones ---------- */
 @media (max-width: 640px) {
-  /* The nav wraps to its own rows; brand and links stay on one line each so
-     the header doesn't eat a third of the screen. */
+  /* Two tight rows: brand + theme picker, then the links. `align-items:
+     stretch` in a column here was what stretched the theme toggle across the
+     full width and pushed the header to three tall rows. */
   .nav {
-    align-items: stretch;
-    flex-direction: column;
-    gap: 10px;
-    padding: 12px 16px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-areas:
+      "brand theme"
+      "links links";
+    align-items: center;
+    gap: 6px 12px;
+    padding: 9px 16px;
+  }
+
+  .brand {
+    grid-area: brand;
+    font-size: 0.95rem;
+  }
+
+  .theme-toggle {
+    grid-area: theme;
+    justify-self: end;
+  }
+
+  .nav-links {
+    grid-area: links;
+  }
+
+  /* Preview-only, so it just needs somewhere sane to sit. */
+  .incident-toggle {
+    grid-column: 1 / -1;
+    justify-self: start;
   }
 
   .nav-links {
@@ -2479,25 +2705,56 @@ h3 {
     font-size: 1rem;
   }
 
-  .map-disclaimer {
-    top: 108px;
-  }
-
+  /* Flag and the updates link share the top row; headline and meta take the
+     full width beneath. The previous stack put all three on their own rows
+     and ate a third of a phone screen. */
   .incident-alert-inner {
     flex-wrap: wrap;
-    gap: 10px;
+    gap: 8px 10px;
     padding: 10px 16px;
   }
 
-  .incident-alert-body {
-    flex-basis: 100%;
-    order: 2;
+  .incident-alert-flag {
+    order: 1;
+    padding: 4px 10px;
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
   }
 
   .incident-alert-link {
+    order: 2;
+    margin-left: auto;
+    padding: 6px 13px;
+    font-size: 0.76rem;
+  }
+
+  .incident-alert-body {
     order: 3;
-    width: 100%;
-    justify-content: center;
+    flex-basis: 100%;
+  }
+
+  .incident-alert-headline {
+    font-size: 1.02rem;
+    line-height: 1.3;
+  }
+
+  .incident-alert-meta {
+    font-size: 0.76rem;
+  }
+
+  .incident-ticker-label {
+    padding: 7px 11px;
+    font-size: 0.62rem;
+    letter-spacing: 0.12em;
+  }
+
+  .incident-ticker-item {
+    font-size: 0.8rem;
+    margin-right: 30px;
+  }
+
+  .incident-ticker-item::after {
+    margin-left: 30px;
   }
 
   .site-footer {
@@ -2727,18 +2984,40 @@ h3 {
   outline-offset: 2px;
 }
 
+/* This block must stay AFTER the base .map-disclaimer rule above — an
+   earlier @media block loses to a later unconditional one at equal
+   specificity, which is exactly how the desktop centring survived onto
+   mobile and left a tall narrow column of text over the map. */
 @media (max-width: 900px) {
-  /* Position is owned by the responsive section above — this only shrinks
-     the chrome. Setting `bottom` here would re-anchor it to the foot of the
-     stacked hero, far below the map it belongs to. */
   .map-disclaimer {
+    /* Pinned just under the town selector, inside the map block. On mobile
+       the hero is far taller than the map, so anchoring to `bottom` puts it
+       adrift below the thing it describes. */
+    top: 68px;
+    right: 12px;
+    bottom: auto;
+    left: 12px;
+    width: auto;
+    max-width: none;
     gap: 7px;
-    padding: 7px 7px 7px 10px;
+    padding: 7px 8px 7px 10px;
     border-radius: 12px;
+    transform: none;
   }
 
   .map-disclaimer p {
     font-size: 0.68rem;
+    line-height: 1.4;
+  }
+}
+
+@media (max-width: 640px) {
+  .map-disclaimer {
+    top: 62px;
+  }
+
+  .map-disclaimer p {
+    font-size: 0.65rem;
   }
 }
 

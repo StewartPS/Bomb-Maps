@@ -30,7 +30,18 @@
       })();
     </script>
 
-    <link rel="stylesheet" href="css/style.css">
+    <!-- ============================================================
+         CACHE BUSTING — bump ?v= on every release
+         ------------------------------------------------------------
+         GitHub Pages tells browsers to hang on to CSS and JS, so a push
+         alone doesn't reach anyone who has already visited: they keep the
+         old files until the cache expires. Changing the query string makes
+         the URL new, so the browser has no choice but to fetch it.
+
+         To release: find and replace ?v=1.8.1 with the next number in BOTH
+         index.html and news.html. Nothing else needs touching.
+         ============================================================ -->
+    <link rel="stylesheet" href="css/style.css?v=1.8.1">
   </head>
   <body>
     <header class="site-header">
@@ -74,6 +85,6 @@
       </a>
     </footer>
 
-    <script src="js/news.js"></script>
+    <script src="js/news.js?v=1.8.1"></script>
   </body>
 </html>
