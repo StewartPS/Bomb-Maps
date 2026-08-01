@@ -1,7 +1,7 @@
 {
   "_readme": "EDIT THIS FILE ON GITHUB.COM TO PUT A LIVE INCIDENT ON THE SITE. Set active to true, fill in the details, commit. The site picks it up within about a minute. Set active back to false when it is over — everything else can stay as it is, it will simply be ignored.",
 
-  "active": false,
+  "active": true,
 
   "headline": "Suspected wartime device found at Bath Street, Millbay",
   "status": "Cordon in place",
