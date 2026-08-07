@@ -1451,6 +1451,46 @@ function getActiveRecords() {
   return ALL_RECORDS;
 }
 
+/* ---------- Counties ----------
+   Coverage now grows county by county, so the county — not the town — is
+   the unit people navigate by. Towns don't disappear; they move into the
+   search box, which finds them faster than a dropdown ever did and doesn't
+   grow unusable as coverage spreads.
+
+   Derived from the towns rather than declared separately, so adding a town
+   to regionData with a `county` puts it in the right place here for free.
+
+   These are modern ceremonial counties, which is what visitors recognise.
+   Worth knowing they aren't identical to wartime administrative boundaries
+   — Plymouth is its own unitary authority today but was part of Devon then.
+   For navigation that difference doesn't matter; for any future claim about
+   which county a record "belongs" to, it would.
+------------------------------------------------------------------- */
+const COUNTY_ALL = "all";
+
+function buildCounties() {
+  const counties = new Map();
+  TOWN_KEYS.forEach((key) => {
+    const cfg = regionData[key];
+    const name = cfg.county;
+    if (!name) return;
+    if (!counties.has(name)) {
+      counties.set(name, { name, accent: cfg.accent, townKeys: [], records: [] });
+    }
+    const entry = counties.get(name);
+    entry.townKeys.push(key);
+    entry.records.push(...cfg.records);
+  });
+
+  counties.forEach((entry) => {
+    entry.bounds = L.latLngBounds(entry.records.map((r) => [r.lat, r.lng])).pad(0.15);
+  });
+  return counties;
+}
+
+const COUNTIES = buildCounties();
+let activeCounty = COUNTY_ALL;
+
 /* The potential-sites layer is Plymouth-only *data*, but it is part of the
    same single combined layer as everything else — it stays on the map
    whichever town is selected, rather than vanishing the moment you pick
@@ -2169,18 +2209,18 @@ function updateStatsPills() {
   if (statTotalBombs) statTotalBombs.textContent = String(markers.size);
   if (!statRaidNights) return;
 
-  // With no town selected there is no meaningful raid-night figure — summing
-  // counts from different towns' sources would invent a statistic — so the
-  // pill reports coverage instead.
-  if (regionData[activeRegion].isAll) {
-    if (statRaidNightsLabel) statRaidNightsLabel.textContent = "Locations";
-    statRaidNights.textContent = String(TOWN_KEYS.length);
+  // Raid-night counts exist per town, from each town's own sources. Summing
+  // them across a county would invent a statistic, so at county level the
+  // pill reports how many towns are covered instead.
+  if (activeCounty === COUNTY_ALL) {
+    if (statRaidNightsLabel) statRaidNightsLabel.textContent = "Counties";
+    statRaidNights.textContent = String(COUNTIES.size);
     return;
   }
 
-  if (statRaidNightsLabel) statRaidNightsLabel.textContent = "Raid Nights";
-  const nights = regionData[activeRegion].raidNights;
-  statRaidNights.textContent = nights == null ? "—" : String(nights);
+  const entry = COUNTIES.get(activeCounty);
+  if (statRaidNightsLabel) statRaidNightsLabel.textContent = "Towns";
+  statRaidNights.textContent = entry ? String(entry.townKeys.length) : "—";
 }
 
 /* ---------- Positional uncertainty ----------
@@ -2712,77 +2752,57 @@ const locationTriggerLabel = document.getElementById("locationTriggerLabel");
 const locationTriggerDot = document.getElementById("locationTriggerDot");
 const locationMenu = document.getElementById("locationMenu");
 
-// Insertion order in regionData decides both county order and the order of
-// towns within a county, so the data file stays the single source of truth.
-function groupRegionsByCounty() {
-  const groups = new Map();
-  for (const [key, cfg] of Object.entries(regionData)) {
-    if (cfg.isAll) continue; // pinned to the top of the menu, not filed under a county
-    const county = cfg.county || "Other";
-    if (!groups.has(county)) groups.set(county, []);
-    groups.get(county).push([key, cfg]);
-  }
-  return groups;
-}
-
 let locationOptions = [];
 
+// One option per county, plus "All locations" pinned at the top as the way
+// back out. Towns are deliberately absent — they live in the search box now,
+// which stays usable however far coverage spreads.
 function buildLocationMenu() {
   if (!locationMenu) return;
   locationMenu.innerHTML = "";
 
-  // "All locations" first — it's the default state and the way back out of
-  // a town once you've zoomed in.
-  const allCfg = regionData[ALL_REGIONS_KEY];
-  const allOption = document.createElement("button");
-  allOption.type = "button";
-  allOption.className = "location-option location-option-all";
-  allOption.setAttribute("role", "option");
-  allOption.dataset.region = ALL_REGIONS_KEY;
-  allOption.innerHTML =
-    `<span class="dot" style="background: ${allCfg.accent}"></span>` +
-    `<span class="location-option-name"></span>` +
-    `<span class="location-option-count"></span>`;
-  allOption.querySelector(".location-option-name").textContent = allCfg.short;
-  allOption.querySelector(".location-option-count").textContent = ALL_RECORDS.length;
-  allOption.querySelector(".location-option-count").title = `${ALL_RECORDS.length} records in total`;
-  locationMenu.appendChild(allOption);
+  function addOption(county, label, count, countTitle, accent, extraClass) {
+    const option = document.createElement("button");
+    option.type = "button";
+    option.className = `location-option${extraClass ? ` ${extraClass}` : ""}`;
+    option.setAttribute("role", "option");
+    option.dataset.county = county;
+    option.innerHTML =
+      `<span class="dot" style="background: ${accent}"></span>` +
+      `<span class="location-option-name"></span>` +
+      `<span class="location-option-count"></span>`;
+    option.querySelector(".location-option-name").textContent = label;
+    const countEl = option.querySelector(".location-option-count");
+    countEl.textContent = count;
+    countEl.title = countTitle;
+    locationMenu.appendChild(option);
+    return option;
+  }
 
-  for (const [county, entries] of groupRegionsByCounty()) {
-    const heading = document.createElement("p");
-    heading.className = "location-menu-heading";
-    heading.id = `locationGroup-${county.toLowerCase()}`;
-    heading.textContent = county;
-    locationMenu.appendChild(heading);
+  addOption(
+    COUNTY_ALL,
+    "All counties",
+    ALL_RECORDS.length,
+    `${ALL_RECORDS.length} records across ${COUNTIES.size} counties`,
+    "var(--cyan)",
+    "location-option-all"
+  );
 
-    const group = document.createElement("div");
-    group.setAttribute("role", "group");
-    group.setAttribute("aria-labelledby", heading.id);
-
-    for (const [key, cfg] of entries) {
-      const option = document.createElement("button");
-      option.type = "button";
-      option.className = "location-option";
-      option.setAttribute("role", "option");
-      option.dataset.region = key;
-      option.innerHTML =
-        `<span class="dot" style="background: ${cfg.accent || "var(--amber)"}"></span>` +
-        `<span class="location-option-name"></span>` +
-        `<span class="location-option-count"></span>`;
-      option.querySelector(".location-option-name").textContent = cfg.short || cfg.label;
-      const count = cfg.records.length;
-      option.querySelector(".location-option-count").textContent = count;
-      option.querySelector(".location-option-count").title =
-        `${count} record${count === 1 ? "" : "s"}`;
-      group.appendChild(option);
-    }
-    locationMenu.appendChild(group);
+  for (const [name, entry] of COUNTIES) {
+    const towns = entry.townKeys.length;
+    addOption(
+      name,
+      name,
+      entry.records.length,
+      `${entry.records.length} record${entry.records.length === 1 ? "" : "s"} across ${towns} town${towns === 1 ? "" : "s"}`,
+      entry.accent || "var(--amber)"
+    );
   }
 
   locationOptions = [...locationMenu.querySelectorAll(".location-option")];
   locationOptions.forEach((option) => {
     option.addEventListener("click", () => {
-      switchRegion(option.dataset.region);
+      switchCounty(option.dataset.county);
       saveUiState();
       closeLocationMenu({ refocus: true });
     });
@@ -2790,12 +2810,17 @@ function buildLocationMenu() {
 }
 
 function syncLocationSelector() {
-  const cfg = regionData[activeRegion];
-  if (!cfg) return;
-  if (locationTriggerLabel) locationTriggerLabel.textContent = cfg.label;
-  if (locationTriggerDot) locationTriggerDot.style.background = cfg.accent || "var(--amber)";
+  const isAll = activeCounty === COUNTY_ALL;
+  const entry = isAll ? null : COUNTIES.get(activeCounty);
+
+  if (locationTriggerLabel) {
+    locationTriggerLabel.textContent = isAll ? "All counties" : activeCounty;
+  }
+  if (locationTriggerDot) {
+    locationTriggerDot.style.background = isAll ? "var(--cyan)" : (entry && entry.accent) || "var(--amber)";
+  }
   locationOptions.forEach((option) => {
-    const isActive = option.dataset.region === activeRegion;
+    const isActive = option.dataset.county === activeCounty;
     option.classList.toggle("is-selected", isActive);
     option.setAttribute("aria-selected", String(isActive));
   });
@@ -2809,8 +2834,8 @@ function openLocationMenu() {
   locationMenu.hidden = false;
   locationSelect.classList.add("is-open");
   locationTrigger.setAttribute("aria-expanded", "true");
-  // Start keyboard navigation on the current town, not the top of the list.
-  const current = locationOptions.find((o) => o.dataset.region === activeRegion);
+  // Start keyboard navigation on the current county, not the top of the list.
+  const current = locationOptions.find((o) => o.dataset.county === activeCounty);
   (current || locationOptions[0])?.focus();
 }
 
@@ -3112,37 +3137,129 @@ function initMapSearch() {
   });
 }
 
+/* ---------- County outline ----------
+   The selected county is drawn as a red dashed boundary, so it's obvious
+   what's in scope and what merely happens to be on screen.
+
+   Boundaries come from one of two places, in order:
+     1. data/county-boundaries.json, if it's been generated — instant, works
+        offline, and the polygons are already simplified. Build it with
+        tools/fetch-county-boundaries.js.
+     2. Failing that, OpenStreetMap at runtime, fetched once per county and
+        held in memory for the session.
+   The fallback means this works before anyone runs the tool; the file means
+   it stops depending on someone else's server once they have.
+
+   A missing boundary is not an error. The map still flies to the county and
+   filters normally — it just doesn't draw the outline.
+------------------------------------------------------------------- */
+const COUNTY_OUTLINE_STYLE = {
+  color: "#ff5252",
+  weight: 2,
+  opacity: 0.9,
+  dashArray: "6 6",
+  fill: false,
+  interactive: false
+};
+
+let countyOutline = null;
+const countyBoundaryCache = new Map();
+
+// Populated by the <script> tag in index.html when the generated file exists.
+if (typeof COUNTY_BOUNDARIES !== "undefined" && COUNTY_BOUNDARIES) {
+  Object.entries(COUNTY_BOUNDARIES).forEach(([name, geometry]) => {
+    countyBoundaryCache.set(name, geometry);
+  });
+}
+
+function clearCountyOutline() {
+  if (countyOutline) { map.removeLayer(countyOutline); countyOutline = null; }
+}
+
+async function fetchCountyBoundary(name) {
+  const url =
+    "https://nominatim.openstreetmap.org/search?format=json&limit=1&polygon_geojson=1" +
+    `&countrycodes=gb&q=${encodeURIComponent(`${name}, United Kingdom`)}`;
+  const res = await fetch(url, { headers: { "Accept-Language": "en-GB" } });
+  if (!res.ok) throw new Error(`Nominatim responded ${res.status}`);
+  const data = await res.json();
+  const geometry = data && data[0] && data[0].geojson;
+  if (!geometry || !/Polygon$/.test(geometry.type)) throw new Error("no polygon returned");
+  return geometry;
+}
+
+async function drawCountyOutline(name) {
+  clearCountyOutline();
+  if (!name || name === COUNTY_ALL) return;
+
+  let geometry = countyBoundaryCache.get(name);
+  if (!geometry) {
+    try {
+      geometry = await fetchCountyBoundary(name);
+      countyBoundaryCache.set(name, geometry);
+    } catch (e) {
+      return; // no outline available; the rest of the selection still works
+    }
+  }
+
+  // The county may have changed while the request was in flight.
+  if (activeCounty !== name) return;
+  countyOutline = L.geoJSON(geometry, { style: () => COUNTY_OUTLINE_STYLE }).addTo(map);
+}
+
 const heroEyebrow = document.getElementById("heroEyebrow");
 
 function updateHeroCopy() {
-  if (heroEyebrow) heroEyebrow.textContent = regionData[activeRegion].label;
+  if (!heroEyebrow) return;
+  heroEyebrow.textContent =
+    activeCounty === COUNTY_ALL ? "Every county covered so far" : `${activeCounty}, England`;
 }
 
-/* Choosing a town is now a viewport move, not a data swap. The markers are
-   already all on the map, so there is nothing to re-render and no reason to
-   clear the visitor's filters — those still mean the same thing in the next
-   town as they did in the last. */
-function switchRegion(region, opts) {
-  if (!regionData[region]) return;
+/* Selecting a county is a viewport move plus an outline, not a data swap.
+   Every record is already on the map and stays there — the outline says
+   what's in scope without hiding what's beside it, which matters when a
+   raid on one side of a county line is part of the same night's story as
+   one on the other.
+
+   Filters aren't reset either: a status or weight selection means the same
+   thing in the next county as it did in the last. */
+function switchCounty(county, opts) {
+  const target = COUNTIES.has(county) ? county : COUNTY_ALL;
   const fly = !opts || opts.fly !== false;
-  activeRegion = region;
+  activeCounty = target;
 
   syncLocationSelector();
   updateHeroCopy();
   updateStatsPills();
+  drawCountyOutline(target);
 
   if (!fly) return;
+  if (target === COUNTY_ALL) map.flyToBounds(ALL_BOUNDS, { duration: 1 });
+  else map.flyToBounds(COUNTIES.get(target).bounds, { duration: 1 });
+}
 
+/* Kept for the search box: picking a town still needs to fly there, and to
+   put the selector into that town's county so the outline follows. */
+function switchRegion(region, opts) {
   const cfg = regionData[region];
+  if (!cfg) return;
+  const fly = !opts || opts.fly !== false;
+  activeRegion = region;
+
   if (cfg.isAll) {
-    map.flyToBounds(ALL_BOUNDS, { duration: 1 });
-  } else {
-    map.flyTo(cfg.center, cfg.zoom, { duration: 1 });
+    switchCounty(COUNTY_ALL, { fly });
+    return;
   }
+
+  if (cfg.county && cfg.county !== activeCounty) {
+    switchCounty(cfg.county, { fly: false });
+  }
+  if (fly) map.flyTo(cfg.center, cfg.zoom, { duration: 1 });
 }
 
 initLocationMenu();
 initMapSearch();
+switchCounty(COUNTY_ALL, { fly: false }); // paint the trigger, hero and pills
 
 map.on("zoomend", handlePotentialZoomChange);
 handlePotentialZoomChange(); // set the initial state to match the opening zoom
@@ -3283,7 +3400,7 @@ const UI_KEY = "pbm-ui";
 function saveUiState() {
   try {
     localStorage.setItem(UI_KEY, JSON.stringify({
-      region: activeRegion,
+      county: activeCounty,
       filter: currentFilter,
       weight: currentWeightBand,
       potential: potentialToggle ? potentialToggle.checked : true,
@@ -3299,13 +3416,16 @@ function restoreUiState() {
   } catch (e) { return; }
   if (!st || typeof st !== "object") return;
 
-  // Restore the selected town without the fly-in animation — on first paint
+  // Restore the selected county without the fly-in animation — on first paint
   // an animated pan from the national view looks like a bug, not a feature.
-  if (st.region && st.region !== activeRegion && regionData[st.region]) {
-    switchRegion(st.region, { fly: false });
-    const cfg = regionData[st.region];
-    if (cfg.isAll) map.fitBounds(ALL_BOUNDS);
-    else map.setView(cfg.center, cfg.zoom);
+  // `st.region` is read too, so anyone carrying saved state from before the
+  // selector became county-based lands somewhere sensible rather than nowhere.
+  const savedCounty =
+    st.county || (st.region && regionData[st.region] && regionData[st.region].county) || null;
+
+  if (savedCounty && savedCounty !== activeCounty && COUNTIES.has(savedCounty)) {
+    switchCounty(savedCounty, { fly: false });
+    map.fitBounds(COUNTIES.get(savedCounty).bounds);
   }
 
   const statusBtn = [...filterButtons].find((b) => b.dataset.filter === st.filter);

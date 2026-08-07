@@ -69,6 +69,77 @@ It deliberately does not write to `app.js`. A street centroid is not
 necessarily where a bomb fell, and records naming an area or a landmark will
 always look wrong to a geocoder — every correction is a judgement call.
 
+### The national layer: `ingest-bombing-britain.js` + `geocode-places.js`
+
+Two-stage pipeline that turns the [Bombing Britain](http://www.warstateandsociety.com/Bombing-Britain)
+dataset into a plottable national layer. That dataset covers 32,000+ air raids
+across the UK, 1939–45, transcribed from The National Archives' HO 203
+(Ministry of Home Security Daily Intelligence Reports) by Dr Laura Blomvall at
+the University of York, published free by Routledge/Taylor & Francis.
+
+```bash
+# 1. Download the full dataset, save as CSV at data/source/bombing-britain.csv
+node tools/ingest-bombing-britain.js   # → data/national-raids.json, lat/lng null
+node tools/geocode-places.js           # → fills in coordinates + settlement radius
+```
+
+`data/source/` and `data/national-raids.json` are gitignored: the raw file is
+not ours to redistribute, and the output is reproducible from it.
+
+**Resolution — the thing to understand about this layer.** HO 203 recorded
+which *town* was attacked, not where in the town a bomb fell. London is
+recorded *by borough*. Anything vaguer than a town was excluded by the
+transcribers. So every record carries `resolution: "settlement"` or
+`"borough"`, and the map must draw it as a circle covering that place. A pin
+would claim a precision the source does not have.
+
+Neither script guesses. Rows that can't be parsed go to a rejects file; place
+names the gazetteer can't confidently resolve go to `unresolved-places.json`
+and stay off the map until someone decides what they are. The geocoder rejects
+matches that aren't settlement-like features in the UK — asking a gazetteer for
+"Coventry" will happily offer you a pub — and records what it matched against,
+so any coordinate can be traced back and spot-checked.
+
+Geocoding runs at one request per 1.1 seconds per Nominatim's usage policy, so
+a full run takes an hour or more. It caches every answer and is safe to
+interrupt and resume.
+
+**Licensing.** The underlying records are Crown Copyright, The National
+Archives — normally Open Government Licence, which permits commercial and
+non-commercial reuse with attribution. Credit TNA. Bomb Sight's London
+street-level data was considered and deliberately not used: it is CC BY-NC-SA,
+and its ShareAlike term would have attached to the combined dataset.
+
+### `tools/fetch-county-boundaries.js`
+
+Coverage grows county by county, so the dropdown lists counties rather than
+towns — towns are reached through the search box, which stays usable however
+far coverage spreads. Selecting a county outlines it in red dashes and fits the
+map to it. It does **not** filter the data: every record stays on the map,
+because a raid just over a county line is often part of the same night's story
+as one just inside it.
+
+```bash
+node tools/fetch-county-boundaries.js   # → data/county-boundaries.js
+```
+
+Reads the county names out of `js/app.js`, so adding a town with a new `county`
+and re-running is all that's needed. Outlines are simplified with
+Ramer–Douglas–Peucker to roughly a 200m tolerance — far inside the width of the
+dashed stroke at county zoom, and the difference between a usable file and tens
+of thousands of points per county.
+
+The generated file is optional. Any county missing from it falls back to a
+runtime lookup against OpenStreetMap, so the map works before the tool is ever
+run; generating it just makes that instant and removes the dependency on
+someone else's server.
+
+Boundaries are **modern ceremonial counties** (OpenStreetMap contributors,
+ODbL). They are not identical to wartime administrative boundaries — Plymouth
+is its own unitary authority today but was part of Devon then. That's fine for
+navigation, but don't lean on it for any claim about which county a record
+historically belonged to.
+
 ### `tools/smoke-test.js`
 
 `npm install jsdom` once, then `node tools/smoke-test.js`. Loads `index.html`

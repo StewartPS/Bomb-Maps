@@ -118,9 +118,10 @@ window.L = makeLeafletStub(state);
 // to see them. (Function declarations do land on `window`, which is why the
 // search helpers need no such treatment.)
 const EXPORT_GLOBALS =
-  "\n;window.__t = { ALL_RECORDS, ALL_BOUNDS, TOWN_KEYS, HAS_POTENTIAL_DATA, regionData, ALL_REGIONS_KEY };\n";
+  "\n;window.__t = { ALL_RECORDS, ALL_BOUNDS, TOWN_KEYS, HAS_POTENTIAL_DATA, regionData," +
+  " ALL_REGIONS_KEY, COUNTIES, COUNTY_ALL, POTENTIAL_MIN_ZOOM };\n";
 
-for (const rel of ["data/potential-bomb-sites.js", "js/app.js"]) {
+for (const rel of ["data/potential-bomb-sites.js", "data/county-boundaries.js", "js/app.js"]) {
   let code = fs.readFileSync(path.join(ROOT, rel), "utf8");
   if (rel === "js/app.js") code += EXPORT_GLOBALS;
   try {
@@ -191,6 +192,40 @@ if (window.buildSuggestions) {
   check("search ignores one-character queries", window.buildSuggestions("s").length === 0);
 } else {
   failures.push("buildSuggestions is not defined — search did not initialise");
+}
+
+// The selector is county-based, and every county derives from the towns.
+if (t.COUNTIES) {
+  const counties = [...t.COUNTIES.keys()];
+  check(`counties derived from towns (${counties.join(", ")})`, counties.length > 0);
+  check("every county has at least one town and one record",
+    counties.every((c) => t.COUNTIES.get(c).townKeys.length > 0 && t.COUNTIES.get(c).records.length > 0));
+  check("every county has valid bounds",
+    counties.every((c) => t.COUNTIES.get(c).bounds && t.COUNTIES.get(c).bounds.isValid()));
+  check("county record counts sum to the whole dataset",
+    counties.reduce((sum, c) => sum + t.COUNTIES.get(c).records.length, 0) === totalRecords,
+    "a town without a county would be unreachable from the selector");
+
+  // The dropdown must offer counties, not towns — one option per county plus
+  // the "all" entry, and no town names among them.
+  const options = [...doc.querySelectorAll("#locationMenu .location-option")];
+  check(`dropdown lists ${counties.length} counties + "All"`, options.length === counties.length + 1,
+    `found ${options.length} options`);
+  check("every dropdown option carries a county, not a town",
+    options.every((o) => o.dataset.county === t.COUNTY_ALL || t.COUNTIES.has(o.dataset.county)));
+
+  if (typeof window.switchCounty === "function" && counties.length) {
+    window.switchCounty(counties[0], { fly: false });
+    check("selecting a county updates the trigger label",
+      doc.getElementById("locationTriggerLabel").textContent === counties[0]);
+    check("selecting a county does not remove any markers", state.layers.filter((k) => k === "marker").length === totalRecords,
+      "county selection must move the viewport, not filter the data");
+    window.switchCounty(t.COUNTY_ALL, { fly: false });
+  } else {
+    failures.push("switchCounty is not defined");
+  }
+} else {
+  failures.push("COUNTIES was not built");
 }
 
 // Branding actually changed everywhere it should have.
