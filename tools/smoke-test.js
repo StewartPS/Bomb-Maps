@@ -228,6 +228,24 @@ if (t.COUNTIES) {
   failures.push("COUNTIES was not built");
 }
 
+/* Analytics consent. The banner is injected by an inline script in the head,
+   which jsdom's "outside-only" mode doesn't execute, so these check the
+   source text rather than the live DOM — enough to catch the two ways this
+   silently breaks: a placeholder ID shipped to production, and a consent
+   default with no way for anyone to change it. */
+["index.html", "news.html"].forEach((file) => {
+  const src = fs.readFileSync(path.join(ROOT, file), "utf8");
+  check(`${file}: GA measurement ID is real, not a placeholder`,
+    /window\.GA_ID = "G-(?!X)[A-Z0-9]+"/.test(src));
+  check(`${file}: consent defaults to denied`,
+    /analytics_storage: "denied"/.test(src));
+  check(`${file}: a consent banner exists to grant it`,
+    /consent-banner/.test(src) && /data-consent="granted"/.test(src) && /data-consent="denied"/.test(src),
+    "denied-by-default with no banner means GA reports stay empty forever");
+});
+check("consent banner is styled",
+  /\.consent-banner\s*\{/.test(fs.readFileSync(path.join(ROOT, "css/style.css"), "utf8")));
+
 // Branding actually changed everywhere it should have.
 check("title uses the new name", /Bomb Maps/.test(doc.title));
 check("canonical points at the live domain",

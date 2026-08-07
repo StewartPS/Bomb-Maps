@@ -38,27 +38,81 @@
       window.GA_ID = "G-909MJHFEHN";
       (function () {
         if (!window.GA_ID || window.GA_ID.indexOf("G-X") === 0) return;
+
+        var CONSENT_KEY = "pbm-analytics-consent";
         window.dataLayer = window.dataLayer || [];
         window.gtag = function () { dataLayer.push(arguments); };
+
+        // Denied until the visitor says otherwise. Analytics cookies are
+        // non-essential under UK PECR, so this has to be the starting state
+        // — but note what it costs: while denied, GA sends cookieless pings
+        // that only feed modelled data, and a low-traffic property never
+        // meets the threshold for that to appear. No banner, no numbers.
         gtag("consent", "default", {
           ad_storage: "denied",
           ad_user_data: "denied",
           ad_personalization: "denied",
           analytics_storage: "denied"
         });
+
         var stored = null;
-        try { stored = localStorage.getItem("pbm-analytics-consent"); } catch (e) {}
+        try { stored = localStorage.getItem(CONSENT_KEY); } catch (e) { /* private mode */ }
         if (stored === "granted") gtag("consent", "update", { analytics_storage: "granted" });
+
+        function remember(value) {
+          try { localStorage.setItem(CONSENT_KEY, value); } catch (e) { /* session only */ }
+        }
+
         window.grantAnalyticsConsent = function () {
-          try { localStorage.setItem("pbm-analytics-consent", "granted"); } catch (e) {}
+          remember("granted");
           gtag("consent", "update", { analytics_storage: "granted" });
         };
+        window.denyAnalyticsConsent = function () { remember("denied"); };
+
         gtag("js", new Date());
         gtag("config", window.GA_ID, { anonymize_ip: true });
         var s = document.createElement("script");
         s.async = true;
         s.src = "https://www.googletagmanager.com/gtag/js?id=" + window.GA_ID;
         document.head.appendChild(s);
+
+        /* ---------- Consent banner ----------
+           Built here rather than in the page markup so the whole analytics
+           concern stays in one copy-paste block across both pages.
+
+           Accept and Decline are given equal visual weight. Nudging people
+           towards Accept with a greyed-out Decline is a dark pattern, and on
+           a site about civilian casualties it would be a poor trade for a
+           few percent more traffic data. Asked once, then never again. */
+        if (stored === "granted" || stored === "denied") return;
+
+        function buildBanner() {
+          var wrap = document.createElement("div");
+          wrap.className = "consent-banner";
+          wrap.setAttribute("role", "dialog");
+          wrap.setAttribute("aria-label", "Analytics cookies");
+          wrap.innerHTML =
+            '<p class="consent-text">This site can use Google Analytics to count visits. ' +
+            'It sets a cookie and is entirely optional &mdash; the map works the same either way.</p>' +
+            '<div class="consent-actions">' +
+            '<button type="button" class="consent-btn" data-consent="denied">Decline</button>' +
+            '<button type="button" class="consent-btn" data-consent="granted">Accept</button>' +
+            "</div>";
+
+          wrap.addEventListener("click", function (e) {
+            var btn = e.target.closest("[data-consent]");
+            if (!btn) return;
+            if (btn.dataset.consent === "granted") window.grantAnalyticsConsent();
+            else window.denyAnalyticsConsent();
+            wrap.remove();
+          });
+
+          document.body.appendChild(wrap);
+        }
+
+        if (document.readyState === "loading") {
+          document.addEventListener("DOMContentLoaded", buildBanner);
+        } else buildBanner();
       })();
     </script>
 
@@ -70,10 +124,10 @@
          old files until the cache expires. Changing the query string makes
          the URL new, so the browser has no choice but to fetch it.
 
-         To release: find and replace ?v=1.9.0 with the next number in BOTH
+         To release: find and replace ?v=1.9.1 with the next number in BOTH
          index.html and news.html. Nothing else needs touching.
          ============================================================ -->
-    <link rel="stylesheet" href="css/style.css?v=1.9.0">
+    <link rel="stylesheet" href="css/style.css?v=1.9.1">
   </head>
   <body>
     <header class="site-header">
@@ -122,6 +176,6 @@
       </a>
     </footer>
 
-    <script src="js/news.js?v=1.9.0"></script>
+    <script src="js/news.js?v=1.9.1"></script>
   </body>
 </html>

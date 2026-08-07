@@ -1,4 +1,4 @@
-# Bomb Maps — v1.9.0
+# Bomb Maps — v1.9.1
 
 Live at [bombmaps.co.uk](https://bombmaps.co.uk). Previously "Plymouth Bomb
 Map"; renamed in v1.9.0 now that coverage spans fifteen towns across Devon and
@@ -7,7 +7,7 @@ Cornwall.
 ## Releasing a change
 
 **Bump `?v=` in `index.html` and `news.html` before you push.** Find and
-replace `?v=1.9.0` with the next number in both files.
+replace `?v=1.9.1` with the next number in both files.
 
 GitHub Pages tells browsers to hold on to CSS and JS, so pushing alone doesn't
 reach anyone who has visited before — they keep the old files until their
