@@ -3,15 +3,17 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Plymouth Bomb Map — WWII Blitz and UXO records</title>
-    <meta name="description" content="An interactive map of Second World War bombing and unexploded-ordnance records across Plymouth and Exeter, drawn from the Town Clerk's wartime bomb book, council incident reports and digitised bomb census maps.">
-    <link rel="canonical" href="https://stewartps.github.io/Plymouth-Bomb-Website/">
+    <title>Bomb Maps — WWII bombing and UXO records across Devon and Cornwall</title>
+    <meta name="description" content="An interactive map of Second World War bombing and unexploded-ordnance records across Devon and Cornwall, drawn from the Town Clerk's wartime bomb book, council incident reports and digitised bomb census maps.">
+    <link rel="canonical" href="https://bombmaps.co.uk/">
 
     <!-- Social preview. Replace og:image with a real 1200x630 screenshot of the
          map before sharing publicly — without it, links unfurl as bare text. -->
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Plymouth Bomb Map — WWII Blitz and UXO records">
-    <meta property="og:description" content="Where the bombs fell on Plymouth, 1940–44 — and where unexploded ordnance still surfaces today.">
+    <meta property="og:site_name" content="Bomb Maps">
+    <meta property="og:url" content="https://bombmaps.co.uk/">
+    <meta property="og:title" content="Bomb Maps — WWII bombing and UXO records across Devon and Cornwall">
+    <meta property="og:description" content="Where the bombs fell on Devon and Cornwall, 1940–44 — and where unexploded ordnance still surfaces today.">
     <meta property="og:locale" content="en_GB">
     <meta name="twitter:card" content="summary_large_image">
 
@@ -35,6 +37,47 @@
       })();
     </script>
 
+    <!-- ============================================================
+         GOOGLE ANALYTICS (GA4)
+         ------------------------------------------------------------
+         Put your Measurement ID (looks like G-XXXXXXXXXX) in GA_ID below,
+         in BOTH index.html and news.html. Until you do, nothing loads and
+         no request is made — the placeholder is deliberately inert so a
+         half-finished setup can't send data to the wrong property.
+
+         UK/EU note: this drops analytics cookies, which PECR treats as
+         non-essential and therefore consent-required. Consent Mode is
+         wired up below and defaults to "denied"; a consent banner needs
+         to call grantAnalyticsConsent() once the visitor agrees.
+         ============================================================ -->
+    <script>
+      window.GA_ID = "G-XXXXXXXXXX"; // <-- replace with your Measurement ID
+      (function () {
+        if (!window.GA_ID || window.GA_ID.indexOf("G-X") === 0) return;
+        window.dataLayer = window.dataLayer || [];
+        window.gtag = function () { dataLayer.push(arguments); };
+        gtag("consent", "default", {
+          ad_storage: "denied",
+          ad_user_data: "denied",
+          ad_personalization: "denied",
+          analytics_storage: "denied"
+        });
+        var stored = null;
+        try { stored = localStorage.getItem("pbm-analytics-consent"); } catch (e) { /* private mode */ }
+        if (stored === "granted") gtag("consent", "update", { analytics_storage: "granted" });
+        window.grantAnalyticsConsent = function () {
+          try { localStorage.setItem("pbm-analytics-consent", "granted"); } catch (e) {}
+          gtag("consent", "update", { analytics_storage: "granted" });
+        };
+        gtag("js", new Date());
+        gtag("config", window.GA_ID, { anonymize_ip: true });
+        var s = document.createElement("script");
+        s.async = true;
+        s.src = "https://www.googletagmanager.com/gtag/js?id=" + window.GA_ID;
+        document.head.appendChild(s);
+      })();
+    </script>
+
     <link rel="preconnect" href="https://unpkg.com">
     <link rel="preconnect" href="https://a.basemaps.cartocdn.com" crossorigin>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
@@ -46,17 +89,25 @@
          old files until the cache expires. Changing the query string makes
          the URL new, so the browser has no choice but to fetch it.
 
-         To release: find and replace ?v=1.8.1 with the next number in BOTH
+         To release: find and replace ?v=1.9.0 with the next number in BOTH
          index.html and news.html. Nothing else needs touching.
          ============================================================ -->
-    <link rel="stylesheet" href="css/style.css?v=1.8.1">
+    <link rel="stylesheet" href="css/style.css?v=1.9.0">
   </head>
   <body>
     <header class="site-header">
       <nav class="nav" aria-label="Primary">
-        <a class="brand" href="#top" aria-label="Plymouth Bomb Map home">
-          <span class="brand-mark"></span>
-          <span>Plymouth Bomb Map</span>
+        <!-- Brand mark is the favicon, inlined: same concentric target, same
+             colours, same proportions. Kept as SVG (not the old CSS gradient)
+             so the two can never drift apart — edit one, copy to the other. -->
+        <a class="brand" href="#top" aria-label="Bomb Maps home">
+          <svg class="brand-mark" viewBox="0 0 32 32" width="36" height="36" aria-hidden="true" focusable="false">
+            <circle cx="16" cy="16" r="15" fill="#0b0f17"/>
+            <circle cx="16" cy="16" r="10" fill="none" stroke="#00f2fe" stroke-width="2" opacity=".5"/>
+            <circle cx="16" cy="16" r="5.5" fill="none" stroke="#00f2fe" stroke-width="2"/>
+            <circle cx="16" cy="16" r="2" fill="#ff5252"/>
+          </svg>
+          <span class="brand-text">Bomb<span class="brand-text-accent">Maps</span></span>
         </a>
         <div class="nav-links">
           <a href="#map-section">Map</a>
@@ -140,8 +191,11 @@
             <span class="pill-label">Bombs Plotted</span>
             <span class="pill-value" id="statTotalBombs">&mdash;</span>
           </div>
+          <!-- Second pill swaps meaning with the selection: a raid-night count
+               only exists per town, so with "All locations" active it shows how
+               many towns are covered instead of an invented total. -->
           <div class="pill">
-            <span class="pill-label">Raid Nights</span>
+            <span class="pill-label" id="statRaidNightsLabel">Locations</span>
             <span class="pill-value" id="statRaidNights">&mdash;</span>
           </div>
         </div>
@@ -153,7 +207,7 @@
           <button class="location-trigger" id="locationTrigger" type="button"
                   aria-haspopup="listbox" aria-expanded="false" aria-controls="locationMenu">
             <span class="dot" id="locationTriggerDot"></span>
-            <span class="location-trigger-label" id="locationTriggerLabel">Plymouth, Devon</span>
+            <span class="location-trigger-label" id="locationTriggerLabel">Devon &amp; Cornwall &mdash; all locations</span>
             <svg class="location-caret" viewBox="0 0 24 24" width="14" height="14" fill="none"
                  stroke="currentColor" stroke-width="2.4" stroke-linecap="round"
                  stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
@@ -164,11 +218,32 @@
 
         <div class="hero-overlay">
           <div class="hero-intro">
-            <p class="eyebrow" id="heroEyebrow">Plymouth, Devon</p>
+            <p class="eyebrow" id="heroEyebrow">Devon &amp; Cornwall &mdash; all locations</p>
             <h1 id="map-title">Bombing and UXO locations</h1>
           </div>
 
           <aside class="control-panel" aria-label="Map controls">
+            <!-- Search. Two things in one box, in this order: the site's own
+                 records (instant, offline, no request) and — only if you press
+                 Enter with no record chosen — a general place lookup via
+                 OpenStreetMap, so a postcode or an unlisted street still takes
+                 you somewhere sensible on the map. -->
+            <div class="search-group" aria-label="Search">
+              <div class="search-field">
+                <svg class="search-icon" viewBox="0 0 24 24" width="15" height="15" fill="none"
+                     stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
+                     stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+                <input type="search" id="mapSearchInput" autocomplete="off" spellcheck="false"
+                       role="combobox" aria-expanded="false" aria-controls="mapSearchResults"
+                       aria-autocomplete="list" aria-label="Search a town, street or postcode"
+                       placeholder="Search a town, street or postcode">
+                <button type="button" class="search-clear" id="mapSearchClear" aria-label="Clear search" hidden>&times;</button>
+              </div>
+              <ul class="search-results" id="mapSearchResults" role="listbox"
+                  aria-label="Search results" hidden></ul>
+              <p class="search-status" id="mapSearchStatus" role="status" hidden></p>
+            </div>
+
             <div class="filter-group" aria-label="Record filters">
               <button class="filter active" type="button" data-filter="all">
                 <span class="dot all"></span>All
@@ -540,12 +615,17 @@
           </p>
           <p class="accuracy-note">
             <strong>On accuracy:</strong> positions here are indicative rather than
-            survey-grade. Confirmed records are geocoded to the street named in the
-            record; the potential-sites layer is digitised from printed bomb census
-            mapping, where a single dot covers roughly 35&ndash;45m of ground. Treat every
-            point as &ldquo;somewhere in this area&rdquo;. Nothing on this site should be used
+            survey-grade. Most confirmed records name a street, not an address, so the
+            point is placed along that street and can sit some way from the specific
+            building involved. Each pin is drawn inside a translucent circle showing
+            that margin &mdash; from about 30m for a named building up to 500m for a
+            record that only describes an area &mdash; and the same figure is repeated
+            as &ldquo;Position accuracy&rdquo; in every record's detail panel. The
+            potential-sites layer is digitised from printed bomb census mapping, where a
+            single dot covers roughly 35&ndash;45m of ground. Treat every point as
+            &ldquo;somewhere in this area&rdquo;. Nothing on this site should be used
             to assess unexploded-ordnance risk at a specific address &mdash; if you have a
-            genuine concern, contact Plymouth City Council or the police.
+            genuine concern, contact your local council or the police.
           </p>
         </div>
         <ul class="source-list">
@@ -575,7 +655,7 @@
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="https://unpkg.com/leaflet.heat@0.2.0/dist/leaflet-heat.js"></script>
-    <script src="data/potential-bomb-sites.js?v=1.8.1"></script>
-    <script src="js/app.js?v=1.8.1"></script>
+    <script src="data/potential-bomb-sites.js?v=1.9.0"></script>
+    <script src="js/app.js?v=1.9.0"></script>
   </body>
 </html>

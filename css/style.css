@@ -722,20 +722,36 @@ body.has-cordon .detail-panel {
   text-decoration: none;
 }
 
+/* Inline SVG copy of the favicon (see index.html). The glow is a drop-shadow
+   filter rather than a box-shadow so it follows the circle, not a square box. */
 .brand-mark {
   width: 36px;
   height: 36px;
+  flex: none;
   border-radius: 50%;
-  background:
-    radial-gradient(circle at 50% 50%, var(--amber) 0 3px, transparent 4px),
-    conic-gradient(from 20deg, var(--cyan), var(--amber), var(--alert), var(--cyan));
-  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1), 0 0 16px rgba(0, 242, 254, 0.4);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  filter: drop-shadow(0 0 6px rgba(0, 242, 254, 0.45));
+  transition: transform 0.2s ease, filter 0.2s ease;
 }
 
 .brand:hover .brand-mark {
-  transform: scale(1.08) rotate(8deg);
-  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.14), 0 0 22px rgba(0, 242, 254, 0.6);
+  transform: scale(1.08);
+  filter: drop-shadow(0 0 10px rgba(0, 242, 254, 0.7));
+}
+
+.brand-text {
+  letter-spacing: -0.02em;
+}
+
+.brand-text-accent {
+  color: var(--cyan);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .brand-mark,
+  .brand:hover .brand-mark {
+    transition: none;
+    transform: none;
+  }
 }
 
 .nav-links a {
@@ -1140,6 +1156,161 @@ h3 {
   background: rgba(11, 15, 23, 0.62);
   backdrop-filter: blur(14px);
   box-shadow: var(--shadow);
+}
+
+/* ---------- Map search ----------
+   Lives at the top of the control panel, which sits on a dark translucent
+   card in both themes — hence the hard-coded light-on-dark values here
+   rather than the theme tokens used elsewhere. */
+.search-group {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.search-field {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 10px;
+  border: 1px solid rgba(255, 253, 247, 0.2);
+  border-radius: 8px;
+  background: rgba(11, 15, 23, 0.55);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.search-field:focus-within {
+  border-color: rgba(0, 242, 254, 0.65);
+  box-shadow: 0 0 0 3px rgba(0, 242, 254, 0.16);
+}
+
+.search-icon {
+  flex: none;
+  color: rgba(247, 244, 236, 0.5);
+}
+
+.search-field input {
+  flex: 1;
+  min-width: 0;
+  padding: 9px 0;
+  border: 0;
+  background: transparent;
+  color: rgba(247, 244, 236, 0.95);
+  font: inherit;
+  font-size: 0.85rem;
+}
+
+.search-field input::placeholder {
+  color: rgba(247, 244, 236, 0.45);
+}
+
+.search-field input:focus {
+  outline: none;
+}
+
+/* Safari draws its own clear button on type="search"; we have our own. */
+.search-field input::-webkit-search-decoration,
+.search-field input::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.search-clear {
+  flex: none;
+  padding: 0 2px;
+  border: 0;
+  background: transparent;
+  color: rgba(247, 244, 236, 0.5);
+  font-size: 1.1rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.search-clear:hover {
+  color: rgba(247, 244, 236, 0.9);
+}
+
+.search-results {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  z-index: 600;
+  max-height: 260px;
+  margin: 0;
+  padding: 4px;
+  overflow-y: auto;
+  list-style: none;
+  border: 1px solid rgba(255, 253, 247, 0.18);
+  border-radius: 8px;
+  background: rgba(11, 15, 23, 0.96);
+  backdrop-filter: blur(14px);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
+}
+
+.search-result {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.search-result.is-active,
+.search-result:hover {
+  background: rgba(0, 242, 254, 0.12);
+}
+
+.search-result-kind {
+  flex: none;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.6rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.search-result-kind-town {
+  background: rgba(0, 242, 254, 0.18);
+  color: #7fefff;
+}
+
+.search-result-kind-record {
+  background: rgba(255, 159, 67, 0.18);
+  color: #ffc48a;
+}
+
+.search-result-text {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+}
+
+.search-result-label {
+  color: rgba(247, 244, 236, 0.95);
+  font-size: 0.82rem;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.search-result-detail {
+  color: rgba(247, 244, 236, 0.55);
+  font-size: 0.7rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.search-status {
+  margin: 0;
+  color: rgba(247, 244, 236, 0.7);
+  font-size: 0.72rem;
+  line-height: 1.45;
 }
 
 .cordon-card {

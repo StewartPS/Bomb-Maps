@@ -1216,14 +1216,19 @@ const stIvesRecords = [
   }
 ];
 
-/* ---------- Region switching ----------
-   The map, filters, timeline bounds, and stats all key off
-   `activeRegion` / regionData[activeRegion].records rather than the
-   bare `records` array, so the same UI can serve either city. Plymouth
-   keeps the full bomb-book-derived dataset and the potential-sites
-   layer; Exeter is a smaller hand-researched starter set with no
-   potential-sites layer (that image-derived dataset doesn't exist for
-   Exeter here).
+/* ---------- Regions ----------
+   One entry per town: its records, where to fly when it's chosen, and the
+   accent colour used in the selector.
+
+   Note what `activeRegion` does and does not control. It is a *viewport*
+   selection, not a data filter — every region's records are plotted at
+   once (see the combined-layer block immediately below this object). The
+   only things keyed off the active region are the hero copy, the raid-night
+   pill, and where the map is pointing.
+
+   Plymouth carries the full bomb-book-derived dataset plus the digitised
+   potential-sites layer; the other towns are smaller hand-researched sets
+   with no equivalent census imagery to digitise.
 ------------------------------------------------------------------- */
 const regionData = {
   plymouth: {
@@ -1393,11 +1398,67 @@ const regionData = {
   }
 };
 
-let activeRegion = "plymouth";
+/* ---------- One combined layer, always ----------
+   Previously only the selected region's records existed on the map, so
+   picking a town and zooming out left an empty map — every other town's
+   records had been unloaded. That reads as "there's nothing there", which
+   is the opposite of the truth.
+
+   Now every region's records are plotted at once and stay plotted. Choosing
+   a town moves the viewport; it never swaps the dataset. The status,
+   weight and timeline filters apply across the whole set.
+------------------------------------------------------------------- */
+const TOWN_KEYS = Object.keys(regionData);
+
+// Stamp each record with where it came from. A flat array loses the region
+// context otherwise, and both search and the detail panel now need it.
+TOWN_KEYS.forEach((key) => {
+  const cfg = regionData[key];
+  cfg.records.forEach((record) => {
+    record.regionKey = key;
+    record.regionLabel = cfg.label;
+    record.regionShort = cfg.short || cfg.label;
+    record.regionCounty = cfg.county || "";
+  });
+});
+
+const ALL_RECORDS = TOWN_KEYS.flatMap((key) => regionData[key].records);
+
+// Padded box that holds every plotted record — the opening view.
+const ALL_BOUNDS = L.latLngBounds(ALL_RECORDS.map((r) => [r.lat, r.lng])).pad(0.08);
+
+/* Pseudo-region meaning "no town selected". It sits in regionData so the
+   selector, hero copy and stats pills can treat it like any other entry,
+   but it's flagged isAll so the menu builder can pin it to the top rather
+   than filing it under a county. */
+const ALL_REGIONS_KEY = "all";
+regionData[ALL_REGIONS_KEY] = {
+  label: "Devon & Cornwall — all locations",
+  short: "All locations",
+  county: null,
+  accent: "var(--cyan)",
+  records: ALL_RECORDS,
+  center: ALL_BOUNDS.getCenter(),
+  zoom: 8,
+  raidNights: null,
+  hasPotential: true,
+  isAll: true
+};
+
+let activeRegion = ALL_REGIONS_KEY;
 
 function getActiveRecords() {
-  return regionData[activeRegion].records;
+  return ALL_RECORDS;
 }
+
+/* The potential-sites layer is Plymouth-only *data*, but it is part of the
+   same single combined layer as everything else — it stays on the map
+   whichever town is selected, rather than vanishing the moment you pick
+   Exeter. Availability is therefore a question about the dataset, not about
+   the current selection. The data script loads before this one (see the
+   <script> order in index.html), so this is safe to read at parse time. */
+const HAS_POTENTIAL_DATA =
+  typeof POTENTIAL_BOMB_SITES !== "undefined" && POTENTIAL_BOMB_SITES.length > 0;
 
 /* ---------- Modelled years for the potential-sites layer ----------
    The ~3,500 "potential sites" points (see below) carry no individual
@@ -1457,7 +1518,7 @@ function assignEstimatedYears(points) {
 // layers together instead of leaving the potential layer static.
 function computeSortedYears() {
   const years = new Set(getActiveRecords().map((r) => r.sortYear));
-  if (regionData[activeRegion].hasPotential) {
+  if (HAS_POTENTIAL_DATA) {
     Object.keys(BLITZ_YEAR_WEIGHTS).forEach((y) => years.add(Number(y)));
   }
   return [...years].sort((a, b) => a - b);
@@ -1479,10 +1540,12 @@ function currentYearCeiling() {
 let heatmapMode = false;
 let heatLayer = null;
 
+// Opens on the full extent of the data rather than one city, so the first
+// thing a visitor sees is how much is plotted and where.
 const map = L.map("map", {
   scrollWheelZoom: false,
   zoomControl: false
-}).setView(regionData[activeRegion].center, regionData[activeRegion].zoom);
+}).fitBounds(ALL_BOUNDS);
 
 L.control.zoom({ position: "bottomright" }).addTo(map);
 
@@ -1677,7 +1740,7 @@ const yearBreakdownEl = document.getElementById("yearBreakdown");
 // so it doesn't jump around as the weight/status filters change.
 function renderYearBreakdown() {
   if (!yearBreakdownEl) return;
-  if (!regionData[activeRegion].hasPotential || !potentialSitesData.length) {
+  if (!HAS_POTENTIAL_DATA || !potentialSitesData.length) {
     yearBreakdownEl.hidden = true;
     yearBreakdownEl.innerHTML = "";
     return;
@@ -1703,7 +1766,7 @@ function renderYearBreakdown() {
 function renderPotentialLayer() {
   if (potentialLayer) { map.removeLayer(potentialLayer); potentialLayer = null; }
   // Plymouth-only layer — Exeter has no equivalent digitised dataset here.
-  if (!regionData[activeRegion].hasPotential) return;
+  if (!HAS_POTENTIAL_DATA) return;
   if (!potentialToggle.checked || !potentialSitesData.length) return;
   const yearCeiling = currentYearCeiling();
   // A weight filter isolates high explosives: the potential-sites layer has
@@ -1735,7 +1798,7 @@ function renderPotentialLayer() {
 
 function updatePotentialAvailability() {
   if (!potentialToggle) return;
-  if (!regionData[activeRegion].hasPotential) {
+  if (!HAS_POTENTIAL_DATA) {
     potentialToggle.disabled = true;
     potentialCount.textContent = "Plymouth only";
     if (potentialLayer) { map.removeLayer(potentialLayer); potentialLayer = null; }
@@ -1800,7 +1863,7 @@ function refreshHeatLayer() {
 
   const heatPoints = visibleRecords().map((r) => [r.lat, r.lng, r.status === "historic" ? 0.6 : 1]);
 
-  if (regionData[activeRegion].hasPotential && potentialToggle.checked && potentialSitesData.length) {
+  if (HAS_POTENTIAL_DATA && potentialToggle.checked && potentialSitesData.length) {
     const yearCeiling = currentYearCeiling();
     potentialSitesData.forEach((p) => {
       if (!potentialMatchesWeight(p)) return;
@@ -1839,6 +1902,8 @@ const colors = {
 let currentFilter = "all";
 let activeId = getActiveRecords()[0].id;
 const markers = new Map();
+// Positional-uncertainty circles, keyed by record id alongside their marker.
+const accuracyCircles = new Map();
 
 // The town selector lives in its own floating box (.location-select, docked to
 // the top of the map) and is wired up independently below, so a plain
@@ -1923,6 +1988,10 @@ function detailStatsHtml(record) {
   if (record.evacuationProperties) {
     stats.push({ label: "Properties evacuated", value: `~${record.evacuationProperties.toLocaleString("en-GB")}` });
   }
+  // Always shown, and deliberately last: it's the caveat that qualifies
+  // everything above it, and it matches the circle drawn on the map.
+  stats.push({ label: "Position accuracy", value: `±${accuracyRadiusM(record)}m` });
+
   if (!stats.length) return "";
   return `<div class="detail-stats">${stats
     .map((s) => `<div class="detail-stat"><span class="detail-stat-label">${s.label}</span><span class="detail-stat-value">${s.value}</span></div>`)
@@ -2053,13 +2122,53 @@ function selectRecord(id, pan = true) {
 // `raidNights: null` and show an em dash rather than an invented figure.
 const statTotalBombs = document.getElementById("statTotalBombs");
 const statRaidNights = document.getElementById("statRaidNights");
+const statRaidNightsLabel = document.getElementById("statRaidNightsLabel");
 
 function updateStatsPills() {
   if (statTotalBombs) statTotalBombs.textContent = String(markers.size);
-  if (statRaidNights) {
-    const nights = regionData[activeRegion].raidNights;
-    statRaidNights.textContent = nights == null ? "—" : String(nights);
+  if (!statRaidNights) return;
+
+  // With no town selected there is no meaningful raid-night figure — summing
+  // counts from different towns' sources would invent a statistic — so the
+  // pill reports coverage instead.
+  if (regionData[activeRegion].isAll) {
+    if (statRaidNightsLabel) statRaidNightsLabel.textContent = "Locations";
+    statRaidNights.textContent = String(TOWN_KEYS.length);
+    return;
   }
+
+  if (statRaidNightsLabel) statRaidNightsLabel.textContent = "Raid Nights";
+  const nights = regionData[activeRegion].raidNights;
+  statRaidNights.textContent = nights == null ? "—" : String(nights);
+}
+
+/* ---------- Positional uncertainty ----------
+   Almost none of these positions are survey-grade. Most are derived from a
+   street name in a written record, which locates an incident to a road, not
+   to a doorstep — plotting that as a sharp pin claims a precision the source
+   does not support, and invites exactly the "why isn't this on Fore Street?"
+   question it deserves.
+
+   So each record also gets a translucent circle sized by how the position was
+   arrived at. The pin still marks the best estimate; the circle is the honest
+   margin around it. Radii are deliberately generous rather than flattering.
+------------------------------------------------------------------- */
+const ACCURACY_RADII = [
+  [/building-level/i, 30],
+  [/landmark/i, 90],
+  [/street-derived|street level/i, 150],
+  [/confirmed incident/i, 60],
+  [/approximate/i, 250],
+  [/rough area|target area|area$/i, 500]
+];
+
+function accuracyRadiusM(record) {
+  if (typeof record.accuracyRadiusM === "number") return record.accuracyRadiusM;
+  const confidence = record.confidence || "";
+  for (const [pattern, radius] of ACCURACY_RADII) {
+    if (pattern.test(confidence)) return radius;
+  }
+  return 200; // unlabelled confidence — assume the worse case, not the better
 }
 
 function renderMarkers() {
@@ -2067,8 +2176,23 @@ function renderMarkers() {
   const previousActiveId = activeId;
   markers.forEach((marker) => marker.remove());
   markers.clear();
+  accuracyCircles.forEach((circle) => circle.remove());
+  accuracyCircles.clear();
 
   visibleRecords().forEach((record) => {
+    if (!heatmapMode) {
+      const circle = L.circle([record.lat, record.lng], {
+        radius: accuracyRadiusM(record),
+        interactive: false,
+        color: "#00f2fe",
+        weight: 1,
+        opacity: 0.28,
+        fillColor: "#00f2fe",
+        fillOpacity: 0.07
+      }).addTo(map);
+      accuracyCircles.set(record.id, circle);
+    }
+
     const marker = L.marker([record.lat, record.lng], { icon: markerIcon(record) });
     marker.on("click", () => selectRecord(record.id, true));
     // In heatmap mode, individual markers give way to the density layer —
@@ -2552,6 +2676,7 @@ const locationMenu = document.getElementById("locationMenu");
 function groupRegionsByCounty() {
   const groups = new Map();
   for (const [key, cfg] of Object.entries(regionData)) {
+    if (cfg.isAll) continue; // pinned to the top of the menu, not filed under a county
     const county = cfg.county || "Other";
     if (!groups.has(county)) groups.set(county, []);
     groups.get(county).push([key, cfg]);
@@ -2564,6 +2689,23 @@ let locationOptions = [];
 function buildLocationMenu() {
   if (!locationMenu) return;
   locationMenu.innerHTML = "";
+
+  // "All locations" first — it's the default state and the way back out of
+  // a town once you've zoomed in.
+  const allCfg = regionData[ALL_REGIONS_KEY];
+  const allOption = document.createElement("button");
+  allOption.type = "button";
+  allOption.className = "location-option location-option-all";
+  allOption.setAttribute("role", "option");
+  allOption.dataset.region = ALL_REGIONS_KEY;
+  allOption.innerHTML =
+    `<span class="dot" style="background: ${allCfg.accent}"></span>` +
+    `<span class="location-option-name"></span>` +
+    `<span class="location-option-count"></span>`;
+  allOption.querySelector(".location-option-name").textContent = allCfg.short;
+  allOption.querySelector(".location-option-count").textContent = ALL_RECORDS.length;
+  allOption.querySelector(".location-option-count").title = `${ALL_RECORDS.length} records in total`;
+  locationMenu.appendChild(allOption);
 
   for (const [county, entries] of groupRegionsByCounty()) {
     const heading = document.createElement("p");
@@ -2674,37 +2816,292 @@ function initLocationMenu() {
     if (locationMenuOpen && !locationSelect.contains(e.target)) closeLocationMenu();
   });
 }
+/* ---------- Map search ----------
+   Local first, network second. Every keystroke filters the site's own
+   records and town list in memory — instant, works offline, and cannot
+   rate-limit. Only when someone presses Enter without picking one of those
+   do we fall back to OpenStreetMap's Nominatim for a general place lookup,
+   which is what makes an arbitrary postcode or unlisted street work.
+
+   Nominatim's usage policy asks for no more than one request a second and
+   no autocomplete-style per-keystroke querying, which is exactly why the
+   remote lookup is on submit only rather than on input.
+------------------------------------------------------------------- */
+const mapSearchInput = document.getElementById("mapSearchInput");
+const mapSearchResults = document.getElementById("mapSearchResults");
+const mapSearchStatus = document.getElementById("mapSearchStatus");
+const mapSearchClear = document.getElementById("mapSearchClear");
+
+let searchSuggestions = [];
+let searchActiveIndex = -1;
+let searchMarker = null;
+
+function normaliseForSearch(value) {
+  return (value || "")
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[̀-ͯ]/g, "") // strip accents so "Plymouth" matches either way
+    .replace(/[^a-z0-9 ]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function setSearchStatus(text) {
+  if (!mapSearchStatus) return;
+  mapSearchStatus.textContent = text || "";
+  mapSearchStatus.hidden = !text;
+}
+
+// Records score above towns, and a prefix match scores above a mid-string
+// one, so typing "sal" offers Salcombe the town before a street that merely
+// contains those letters.
+function buildSuggestions(rawQuery) {
+  const q = normaliseForSearch(rawQuery);
+  if (q.length < 2) return [];
+
+  const scored = [];
+
+  TOWN_KEYS.forEach((key) => {
+    const cfg = regionData[key];
+    const hay = normaliseForSearch(`${cfg.label} ${cfg.short} ${cfg.county}`);
+    const at = hay.indexOf(q);
+    if (at === -1) return;
+    scored.push({
+      kind: "town",
+      key,
+      label: cfg.short || cfg.label,
+      detail: `${cfg.county} · ${cfg.records.length} record${cfg.records.length === 1 ? "" : "s"}`,
+      score: (at === 0 ? 0 : 40) + at
+    });
+  });
+
+  ALL_RECORDS.forEach((record) => {
+    const hay = normaliseForSearch(`${record.title} ${record.regionShort} ${record.date}`);
+    const at = hay.indexOf(q);
+    if (at === -1) return;
+    scored.push({
+      kind: "record",
+      id: record.id,
+      label: record.title,
+      detail: `${record.regionShort} · ${record.date}`,
+      score: (at === 0 ? 0 : 20) + at + 5
+    });
+  });
+
+  return scored.sort((a, b) => a.score - b.score || a.label.localeCompare(b.label)).slice(0, 8);
+}
+
+function renderSearchResults() {
+  if (!mapSearchResults) return;
+  if (!searchSuggestions.length) {
+    mapSearchResults.hidden = true;
+    mapSearchResults.innerHTML = "";
+    mapSearchInput.setAttribute("aria-expanded", "false");
+    return;
+  }
+
+  mapSearchResults.innerHTML = searchSuggestions
+    .map((s, i) => `
+      <li class="search-result${i === searchActiveIndex ? " is-active" : ""}"
+          role="option" id="searchResult-${i}" data-index="${i}"
+          aria-selected="${i === searchActiveIndex}">
+        <span class="search-result-kind search-result-kind-${s.kind}">${s.kind === "town" ? "Town" : "Record"}</span>
+        <span class="search-result-text">
+          <span class="search-result-label"></span>
+          <span class="search-result-detail"></span>
+        </span>
+      </li>`)
+    .join("");
+
+  // Text set via textContent rather than interpolated above, so a stray
+  // angle bracket in a record title can never become markup.
+  [...mapSearchResults.children].forEach((li, i) => {
+    li.querySelector(".search-result-label").textContent = searchSuggestions[i].label;
+    li.querySelector(".search-result-detail").textContent = searchSuggestions[i].detail;
+  });
+
+  mapSearchResults.hidden = false;
+  mapSearchInput.setAttribute("aria-expanded", "true");
+}
+
+function closeSearchResults() {
+  searchSuggestions = [];
+  searchActiveIndex = -1;
+  renderSearchResults();
+}
+
+function clearSearchMarker() {
+  if (searchMarker) { map.removeLayer(searchMarker); searchMarker = null; }
+}
+
+function applySuggestion(suggestion) {
+  if (!suggestion) return;
+  if (suggestion.kind === "town") {
+    clearSearchMarker();
+    switchRegion(suggestion.key);
+    saveUiState();
+    setSearchStatus("");
+  } else {
+    const record = ALL_RECORDS.find((r) => r.id === suggestion.id);
+    if (!record) return;
+    clearSearchMarker();
+    // Keep the town selector honest about where the map has just landed.
+    if (record.regionKey !== activeRegion) switchRegion(record.regionKey, { fly: false });
+    saveUiState();
+    selectRecord(record.id, true);
+    setSearchStatus("");
+  }
+  closeSearchResults();
+}
+
+// Biased to the South West but not restricted to it: someone searching an
+// address outside the covered towns should still get taken there and see,
+// plainly, that nothing is plotted nearby.
+async function geocodePlace(query) {
+  const url =
+    "https://nominatim.openstreetmap.org/search?format=json&limit=1&countrycodes=gb" +
+    "&viewbox=-6.0,51.3,-2.9,49.8" +
+    `&q=${encodeURIComponent(query)}`;
+  const res = await fetch(url, { headers: { "Accept-Language": "en-GB" } });
+  if (!res.ok) throw new Error(`Nominatim responded ${res.status}`);
+  const data = await res.json();
+  return data && data.length
+    ? { lat: parseFloat(data[0].lat), lng: parseFloat(data[0].lon), name: data[0].display_name }
+    : null;
+}
+
+function nearestRecordTo(lat, lng) {
+  let best = null;
+  ALL_RECORDS.forEach((record) => {
+    const d = haversineMeters(lat, lng, record.lat, record.lng);
+    if (!best || d < best.distance) best = { record, distance: d };
+  });
+  return best;
+}
+
+async function runRemoteSearch(query) {
+  setSearchStatus("Searching…");
+  let place;
+  try {
+    place = await geocodePlace(query);
+  } catch (e) {
+    setSearchStatus("Search is unavailable right now — try a town from the list.");
+    return;
+  }
+  if (!place) {
+    setSearchStatus(`No place found for “${query}”.`);
+    return;
+  }
+
+  clearSearchMarker();
+  searchMarker = L.circleMarker([place.lat, place.lng], {
+    radius: 7, weight: 2, color: "#0b0f17", fillColor: "#00f2fe", fillOpacity: 1
+  }).addTo(map);
+
+  map.flyTo([place.lat, place.lng], 15, { duration: 1 });
+
+  // Say plainly whether there is anything plotted nearby, rather than
+  // dropping someone on a blank street and leaving them to guess.
+  const nearest = nearestRecordTo(place.lat, place.lng);
+  if (nearest && nearest.distance <= 1500) {
+    setSearchStatus(`Nearest record: ${nearest.record.title} (${nearest.record.regionShort}), about ${Math.round(nearest.distance)}m away.`);
+  } else if (nearest) {
+    const km = (nearest.distance / 1000).toFixed(nearest.distance < 10000 ? 1 : 0);
+    setSearchStatus(`Nothing plotted here. Nearest record is ${nearest.record.title} (${nearest.record.regionShort}), about ${km}km away.`);
+  } else {
+    setSearchStatus("Nothing plotted here.");
+  }
+}
+
+function initMapSearch() {
+  if (!mapSearchInput || !mapSearchResults) return;
+
+  mapSearchInput.addEventListener("input", () => {
+    const value = mapSearchInput.value;
+    if (mapSearchClear) mapSearchClear.hidden = !value;
+    setSearchStatus("");
+    searchSuggestions = buildSuggestions(value);
+    searchActiveIndex = searchSuggestions.length ? 0 : -1;
+    renderSearchResults();
+  });
+
+  mapSearchInput.addEventListener("keydown", (e) => {
+    if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+      if (!searchSuggestions.length) return;
+      e.preventDefault();
+      const step = e.key === "ArrowDown" ? 1 : -1;
+      searchActiveIndex = (searchActiveIndex + step + searchSuggestions.length) % searchSuggestions.length;
+      renderSearchResults();
+      mapSearchInput.setAttribute("aria-activedescendant", `searchResult-${searchActiveIndex}`);
+      return;
+    }
+    if (e.key === "Escape") { closeSearchResults(); setSearchStatus(""); return; }
+    if (e.key !== "Enter") return;
+
+    e.preventDefault();
+    if (searchActiveIndex >= 0 && searchSuggestions[searchActiveIndex]) {
+      applySuggestion(searchSuggestions[searchActiveIndex]);
+      return;
+    }
+    const query = mapSearchInput.value.trim();
+    if (query.length >= 2) { closeSearchResults(); runRemoteSearch(query); }
+  });
+
+  mapSearchResults.addEventListener("mousedown", (e) => {
+    // mousedown, not click: blur would close the list before click landed.
+    const li = e.target.closest(".search-result");
+    if (!li) return;
+    e.preventDefault();
+    applySuggestion(searchSuggestions[Number(li.dataset.index)]);
+  });
+
+  if (mapSearchClear) {
+    mapSearchClear.addEventListener("click", () => {
+      mapSearchInput.value = "";
+      mapSearchClear.hidden = true;
+      clearSearchMarker();
+      closeSearchResults();
+      setSearchStatus("");
+      mapSearchInput.focus();
+    });
+  }
+
+  document.addEventListener("click", (e) => {
+    if (!e.target.closest(".search-group")) closeSearchResults();
+  });
+}
+
 const heroEyebrow = document.getElementById("heroEyebrow");
 
 function updateHeroCopy() {
   if (heroEyebrow) heroEyebrow.textContent = regionData[activeRegion].label;
 }
 
-function switchRegion(region) {
-  if (region === activeRegion || !regionData[region]) return;
+/* Choosing a town is now a viewport move, not a data swap. The markers are
+   already all on the map, so there is nothing to re-render and no reason to
+   clear the visitor's filters — those still mean the same thing in the next
+   town as they did in the last. */
+function switchRegion(region, opts) {
+  if (!regionData[region]) return;
+  const fly = !opts || opts.fly !== false;
   activeRegion = region;
 
   syncLocationSelector();
-
-  // Reset the other filters back to "All" — a filter/weight selection from
-  // one city's data isn't guaranteed to mean anything in the other.
-  currentFilter = "all";
-  filterButtons.forEach((btn) => btn.classList.toggle("active", btn.dataset.filter === "all"));
-  currentWeightBand = "all";
-  weightButtons.forEach((btn) => btn.classList.toggle("active", btn.dataset.weight === "all"));
-  if (weightValue) weightValue.textContent = "All";
-
-  closeDetailPanel();
-  resetTimelineBounds();
   updateHeroCopy();
-  updatePotentialAvailability();
-  renderMarkers();
+  updateStatsPills();
 
-  const cfg = regionData[activeRegion];
-  map.flyTo(cfg.center, cfg.zoom, { duration: 1 });
+  if (!fly) return;
+
+  const cfg = regionData[region];
+  if (cfg.isAll) {
+    map.flyToBounds(ALL_BOUNDS, { duration: 1 });
+  } else {
+    map.flyTo(cfg.center, cfg.zoom, { duration: 1 });
+  }
 }
 
 initLocationMenu();
+initMapSearch();
 
 /* ---------- Header height ----------
    Several sticky offsets keyed off a hard-coded 66px header, which is only
@@ -2858,9 +3255,14 @@ function restoreUiState() {
   } catch (e) { return; }
   if (!st || typeof st !== "object") return;
 
-  // Region first: switchRegion() resets the other filters, so restoring it
-  // afterwards would immediately undo everything else.
-  if (st.region && st.region !== activeRegion && regionData[st.region]) switchRegion(st.region);
+  // Restore the selected town without the fly-in animation — on first paint
+  // an animated pan from the national view looks like a bug, not a feature.
+  if (st.region && st.region !== activeRegion && regionData[st.region]) {
+    switchRegion(st.region, { fly: false });
+    const cfg = regionData[st.region];
+    if (cfg.isAll) map.fitBounds(ALL_BOUNDS);
+    else map.setView(cfg.center, cfg.zoom);
+  }
 
   const statusBtn = [...filterButtons].find((b) => b.dataset.filter === st.filter);
   if (statusBtn) {

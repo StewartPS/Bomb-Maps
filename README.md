@@ -1,9 +1,13 @@
-# Plymouth Bomb Map — v1.8.1
+# Bomb Maps — v1.9.0
+
+Live at [bombmaps.co.uk](https://bombmaps.co.uk). Previously "Plymouth Bomb
+Map"; renamed in v1.9.0 now that coverage spans fifteen towns across Devon and
+Cornwall.
 
 ## Releasing a change
 
 **Bump `?v=` in `index.html` and `news.html` before you push.** Find and
-replace `?v=1.8.1` with the next number in both files.
+replace `?v=1.9.0` with the next number in both files.
 
 GitHub Pages tells browsers to hold on to CSS and JS, so pushing alone doesn't
 reach anyone who has visited before — they keep the old files until their
@@ -14,6 +18,79 @@ returning visitors see stale styling.
 
 `data/incident.json` is exempt — it is fetched with `cache: "no-store"` and a
 timestamp, so a live incident goes out immediately without a version bump.
+
+## v1.9.0 changes
+
+- **Renamed to Bomb Maps.** Title, nav brand, meta and social tags now say
+  Bomb Maps and describe the coverage as Devon and Cornwall rather than
+  Plymouth. The nav mark is the favicon inlined as SVG, so the two can no
+  longer drift apart.
+- **Canonical URL fixed.** Both pages pointed at `stewartps.github.io`, which
+  told search engines the GitHub Pages address was the real site and the
+  custom domain a copy. Now `bombmaps.co.uk`, with `og:url` and `og:site_name`
+  added. A `CNAME` file is committed so the custom domain survives a redeploy.
+- **The map no longer empties when you zoom out.** Previously only the
+  selected town's records existed on the map — choosing Salcombe unloaded
+  everything else, so zooming out showed a blank map. All fifteen towns are
+  now plotted at once in a single layer, the map opens on the full extent of
+  the data, and choosing a town moves the viewport instead of swapping the
+  dataset. Filters and the timeline apply across the whole set.
+- **Search added** to the control panel. Records and towns are matched
+  instantly in memory; pressing Enter without picking one falls back to a
+  Nominatim place lookup, so an arbitrary postcode or street still works. If
+  nothing is plotted nearby it says so, and gives the distance to the nearest
+  record, rather than dropping you on a blank street.
+- **Positional uncertainty is now drawn, not just described.** Most records
+  name a street, not an address, so a sharp pin overstated the source. Each
+  point now sits inside a translucent circle sized by its stated confidence
+  (about 30m for a named building, up to 500m for an area), with the same
+  figure repeated as "Position accuracy" in the detail panel.
+- **Google Analytics (GA4)** wired into both pages, inert until `GA_ID` is
+  set, with Consent Mode defaulting to denied — see "Analytics" below.
+- **`tools/`** added: a geocode audit page and a node smoke test. See below.
+
+## Tools
+
+Neither is part of the public site; both are developer aids.
+
+### `tools/geocode-audit.html`
+
+Every confirmed record's coordinates were entered by hand, and some are wrong
+— the Salcombe Fore Street record, for instance, sat about 150m inland of the
+street it names. This page checks each record against OpenStreetMap's
+gazetteer and reports the distance.
+
+Serve the repo (`python3 -m http.server 8000`) and open
+`http://localhost:8000/tools/geocode-audit.html`. It queries one record every
+1.1 seconds to respect Nominatim's usage policy, so a full run takes about a
+minute. Tick the rows you want and "Copy corrections" gives you JSON.
+
+It deliberately does not write to `app.js`. A street centroid is not
+necessarily where a bomb fell, and records naming an area or a landmark will
+always look wrong to a geocoder — every correction is a judgement call.
+
+### `tools/smoke-test.js`
+
+`npm install jsdom` once, then `node tools/smoke-test.js`. Loads `index.html`
+with a stubbed Leaflet, runs the real `app.js` against the real markup, and
+fails on any uncaught error, missing element id, duplicate id, or record with
+broken coordinates. Catches the class of bug where a rename leaves the JS
+reaching for an element that no longer exists — silent in the console,
+invisible until someone clicks the thing.
+
+## Analytics
+
+`window.GA_ID` near the top of `index.html` and `news.html` holds the GA4
+Measurement ID. Until it is replaced with a real `G-…` value, the snippet
+returns early and makes no request at all — a half-finished setup cannot send
+data to the wrong property. Keep the value identical in both files.
+
+Analytics cookies are non-essential under UK PECR, so consent is required
+before they are set. Consent Mode is configured to default to `denied`, and
+`window.grantAnalyticsConsent()` flips it once a visitor agrees — but nothing
+currently calls that function. Until a consent banner exists, GA will load and
+respect the denied default, which means no cookies and only limited modelled
+data.
 
 ## v1.8.1 fixes
 

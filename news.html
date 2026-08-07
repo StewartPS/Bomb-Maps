@@ -3,13 +3,15 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Latest updates — Plymouth Bomb Map</title>
-    <meta name="description" content="Live updates during unexploded ordnance incidents in Plymouth, alongside the interactive WWII bombing map.">
-    <link rel="canonical" href="https://stewartps.github.io/Plymouth-Bomb-Website/news.html">
+    <title>Latest updates — Bomb Maps</title>
+    <meta name="description" content="Live updates during unexploded ordnance incidents across Devon and Cornwall, alongside the interactive WWII bombing map.">
+    <link rel="canonical" href="https://bombmaps.co.uk/news.html">
 
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Latest updates — Plymouth Bomb Map">
-    <meta property="og:description" content="Live updates during unexploded ordnance incidents in Plymouth.">
+    <meta property="og:site_name" content="Bomb Maps">
+    <meta property="og:url" content="https://bombmaps.co.uk/news.html">
+    <meta property="og:title" content="Latest updates — Bomb Maps">
+    <meta property="og:description" content="Live updates during unexploded ordnance incidents across Devon and Cornwall.">
     <meta property="og:locale" content="en_GB">
     <meta name="twitter:card" content="summary_large_image">
 
@@ -30,6 +32,36 @@
       })();
     </script>
 
+    <!-- Google Analytics (GA4). Keep GA_ID identical to index.html —
+         see the fuller explanation in that file's head. Inert until set. -->
+    <script>
+      window.GA_ID = "G-XXXXXXXXXX"; // <-- replace with your Measurement ID
+      (function () {
+        if (!window.GA_ID || window.GA_ID.indexOf("G-X") === 0) return;
+        window.dataLayer = window.dataLayer || [];
+        window.gtag = function () { dataLayer.push(arguments); };
+        gtag("consent", "default", {
+          ad_storage: "denied",
+          ad_user_data: "denied",
+          ad_personalization: "denied",
+          analytics_storage: "denied"
+        });
+        var stored = null;
+        try { stored = localStorage.getItem("pbm-analytics-consent"); } catch (e) {}
+        if (stored === "granted") gtag("consent", "update", { analytics_storage: "granted" });
+        window.grantAnalyticsConsent = function () {
+          try { localStorage.setItem("pbm-analytics-consent", "granted"); } catch (e) {}
+          gtag("consent", "update", { analytics_storage: "granted" });
+        };
+        gtag("js", new Date());
+        gtag("config", window.GA_ID, { anonymize_ip: true });
+        var s = document.createElement("script");
+        s.async = true;
+        s.src = "https://www.googletagmanager.com/gtag/js?id=" + window.GA_ID;
+        document.head.appendChild(s);
+      })();
+    </script>
+
     <!-- ============================================================
          CACHE BUSTING — bump ?v= on every release
          ------------------------------------------------------------
@@ -38,17 +70,22 @@
          old files until the cache expires. Changing the query string makes
          the URL new, so the browser has no choice but to fetch it.
 
-         To release: find and replace ?v=1.8.1 with the next number in BOTH
+         To release: find and replace ?v=1.9.0 with the next number in BOTH
          index.html and news.html. Nothing else needs touching.
          ============================================================ -->
-    <link rel="stylesheet" href="css/style.css?v=1.8.1">
+    <link rel="stylesheet" href="css/style.css?v=1.9.0">
   </head>
   <body>
     <header class="site-header">
       <nav class="nav" aria-label="Primary">
-        <a class="brand" href="index.html#top" aria-label="Plymouth Bomb Map home">
-          <span class="brand-mark"></span>
-          <span>Plymouth Bomb Map</span>
+        <a class="brand" href="index.html#top" aria-label="Bomb Maps home">
+          <svg class="brand-mark" viewBox="0 0 32 32" width="36" height="36" aria-hidden="true" focusable="false">
+            <circle cx="16" cy="16" r="15" fill="#0b0f17"/>
+            <circle cx="16" cy="16" r="10" fill="none" stroke="#00f2fe" stroke-width="2" opacity=".5"/>
+            <circle cx="16" cy="16" r="5.5" fill="none" stroke="#00f2fe" stroke-width="2"/>
+            <circle cx="16" cy="16" r="2" fill="#ff5252"/>
+          </svg>
+          <span class="brand-text">Bomb<span class="brand-text-accent">Maps</span></span>
         </a>
         <div class="nav-links">
           <a href="index.html#map-section">Map</a>
@@ -85,6 +122,6 @@
       </a>
     </footer>
 
-    <script src="js/news.js?v=1.8.1"></script>
+    <script src="js/news.js?v=1.9.0"></script>
   </body>
 </html>
