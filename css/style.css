@@ -1158,6 +1158,24 @@ h3 {
   box-shadow: var(--shadow);
 }
 
+/* Potential-sites layer, withheld at low zoom. The legend and the count are
+   dimmed rather than hidden, so it stays obvious that the layer exists and
+   is simply not being drawn yet. */
+.potential-zoom-note {
+  margin: 6px 0 0;
+  padding: 7px 9px;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 159, 67, 0.28);
+  background: rgba(255, 159, 67, 0.1);
+  color: rgba(247, 244, 236, 0.78);
+  font-size: 0.7rem;
+  line-height: 1.45;
+}
+
+.potential-group.is-zoom-gated .potential-legend {
+  opacity: 0.4;
+}
+
 /* ---------- Map search ----------
    Lives at the top of the control panel, which sits on a dark translucent
    card in both themes — hence the hard-coded light-on-dark values here

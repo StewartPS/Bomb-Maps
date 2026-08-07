@@ -51,7 +51,7 @@
          to call grantAnalyticsConsent() once the visitor agrees.
          ============================================================ -->
     <script>
-      window.GA_ID = "G-XXXXXXXXXX"; // <-- replace with your Measurement ID
+      window.GA_ID = "G-909MJHFEHN";
       (function () {
         if (!window.GA_ID || window.GA_ID.indexOf("G-X") === 0) return;
         window.dataLayer = window.dataLayer || [];
@@ -308,6 +308,14 @@
                 <span><span class="dot potential-unknown"></span>Unknown type</span>
                 <span><span class="dot potential-undiff"></span>Undifferentiated</span>
               </div>
+
+              <!-- Shown only while the layer is withheld for being too dense
+                   to read at the current zoom. See POTENTIAL_MIN_ZOOM. -->
+              <p class="potential-zoom-note" id="potentialZoomNote" hidden>
+                Hidden at this zoom &mdash; three thousand points merge into one
+                blob. Zoom into Plymouth to show them, or switch on the heatmap
+                for a density view that works at any scale.
+              </p>
 
               <!-- Collapsed by default: the full methodology matters for
                    transparency but shouldn't make the panel taller than the map. -->

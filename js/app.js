@@ -1679,6 +1679,8 @@ let potentialLayer = null;
 let potentialSitesData = [];
 const potentialToggle = document.getElementById("potentialToggle");
 const potentialCount = document.getElementById("potentialCount");
+const potentialGroup = document.querySelector(".potential-group");
+const potentialZoomNote = document.getElementById("potentialZoomNote");
 
 // Declared here (rather than down with the other filter state) because
 // renderPotentialLayer() below reads it and can run as early as page load —
@@ -1763,11 +1765,42 @@ function renderYearBreakdown() {
   yearBreakdownEl.hidden = false;
 }
 
+/* ---------- Zoom gate for the potential-sites layer ----------
+   Three thousand coloured dots inside one city are legible at street zoom
+   and meaningless at national zoom: they collapse into a single saturated
+   blob over Plymouth that reads as an artefact of the map rather than as
+   data, and visually outweighs fifteen towns of individually researched
+   records. Below this zoom the layer is withheld and the sidebar says so,
+   rather than the checkbox silently lying about what's on screen.
+
+   Set at 11 — roughly "one city fills the viewport". Above it the dots
+   separate; below it they merge. */
+const POTENTIAL_MIN_ZOOM = 11;
+
+function potentialZoomAllowed() {
+  return map.getZoom() >= POTENTIAL_MIN_ZOOM;
+}
+
+// Redraw when crossing the threshold, not on every zoom step — rebuilding a
+// three-thousand-point layer mid-pinch is wasted work.
+let lastPotentialZoomState = null;
+
+function handlePotentialZoomChange() {
+  const allowed = potentialZoomAllowed();
+  if (allowed === lastPotentialZoomState) return;
+  lastPotentialZoomState = allowed;
+  if (potentialZoomNote) potentialZoomNote.hidden = allowed;
+  updatePotentialCounts();
+  renderPotentialLayer();
+  refreshHeatLayer();
+}
+
 function renderPotentialLayer() {
   if (potentialLayer) { map.removeLayer(potentialLayer); potentialLayer = null; }
   // Plymouth-only layer — Exeter has no equivalent digitised dataset here.
   if (!HAS_POTENTIAL_DATA) return;
   if (!potentialToggle.checked || !potentialSitesData.length) return;
+  if (!potentialZoomAllowed()) return;
   const yearCeiling = currentYearCeiling();
   // A weight filter isolates high explosives: the potential-sites layer has
   // no per-point weight data, only a type category, so when a weight band is
@@ -1818,6 +1851,14 @@ function updatePotentialCounts() {
     potentialCount.textContent = "unavailable";
     return;
   }
+  // Say "zoom in" rather than a count the map isn't currently honouring —
+  // a number next to a ticked box that draws nothing is just confusing.
+  if (!potentialZoomAllowed()) {
+    potentialCount.textContent = "zoom in";
+    if (potentialGroup) potentialGroup.classList.add("is-zoom-gated");
+    return;
+  }
+  if (potentialGroup) potentialGroup.classList.remove("is-zoom-gated");
   potentialCount.textContent = potentialSitesData
     .filter(potentialMatchesWeight)
     .length.toLocaleString("en-GB");
@@ -3102,6 +3143,9 @@ function switchRegion(region, opts) {
 
 initLocationMenu();
 initMapSearch();
+
+map.on("zoomend", handlePotentialZoomChange);
+handlePotentialZoomChange(); // set the initial state to match the opening zoom
 
 /* ---------- Header height ----------
    Several sticky offsets keyed off a hard-coded 66px header, which is only
