@@ -1230,7 +1230,590 @@ const stIvesRecords = [
    potential-sites layer; the other towns are smaller hand-researched sets
    with no equivalent census imagery to digitise.
 ------------------------------------------------------------------- */
+/* ---------- Somerset & Bristol ----------
+   Added after Devon and Cornwall. Two points worth knowing:
+
+   Bristol is NOT in Somerset. It is its own ceremonial county (the City and
+   County of Bristol); Bath is in Somerset, via Bath & North East Somerset.
+   They are filed here as separate counties for that reason.
+
+   These sets are hand-researched named incidents, like the Exeter and
+   Cornwall sets and unlike the Plymouth bulk layer. Where two records would
+   otherwise land on the same coordinate — several raids anchored to one town
+   centre — the lesser-documented raid is recorded in the note of the record
+   it sits alongside rather than given a pin of its own. Two markers stacked
+   on one point hides one of them, and a hidden record is worse than a
+   footnoted one.
+------------------------------------------------------------------- */
+const bristolRecords = [
+  {
+    id: "filton-bac-1940",
+    title: "Bristol Aeroplane Company works, Filton",
+    status: "reported",
+    statusLabel: "Reported target area",
+    date: "25 September 1940",
+    sortYear: 1940,
+    confidence: "Confirmed event, landmark point",
+    lat: 51.5194,
+    lng: -2.5908,
+    bombType: "HE",
+    casualties: 132,
+    casualtiesNote: "Of the dead, 91 were Bristol Aeroplane Company employees. A further 315 people were injured.",
+    summary: "Fifty-eight Heinkel He 111 bombers with fighter escort attacked the Bristol Aeroplane Company works and airfield in a daylight raid shortly before noon. Six semi-underground shelters took direct hits. Eight completed aircraft and a Beaufighter prototype were destroyed.",
+    note: "Sources differ on the death toll: the University of the West of England's Bristol History Resource gives 132, John Penny's archival study for the Bristol Branch of the Historical Association gives 131, and BBC anniversary coverage says 'more than 140'. The figure shown is the most commonly cited. Note also that Filton lies just outside the modern city boundary, in South Gloucestershire, so this marker sits fractionally beyond the Bristol outline — the works were 'Bristol' by name and by workforce, not by council area.",
+    sources: [
+      { label: "UWE Bristol History Resource: Bristol during World War Two", url: "http://humanities.uwe.ac.uk/bhr/Main/ww2/1_7.htm" },
+      { label: "Bristol Branch of the Historical Association: Luftwaffe Operations over Bristol (John Penny)", url: "https://bristolha.wordpress.com/wp-content/uploads/2019/09/bha085.pdf" },
+      { label: "BBC News: Filton Blitz remembered", url: "https://feeds.bbci.co.uk/news/av/uk-england-bristol-54292520" }
+    ]
+  },
+  {
+    id: "wine-street-castle-1940",
+    title: "Wine Street & Castle Street, Old City",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "24 November 1940",
+    sortYear: 1940,
+    confidence: "Confirmed event, street-derived point",
+    lat: 51.4552,
+    lng: -2.5896,
+    bombType: "incendiary",
+    casualties: 207,
+    summary: "The first and most destructive raid of the Bristol Blitz. Around 135 to 148 aircraft attacked for roughly four and a half hours, dropping some 156 tonnes of high explosive and about 12,500 incendiaries. The medieval shopping heart of the city around Castle Street, Wine Street and Mary-le-Port Street burned out.",
+    note: "That quarter was never rebuilt; the ground is now Castle Park, which is why the modern map shows open green space where the city centre used to be. Casualty figures vary between sources — 207 killed and 187 seriously injured is the most commonly cited, while John Penny's archival study gives 200 killed and 689 injured.",
+    sources: [
+      { label: "Historic England: The Bristol Blitz", url: "https://historicengland.org.uk/whats-new/features/blitz-stories/the-bristol-blitz/" },
+      { label: "Bristol24/7: Remembering the Bristol Blitz 75 years on", url: "https://www.bristol247.com/news-and-features/news/75-years-on-from-the-bristol-blitz/" }
+    ]
+  },
+  {
+    id: "park-street-museum-1940",
+    title: "Park Street & Bristol Museum, Clifton",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "24 November 1940",
+    sortYear: 1940,
+    confidence: "Confirmed event, landmark point",
+    lat: 51.4553,
+    lng: -2.6042,
+    bombType: "incendiary",
+    summary: "During the same raid Park Street was severely burnt, with a contemporary journalist recording that every third shop was ablaze. Bristol Museum & Art Gallery on Queen's Road was hit, and the university district and Clifton Parish Church were damaged.",
+    note: "No separate casualty figure is published for Park Street. The 207 dead recorded for the night of 24 November are a city-wide total and are not broken down by street.",
+    sources: [
+      { label: "Historic England: The Bristol Blitz", url: "https://historicengland.org.uk/whats-new/features/blitz-stories/the-bristol-blitz/" }
+    ]
+  },
+  {
+    id: "temple-meads-1941",
+    title: "Temple Meads station & Queen Square",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "3 January 1941",
+    sortYear: 1941,
+    confidence: "Confirmed event, landmark point",
+    lat: 51.4492,
+    lng: -2.5813,
+    bombType: "HE",
+    casualties: 149,
+    summary: "The longest raid on Bristol, lasting over eleven hours, with 178 aircraft dropping about 152 tonnes of high explosive and more than 53,000 incendiaries. Temple Meads lost platforms 9 and 12, its booking office, telegraph office and clock tower.",
+    note: "A 2,000kg bomb nicknamed 'Satan' fell during this raid and failed to explode. It was not recovered until April 1943, and was later paraded through London in the 1945 Victory Parade.",
+    sources: [
+      { label: "Bristol Branch of the Historical Association: Luftwaffe Operations over Bristol", url: "https://bristolha.wordpress.com/wp-content/uploads/2019/09/bha085.pdf" },
+      { label: "Bristol24/7: Remembering the Bristol Blitz 75 years on", url: "https://www.bristol247.com/news-and-features/news/75-years-on-from-the-bristol-blitz/" }
+    ]
+  },
+  {
+    id: "avonmouth-docks-1941",
+    title: "Avonmouth Docks",
+    status: "reported",
+    statusLabel: "Reported target area",
+    date: "4 January 1941",
+    sortYear: 1941,
+    confidence: "Strategic target area",
+    lat: 51.5040,
+    lng: -2.6990,
+    bombType: "incendiary",
+    casualties: 18,
+    casualtiesNote: "The 18 killed and 109 injured is the figure for the Bristol area as a whole that night, not for the docks alone.",
+    summary: "A raid of roughly nine and a half hours by 126 bombers targeted the port, dropping about 158 tonnes of high explosive and nearly 55,000 incendiaries.",
+    note: "Damage was serious enough that on 17 January normal dock operations stopped entirely — the only day in the whole war on which enemy action halted the port.",
+    sources: [
+      { label: "Bristol Branch of the Historical Association: Luftwaffe Operations over Bristol", url: "https://bristolha.wordpress.com/wp-content/uploads/2019/09/bha085.pdf" }
+    ]
+  },
+  {
+    id: "easton-stpauls-1941",
+    title: "Easton, St Paul's, Whitehall & Fishponds",
+    status: "historic",
+    statusLabel: "Historic bombing area",
+    date: "16 March 1941",
+    sortYear: 1941,
+    confidence: "Rough area",
+    lat: 51.4622,
+    lng: -2.5877,
+    bombType: "HE",
+    casualties: 257,
+    summary: "A seven-hour attack by 164 aircraft dropped roughly 164 tonnes of high explosive and nearly 34,000 incendiaries on Bristol and Avonmouth. Poor visibility caused the bombing to drift into densely built working-class suburbs, producing the highest single-night death toll of the Bristol raids.",
+    note: "This marker is a district-level anchor covering Easton, St Paul's, Whitehall and Fishponds, not a bomb location. UWE's Bristol History Resource describes this as perhaps the worst Bristol raid measured by casualties: 257 killed and 391 injured.",
+    sources: [
+      { label: "UWE Bristol History Resource: Bristol during World War Two", url: "http://humanities.uwe.ac.uk/bhr/Main/ww2/1_8.htm" },
+      { label: "Bristol24/7: Remembering the Bristol Blitz 75 years on", url: "https://www.bristol247.com/news-and-features/news/75-years-on-from-the-bristol-blitz/" }
+    ]
+  },
+  {
+    id: "good-friday-raid-1941",
+    title: "Good Friday raid — Queen Square & Prince Street",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "11 April 1941",
+    sortYear: 1941,
+    confidence: "Confirmed event, landmark point",
+    lat: 51.4501,
+    lng: -2.5959,
+    bombType: "HE",
+    casualties: 180,
+    summary: "The last of the six major raids on Bristol. About 153 aircraft attacked over roughly five hours, dropping some 193 tonnes of high explosive and nearly 37,000 incendiaries on the harbour and industrial areas, Avonmouth and Portishead.",
+    note: "Damage to the electricity supply ended Bristol's tram system permanently. Recorded impact areas include Prince Street, Canon's Marsh, Queen Square, Colston Avenue and St Philip's Bridge, along with Bedminster, Knowle, Hotwells and Shirehampton.",
+    sources: [
+      { label: "Bristol Branch of the Historical Association: Luftwaffe Operations over Bristol", url: "https://bristolha.wordpress.com/wp-content/uploads/2019/09/bha085.pdf" },
+      { label: "Bristol24/7: Remembering the Bristol Blitz 75 years on", url: "https://www.bristol247.com/news-and-features/news/75-years-on-from-the-bristol-blitz/" }
+    ]
+  },
+  {
+    id: "broad-weir-1942",
+    title: "Broad Weir, Old Market",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "28 August 1942",
+    sortYear: 1942,
+    confidence: "Confirmed event, street-derived point",
+    lat: 51.4571,
+    lng: -2.5876,
+    bombType: "HE",
+    casualtiesNote: "Deliberately left blank. Published figures for this incident range from five killed and 24 injured to 45 killed, and this site has not been able to resolve the difference from a source it trusts.",
+    summary: "A single Luftwaffe bomber attacking in daylight scored a chance hit on buses standing at Broad Weir, near the corner of Philadelphia Street. Fire spread through the vehicles, and the incident is widely described as the largest loss of life caused by one bomb in Bristol during the war.",
+    note: "The casualty figure is genuinely disputed rather than merely uncertain: Bristol24/7 reports 45 killed, while other local accounts give five killed and 24 injured. Both cannot be right, and no figure is asserted here until a reliable source settles it. Wikipedia's Bristol Blitz article does not cover the incident at all.",
+    sources: [
+      { label: "Bristol24/7: Remembering the Bristol Blitz 75 years on", url: "https://www.bristol247.com/news-and-features/news/75-years-on-from-the-bristol-blitz/" },
+      { label: "brisray.com: Bristol — The Blitz", url: "https://brisray.com/bristol/blitz.htm" }
+    ]
+  },
+  {
+    id: "kings-weston-lane-2024",
+    title: "Kings Weston Lane, Avonmouth",
+    status: "found",
+    statusLabel: "Found UXO",
+    date: "October 2024",
+    sortYear: 2024,
+    confidence: "Confirmed incident, approximate point",
+    lat: 51.5100,
+    lng: -2.6810,
+    bombType: "unspecified",
+    summary: "A suspected unexploded device was uncovered during construction work on Kings Weston Lane in Avonmouth. Police established a safety cordon and bomb disposal specialists attended to examine the item before the road reopened.",
+    note: "The device type and final disposal were not published. The month is taken from a UXO contractor's incident list — the BBC report itself carries no visible date.",
+    sources: [
+      { label: "BBC News: Bomb squad called to 'unexploded device'", url: "https://feeds.bbci.co.uk/news/articles/cdje7g2mjmjo" },
+      { label: "1st Line Defence: UXO risk in Bristol", url: "https://www.1stlinedefence.co.uk/resources/uxo-city-guides/bristol/" }
+    ]
+  },
+  {
+    id: "sneyd-park-shell-2024",
+    title: "Sneyd Park garden shell",
+    status: "found",
+    statusLabel: "Found UXO",
+    date: "January 2024",
+    sortYear: 2024,
+    confidence: "Confirmed incident, approximate point (exact garden not published)",
+    lat: 51.4744,
+    lng: -2.6317,
+    bombType: "HE",
+    disposal: "Removed to open ground on Durdham Downs and destroyed in a controlled explosion.",
+    summary: "A Second World War two-pounder high explosive shell was found in a garden in Sneyd Park. An Explosive Ordnance Disposal team moved it to Durdham Downs and carried out a controlled explosion, leaving a crater about three feet across.",
+    note: "A separate unexploded shell was reportedly dealt with at Sneyd Park in June 2017. The two appear to be distinct finds, but that could not be confirmed from a news source.",
+    sources: [
+      { label: "Zetica UXO: Unexploded shell found in Bristol garden", url: "https://zeticauxo.com/news/unexploded-shell-found-bristol-garden/" }
+    ]
+  }
+];
+
+const bathRecords = [
+  {
+    id: "bath-royal-crescent-1942",
+    title: "Royal Crescent, Bath",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "25–27 April 1942",
+    sortYear: 1942,
+    confidence: "Confirmed event, landmark point",
+    lat: 51.3865,
+    lng: -2.3690,
+    bombType: "HE",
+    summary: "Houses in the Royal Crescent were destroyed during the Baedeker raids of April 1942. The damaged sections were later reconstructed behind the surviving Georgian frontage.",
+    note: "The Baedeker raids were explicitly reprisal attacks on historic cities of cultural rather than military value, named after the German tourist guidebooks said to have been used to choose them. No street-level casualty figure is published for the Royal Crescent.",
+    sources: [
+      { label: "Bath Heritage: Baedeker Raids war memorial", url: "http://bath-heritage.co.uk/war-memorial_airraids.html" }
+    ]
+  },
+  {
+    id: "bath-assembly-rooms-1942",
+    title: "Assembly Rooms & The Circus, Bath",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "25–27 April 1942",
+    sortYear: 1942,
+    confidence: "Confirmed event, landmark point",
+    lat: 51.3866,
+    lng: -2.3636,
+    bombType: "incendiary",
+    summary: "The Bath Assembly Rooms were burnt out during the April 1942 raids, and houses in The Circus and the Paragon were destroyed. Completed in 1771, the Assembly Rooms were among the most significant Georgian buildings in the city and were later restored.",
+    note: "Across the raids 218 buildings of architectural or historic interest were damaged. Bath Abbey and the Roman Baths survived, the Abbey losing a stained glass window; St Andrew's and St James's churches were damaged beyond repair and demolished.",
+    sources: [
+      { label: "Bath Heritage: Baedeker Raids war memorial", url: "http://bath-heritage.co.uk/war-memorial_airraids.html" }
+    ]
+  },
+  {
+    id: "bath-queen-square-1942",
+    title: "Queen Square, Bath",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "25–27 April 1942",
+    sortYear: 1942,
+    confidence: "Confirmed event, landmark point",
+    lat: 51.3840,
+    lng: -2.3648,
+    bombType: "HE",
+    weightKg: 500,
+    summary: "A 500kg high explosive bomb struck the south side of Queen Square, damaging the frontage of the Francis Hotel and neighbouring buildings. The lost section of the John Wood the Elder terrace was later rebuilt.",
+    note: "The Bath Blitz Memorial Project records 118 bombs of 500kg dropped on Bath across the two nights, alongside 165 of 250kg, 58 of 50kg, 22 of 1,000kg, two of 1,800kg and 4,356 one-kilogram incendiaries. The project states plainly that these are best estimates, because the Civil Defence records were themselves destroyed in the bombing.",
+    sources: [
+      { label: "Bath Blitz Memorial Project: bomb types", url: "http://www.bathheritagewatchdog.org/bathblitz/bombtypes.htm" }
+    ]
+  },
+  {
+    id: "bath-roseberry-road-shelter-1942",
+    title: "Roseberry Road public shelter",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "26 April 1942",
+    sortYear: 1942,
+    confidence: "Confirmed event, approximate point",
+    lat: 51.3790,
+    lng: -2.3830,
+    bombType: "HE",
+    casualties: 30,
+    casualtiesNote: "Approximate. One account gives 'over 30 deaths'; the memorial plaque confirms the shelter as a site of mass casualties but gives no number.",
+    summary: "A public air raid shelter in Roseberry Road was hit on 26 April 1942, one of the worst single losses of life in the Bath Blitz. The updated Bath Blitz memorial plaque records it alongside a shelter in Third Avenue as a specific site of mass casualties.",
+    note: "Sources spell the road both Roseberry and Rosebery, and place it variously in Twerton and Oldfield Park, so the point here is an area anchor rather than a located shelter. The Third Avenue shelter is confirmed as a second mass-casualty site but has no confirmable location, so it is recorded in the Oldfield Park entry rather than given its own marker.",
+    sources: [
+      { label: "Bath Heritage: Shaftesbury Road memorial garden and plaques", url: "http://bath-heritage.co.uk/shaftesbury-road.html" }
+    ]
+  },
+  {
+    id: "bath-oldfield-park-1942",
+    title: "Oldfield Park & Twerton — Bath Blitz memorial",
+    status: "historic",
+    statusLabel: "Historic bombing area",
+    date: "25–27 April 1942",
+    sortYear: 1942,
+    confidence: "Rough area",
+    lat: 51.3776,
+    lng: -2.3773,
+    bombType: "HE",
+    casualtiesNote: "417 people were killed across Bath, including 56 young children. That is a city-wide total, not a figure for this district. Other accounts say 'over 400'.",
+    summary: "The residential districts west and south of the centre, including Oldfield Park and Twerton, suffered the heaviest destruction and loss of life — not the Georgian set pieces the raids are remembered for. A memorial garden off Shaftesbury Road commemorates the dead.",
+    note: "City-wide, 329 houses and shops were totally destroyed, around 700 more wrecked and roughly 1,900 further buildings damaged. A memorial service at this garden in 2008 was attended by Willi Schludecker, a former Luftwaffe pilot who had taken part in the raids.",
+    sources: [
+      { label: "Bath Heritage: Shaftesbury Road memorial garden", url: "http://bath-heritage.co.uk/shaftesbury-road.html" },
+      { label: "Bath Heritage: Baedeker Raids war memorial", url: "http://bath-heritage.co.uk/war-memorial_airraids.html" }
+    ]
+  },
+  {
+    id: "bath-lansdown-road-2016",
+    title: "Lansdown Road — former Royal High Junior School",
+    status: "found",
+    statusLabel: "Found UXO",
+    date: "May 2016",
+    sortYear: 2016,
+    confidence: "Confirmed event, street-derived point",
+    lat: 51.3948,
+    lng: -2.3660,
+    bombType: "HE",
+    weightKg: 228,
+    cordonRadiusM: 300,
+    disposal: "Shielded behind 250 tonnes of sand, then removed under police escort and destroyed in a controlled explosion away from the city.",
+    evacuationNote: "Up to 1,000 homes evacuated within a 300m exclusion zone; residents were moved to Bath Racecourse.",
+    casualties: 0,
+    summary: "Contractors using a digger on the former Royal High Junior School site uncovered a suspected unexploded 500lb German bomb, 1.42 metres long. Bomb disposal teams built a barrier of 250 tonnes of sand around the device before removing it.",
+    note: "Later Bath finds include a suspected device at a primary school in July 2018 and a suspected WWII grenade recovered by a magnet fisher in December 2020.",
+    sources: [
+      { label: "BBC News: Bath WW2 bomb scare — hundreds of homes evacuated", url: "https://feeds.bbci.co.uk/news/uk-england-somerset-36279782" },
+      { label: "1st Line Defence: UXO risk in Bath", url: "https://www.1stlinedefence.co.uk/resources/uxo-city-guides/bath/" }
+    ]
+  }
+];
+
+const westonRecords = [
+  {
+    id: "weston-baedeker-1942",
+    title: "Weston-super-Mare — the Baedeker raids",
+    status: "historic",
+    statusLabel: "Historic bombing area",
+    date: "27–29 June 1942",
+    sortYear: 1942,
+    confidence: "Rough area",
+    lat: 51.3458,
+    lng: -2.9770,
+    bombType: "HE",
+    casualties: 102,
+    casualtiesNote: "Figures vary. Historic England gives 'over 100 deaths' across the two nights; a local-history account gives 102 killed and 400 injured; a privately compiled casualty register names 87 dead across the two nights. Around 100 is the most commonly cited figure.",
+    summary: "Weston was attacked on two consecutive nights in June 1942, part of the Baedeker reprisal campaign. Historic England records roughly 100 high-explosive bombs and 10,000 incendiaries across the two nights. Deaths were concentrated in Orchard Street, Devonshire Road, Moorland Road, Prospect Place and the Bournville Estate.",
+    note: "Weston was also raided overnight on 4/5 January 1941, an incendiary attack that caused deaths across the town centre; the named casualty register lists around 32 dead for that night. That raid is recorded here rather than as a separate marker because both would anchor to the same town-centre point. The borough's total civilian war dead was 110.",
+    sources: [
+      { label: "Historic England: Weston-super-Mare — the view from above", url: "https://historicengland.org.uk/whats-new/research/back-issues/weston-super-mare-the-view-from-above/" },
+      { label: "The Weston-super-Mare Blitz war memorial (casualty register)", url: "https://sassienie.com/In%20memory/THE%20WESTON.htm" }
+    ]
+  },
+  {
+    id: "banwell-1940",
+    title: "Banwell village",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "4 September 1940",
+    sortYear: 1940,
+    confidence: "Confirmed event, approximate point",
+    lat: 51.3260,
+    lng: -2.8700,
+    bombType: "HE",
+    weightKg: 680,
+    casualties: 5,
+    casualtiesNote: "Around 50 people were injured. The dead included PC Basil Stockbridge and Special Constable Ronald Clark.",
+    summary: "At about 9.30pm a single German bomber attacked the village of Banwell, north-east of Weston-super-Mare. Damage was reported at Banwell House, the post office and telephone exchange in the Narrows, and several houses and workshops.",
+    note: "Two German parachute land mines were also reported near Park Farm, Wolvershill, and two unexploded bombs near The Grange. This rests on a single local-history account and the casualty figure has not been cross-checked against an official record.",
+    sources: [
+      { label: "Strawberry Line Times: when Banwell was bombed", url: "https://www.harrymottram.co.uk/2025/04/11/strawberry-line-times-when-banwell-was-bombed-in-world-war-two-and-weston-super-mare-suffered-its-own-blitz/" }
+    ]
+  }
+];
+
+const yeovilRecords = [
+  {
+    id: "yeovil-shelters-1940",
+    title: "Preston Road & Vicarage Street shelters",
+    status: "historic",
+    statusLabel: "Historic bombing area",
+    date: "7 October 1940",
+    sortYear: 1940,
+    confidence: "Rough area",
+    lat: 50.9420,
+    lng: -2.6320,
+    bombType: "HE",
+    casualties: 27,
+    casualtiesNote: "The 27 dead covers both the 7 October raid and a second raid the following day; the source does not split the figure by day.",
+    summary: "Yeovil's first and most serious air raid, followed by a second the next day. Two bombs made direct hits on air raid shelters — one in Preston Road, one at Vicarage Street Methodist Church.",
+    note: "Across the war Yeovil recorded ten air raids and 107 high-explosive bombs, killing or fatally wounding 49 people. No incendiaries are recorded as having fallen on the town. The last raid, on 5 August 1942, damaged nearly a thousand houses; it is noted here rather than mapped separately because it would anchor to this same town-centre point.",
+    sources: [
+      { label: "Yeovil History: wartime", url: "https://www.yeoviltown.com/history/wartime.aspx" }
+    ]
+  },
+  {
+    id: "westland-works-1941",
+    title: "Westland Aircraft works & Westland Road",
+    status: "reported",
+    statusLabel: "Reported target area",
+    date: "March 1941",
+    sortYear: 1941,
+    confidence: "Confirmed event, approximate point",
+    lat: 50.9405,
+    lng: -2.6510,
+    bombType: "HE",
+    summary: "A single Dornier 17 attacked the Westland Aircraft factory at lunchtime. Two bombs struck the factory, one hit the car park, and further bombs fell on houses in Westland Road, where a direct hit destroyed a home and killed a mother and her five-year-old son.",
+    note: "The account comes from Yeovil local historian Jack Sweet, who witnessed the raid aged five. No exact day in March 1941 and no total death toll are given, and the factory position here is indicative rather than surveyed.",
+    sources: [
+      { label: "Westland 100: Jack Sweet remembers the March 1941 raid", url: "https://www.westland100.org.uk/content/topics/world-war-11-wartime-production/jack-sweet-local-historian-yeovil-remembers-5-yr-old-boy-witnessing-raid-single-german-bomber-westland-factory-march-1941" }
+    ]
+  }
+];
+
+const bridgwaterRecords = [
+  {
+    id: "bridgwater-1940",
+    title: "Cranleigh Gardens & Old Taunton Road",
+    status: "historic",
+    statusLabel: "Historic bombing area",
+    date: "24/25 August 1940",
+    sortYear: 1940,
+    confidence: "Rough area",
+    lat: 51.1280,
+    lng: -2.9930,
+    bombType: "incendiary",
+    casualties: 7,
+    casualtiesNote: "The dead included ARP Warden Len Wilkins, his wife Gladys and their thirteen-year-old daughter Margaret, along with Daisy Balham and Mr and Mrs Collard.",
+    summary: "Bridgwater's first major attack, when around 200 incendiaries and heavy bombs fell on Cranleigh Gardens, the Colley Lane brickyard and Southgate Terrace in Old Taunton Road. Nine houses were damaged or destroyed.",
+    note: "On 20 March 1941 two magnetic mines detonated in the Meads near Fairfield, damaging nearly 1,500 premises across the town and killing one person; it is recorded here rather than mapped separately because no located point for the Meads was available. Across the war Bridgwater recorded 263 high-explosive bombs, 6,671 incendiaries, 10 land and other mines, and 63 unexploded bombs.",
+    sources: [
+      { label: "Bridgwater Town Council: Second World War air raids", url: "https://bridgwater-tc.gov.uk/history/second-world-war/air-raids/" }
+    ]
+  }
+];
+
+const tauntonRecords = [
+  {
+    id: "richard-huish-2023",
+    title: "Richard Huish College, Taunton",
+    status: "found",
+    statusLabel: "Found UXO",
+    date: "August 2023",
+    sortYear: 2023,
+    confidence: "Confirmed incident, approximate point",
+    lat: 51.0130,
+    lng: -3.1030,
+    bombType: "unspecified",
+    disposal: "Destroyed in a controlled explosion by an Army Explosive Ordnance Disposal team.",
+    summary: "Contractors excavating a field behind Richard Huish College uncovered an unexploded bomb. The Army's EOD unit attended and carried out a controlled explosion at around 16:40.",
+    note: "The BBC report gives the day only as a Thursday, so the exact date is recorded here as August 2023.",
+    sources: [
+      { label: "BBC News: Unexploded bomb destroyed near Taunton college", url: "https://feeds.bbci.co.uk/news/uk-england-somerset-66404933" }
+    ]
+  }
+];
+
+const burnhamRecords = [
+  {
+    id: "brean-beach-2024",
+    title: "Brean beach — artillery shell",
+    status: "found",
+    statusLabel: "Found UXO",
+    date: "16 January 2024",
+    sortYear: 2024,
+    confidence: "Rough area",
+    lat: 51.3080,
+    lng: -3.0180,
+    bombType: "unspecified",
+    disposal: "Moved down the beach, buried in the sand and detonated in place.",
+    evacuationNote: "Nearby properties evacuated as a precaution.",
+    summary: "An angler discovered a WWII-era artillery shell on Brean beach. An Explosive Ordnance Disposal team moved the device, buried it and detonated it.",
+    note: "Finds recur along this coast for a reason: Berrow Flats formed part of the Stert Flats North Range, used heavily for practice bombing and gunnery. More than 3 million .303 rounds and 1 million 20mm rounds were fired there. A separate find in July 2020 — a shrapnel bomb fuse head roughly the size of a rugby ball — was detonated on the same beach after an eight-hour coastguard cordon. This point sits on the tidal sands, seaward of the administrative coastline, so it falls outside the drawn county outline while still belonging to Somerset.",
+    sources: [
+      { label: "Zetica UXO: More UXO found on Brean beach in Somerset", url: "https://zeticauxo.com/news/more-uxo-found-on-brean-beach-in-somerset/" },
+      { label: "Burnham-On-Sea.com: Army bomb disposal team detonates WW2 device on Brean beach", url: "https://www.burnham-on-sea.com/news/video-army-bomb-disposal-team-detonate-ww2-explosive-device-on-brean-beach/" }
+    ]
+  },
+  {
+    id: "brean-seagull-2025",
+    title: "Brean beach — suspected ordnance",
+    status: "found",
+    statusLabel: "Found UXO",
+    date: "25 August 2025",
+    sortYear: 2025,
+    confidence: "Confirmed event, street-derived point",
+    lat: 51.3070,
+    lng: -3.0080,
+    bombType: "unspecified",
+    disposal: "Assessed by a bomb disposal team and declared harmless.",
+    summary: "On Bank Holiday Monday a metal-detector user found a cylinder-shaped object on Brean beach behind the Seagull pub. Coastguards and police cordoned off the area and a bomb disposal team attended.",
+    note: "Recorded as a documented response rather than a confirmed munition — the object was ultimately assessed as safe. Not every cordon ends in a detonation, and the ones that do not are part of the picture too.",
+    sources: [
+      { label: "Burnham-On-Sea.com: Suspected ordnance find sparks beach closure in Brean", url: "https://www.burnham-on-sea.com/news/suspected-ordnance-find-sparks-beach-closure-in-brean-on-bank-holiday-monday" }
+    ]
+  },
+  {
+    id: "apex-park-2026",
+    title: "Apex Park, Burnham-on-Sea",
+    status: "found",
+    statusLabel: "Found UXO",
+    date: "March 2026",
+    sortYear: 2026,
+    confidence: "Confirmed incident, approximate point",
+    lat: 51.2340,
+    lng: -2.9840,
+    bombType: "unspecified",
+    cordonRadiusM: 50,
+    summary: "Construction contractors at Apex Park found small pieces of suspected unexploded ordnance on the east side of the lake, including what appeared to be mortar shells and a grenade. Somerset Council imposed a 50-metre cordon, halted the works and put up temporary fencing.",
+    note: "A specialist contractor was to be engaged to assess and clear any remaining ordnance. The council notice was updated on 6 March 2026; the exact discovery date was not stated.",
+    sources: [
+      { label: "Somerset Council: Council cordons off section of park after suspected ordnance found", url: "https://www.somerset.gov.uk/news/council-takes-action-to-cordon-off-section-of-park-after-suspected-ordnance-is-found" }
+    ]
+  }
+];
+
 const regionData = {
+  bristol: {
+    label: "Bristol",
+    short: "Bristol",
+    county: "Bristol",
+    accent: "var(--amber)",
+    records: bristolRecords,
+    center: [51.4545, -2.5879],
+    zoom: 12,
+    raidNights: null,
+    hasPotential: false
+  },
+  bath: {
+    label: "Bath, Somerset",
+    short: "Bath",
+    county: "Somerset",
+    accent: "var(--amber)",
+    records: bathRecords,
+    center: [51.3811, -2.3590],
+    zoom: 14,
+    raidNights: 2,
+    hasPotential: false
+  },
+  weston: {
+    label: "Weston-super-Mare, Somerset",
+    short: "Weston-super-Mare",
+    county: "Somerset",
+    accent: "var(--amber)",
+    records: westonRecords,
+    center: [51.3400, -2.9400],
+    zoom: 12,
+    raidNights: null,
+    hasPotential: false
+  },
+  yeovil: {
+    label: "Yeovil, Somerset",
+    short: "Yeovil",
+    county: "Somerset",
+    accent: "var(--amber)",
+    records: yeovilRecords,
+    center: [50.9412, -2.6415],
+    zoom: 14,
+    raidNights: 10,
+    hasPotential: false
+  },
+  bridgwater: {
+    label: "Bridgwater, Somerset",
+    short: "Bridgwater",
+    county: "Somerset",
+    accent: "var(--amber)",
+    records: bridgwaterRecords,
+    center: [51.1280, -2.9930],
+    zoom: 14,
+    raidNights: null,
+    hasPotential: false
+  },
+  taunton: {
+    label: "Taunton, Somerset",
+    short: "Taunton",
+    county: "Somerset",
+    accent: "var(--amber)",
+    records: tauntonRecords,
+    center: [51.0130, -3.1030],
+    zoom: 14,
+    raidNights: null,
+    hasPotential: false
+  },
+  burnham: {
+    label: "Burnham-on-Sea & Brean, Somerset",
+    short: "Burnham & Brean",
+    county: "Somerset",
+    accent: "var(--amber)",
+    records: burnhamRecords,
+    center: [51.2750, -3.0000],
+    zoom: 12,
+    raidNights: null,
+    hasPotential: false
+  },
   plymouth: {
     label: "Plymouth, Devon",
     short: "Plymouth",

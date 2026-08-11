@@ -69,7 +69,16 @@ const CEREMONIAL = {
     "East Devon", "Exeter", "Mid Devon", "North Devon", "South Hams",
     "Teignbridge", "Torridge", "West Devon", "Plymouth", "Torbay"
   ],
-  Cornwall: ["Cornwall", "Isles of Scilly"]
+  Cornwall: ["Cornwall", "Isles of Scilly"],
+  // Ceremonial Somerset includes Bath & North East Somerset and North
+  // Somerset (which covers Weston-super-Mare); both are unitary authorities
+  // outside the county council area, the same trap as Plymouth and Torbay.
+  Somerset: [
+    "Mendip", "Sedgemoor", "South Somerset", "Taunton Deane", "West Somerset",
+    "Bath and North East Somerset", "North Somerset"
+  ],
+  // Bristol is its own ceremonial county, NOT part of Somerset.
+  Bristol: ["Bristol, City of"]
 };
 
 function countPoints(geometry) {
