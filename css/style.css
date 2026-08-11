@@ -114,16 +114,28 @@ body,
 }
 
 /* ---------- County mask ----------
-   Sits inside #map, above the tile pane (z-index 200) but below markers
-   and popups (500+), clipped by JS (see showCountyMask/updateCountyMaskPath
+   Sits inside #map, clipped by JS (see showCountyMask/updateCountyMaskPath
    in js/app.js) to everything OUTSIDE the selected county's boundary. The
    blur is a real backdrop-filter — it blurs the map tiles underneath, not
    just an opacity trick — so the selected county reads as sharp and in
-   focus against a softened, dimmed backdrop. */
+   focus against a softened, dimmed backdrop.
+
+   The z-index needs care. Leaflet's individual panes (tiles 200, overlay
+   400, markers 600) all live INSIDE .leaflet-map-pane, which is itself a
+   .leaflet-pane at z-index 400 — so it forms a stacking context and those
+   inner numbers can't be compared with anything outside it. A mask at 350
+   lands underneath the whole map, hidden behind the opaque tiles: that was
+   the original bug here, and it is invisible in any test that hides tiles.
+
+   450 puts the mask above the entire map pane while staying below the
+   Leaflet control container (.leaflet-top / .leaflet-bottom at 1000), so
+   the zoom buttons and attribution stay sharp and clickable. Out-of-county
+   markers dim along with the tiles, which is the intent — they are context,
+   not the selection — and pointer-events: none keeps them clickable. */
 .county-mask {
   position: absolute;
   inset: 0;
-  z-index: 350;
+  z-index: 450;
   pointer-events: none;
   background: rgba(6, 9, 15, 0.42);
   -webkit-backdrop-filter: blur(5px);
