@@ -2162,6 +2162,48 @@ function detailSectionHtml(label, text) {
   return `<div class="detail-section"><span class="detail-section-label">${label}</span><p>${text}</p></div>`;
 }
 
+/* Names the circles drawn around the selected record, in the same colours
+   they appear in. The on-map labels say what each ring is; this says what
+   each one means, which is the part a reader actually needs — a cordon is a
+   fact about what happened, an accuracy ring is a caveat about the data. */
+function detailKeyHtml(record) {
+  const rows = [];
+
+  if (record.cordonRadiusM) {
+    rows.push({
+      variant: "cordon",
+      title: `Evacuation cordon · ${record.cordonRadiusM}m`,
+      note: "The area actually cleared while the device was dealt with."
+    });
+  }
+
+  rows.push({
+    variant: "accuracy",
+    title: `Position accuracy · ±${accuracyRadiusM(record)}m`,
+    note: "How closely the source pins the location — the bomb fell somewhere in here, not necessarily at the marker."
+  });
+
+  return `
+    <div class="detail-section">
+      <span class="detail-section-label">On the map</span>
+      <ul class="detail-key">
+        ${rows
+          .map(
+            (r) => `
+          <li class="detail-key-row">
+            <span class="detail-key-swatch detail-key-swatch--${r.variant}" aria-hidden="true"></span>
+            <span class="detail-key-text">
+              <strong>${r.title}</strong>
+              <span>${r.note}</span>
+            </span>
+          </li>`
+          )
+          .join("")}
+      </ul>
+    </div>
+  `;
+}
+
 function detailContent(record) {
   const sourceLinks = (record.sources || [])
     .map((s) => `<a href="${s.url}" target="_blank" rel="noopener">${s.label} ↗</a>`)
@@ -2173,6 +2215,7 @@ function detailContent(record) {
     <h3>${record.title}</h3>
     <p class="detail-date">${record.date}</p>
     ${detailStatsHtml(record)}
+    ${detailKeyHtml(record)}
     ${detailSectionHtml("What happened", record.summary)}
     ${detailSectionHtml("How it was made safe", record.disposal)}
     ${detailSectionHtml("Evacuation", evacuationText)}
@@ -2189,19 +2232,128 @@ function detailContent(record) {
 function clearDetailCordon() {
   if (detailCordonCircle) { map.removeLayer(detailCordonCircle); detailCordonCircle = null; }
   if (detailCordonCenter) { map.removeLayer(detailCordonCenter); detailCordonCenter = null; }
+  clearMapLabels();
 }
+
+/* ---------- Telling the two circles apart ----------
+   A selected record can draw two concentric circles, and they mean opposite
+   things: the big one is how far people were moved, the small one is how
+   unsure we are about where the bomb actually was. Both used to be blue,
+   with nothing on the map naming either, so the honest answer to "what am I
+   looking at" was "you can't tell".
+
+   Three things separate them now:
+     - Colour. The cordon is amber, which is what the rest of the site
+       already uses for cordons and UXO warnings; it was previously a blue
+       that matched nothing else. Accuracy stays cyan, the site's neutral
+       informational accent.
+     - Line style. The accuracy ring is dashed, because a dashed edge reads
+       as approximate — which is exactly what it is. A cordon was a real
+       line on a real street, so it stays solid.
+     - A label on each ring, so neither depends on the reader knowing a
+       colour convention. */
+const CORDON_COLOR = "#ff9f43";
+const ACCURACY_COLOR = "#00f2fe";
+
+// Good enough for placing a label on a ring's edge; no projection subtlety
+// is warranted for a few hundred metres of label offset.
+const METRES_PER_DEG_LAT = 111320;
+
+let detailLabels = [];
+
+function addMapLabel(lat, lng, text, variant, direction, ringCentre, ringRadiusM) {
+  const label = L.tooltip({
+    permanent: true,
+    direction,
+    interactive: false,
+    className: `map-ring-label map-ring-label--${variant}`
+  })
+    .setLatLng([lat, lng])
+    .setContent(text)
+    .addTo(map);
+  // Remembered so the label can hide itself when its ring is too small on
+  // screen to be worth naming (see updateRingLabelVisibility).
+  label._ringCentre = ringCentre;
+  label._ringRadiusM = ringRadiusM;
+  detailLabels.push(label);
+  return label;
+}
+
+function clearMapLabels() {
+  detailLabels.forEach((label) => map.removeLayer(label));
+  detailLabels = [];
+}
+
+/* Zoomed far enough out, both rings shrink to a few pixels and their labels
+   land on top of each other — which recreates the confusion they exist to
+   solve. Below a ring size worth naming, the label steps aside; the panel
+   key still explains both. */
+const MIN_LABELLED_RING_PX = 34;
+
+function ringRadiusPx(centre, radiusM) {
+  const a = map.latLngToLayerPoint(centre);
+  const b = map.latLngToLayerPoint([centre[0] + radiusM / METRES_PER_DEG_LAT, centre[1]]);
+  return Math.abs(a.y - b.y);
+}
+
+function updateRingLabelVisibility() {
+  detailLabels.forEach((label) => {
+    const el = label.getElement();
+    if (!el || !label._ringCentre) return;
+    const big = ringRadiusPx(label._ringCentre, label._ringRadiusM) >= MIN_LABELLED_RING_PX;
+    el.classList.toggle("is-too-small", !big);
+  });
+}
+
+map.on("zoomend", updateRingLabelVisibility);
 
 function drawDetailCordon(record) {
   clearDetailCordon();
-  if (!record.cordonRadiusM) return;
-  const color = "#4169a8";
-  detailCordonCenter = L.circleMarker([record.lat, record.lng], {
-    radius: 5, color, fillColor: color, fillOpacity: 1, weight: 2
-  }).addTo(map);
-  detailCordonCircle = L.circle([record.lat, record.lng], {
-    radius: record.cordonRadiusM, color, weight: 1.5, fillColor: color, fillOpacity: 0.12,
-    className: "detail-cordon-pulse"
-  }).addTo(map);
+
+  const accuracyM = accuracyRadiusM(record);
+
+  // Labels sit on the top edge of the cordon and the bottom edge of the
+  // accuracy ring, so the two never stack on top of each other.
+  if (record.cordonRadiusM) {
+    detailCordonCenter = L.circleMarker([record.lat, record.lng], {
+      radius: 5,
+      color: CORDON_COLOR,
+      fillColor: CORDON_COLOR,
+      fillOpacity: 1,
+      weight: 2
+    }).addTo(map);
+
+    detailCordonCircle = L.circle([record.lat, record.lng], {
+      radius: record.cordonRadiusM,
+      color: CORDON_COLOR,
+      weight: 1.5,
+      fillColor: CORDON_COLOR,
+      fillOpacity: 0.1,
+      className: "detail-cordon-pulse"
+    }).addTo(map);
+
+    addMapLabel(
+      record.lat + record.cordonRadiusM / METRES_PER_DEG_LAT,
+      record.lng,
+      `Evacuation cordon · ${record.cordonRadiusM}m`,
+      "cordon",
+      "top",
+      [record.lat, record.lng],
+      record.cordonRadiusM
+    );
+  }
+
+  addMapLabel(
+    record.lat - accuracyM / METRES_PER_DEG_LAT,
+    record.lng,
+    `Position accurate to ±${accuracyM}m`,
+    "accuracy",
+    "bottom",
+    [record.lat, record.lng],
+    accuracyM
+  );
+
+  updateRingLabelVisibility();
 }
 
 /* ---------- Panel stacking ----------
@@ -2343,10 +2495,13 @@ function renderMarkers() {
       const circle = L.circle([record.lat, record.lng], {
         radius: accuracyRadiusM(record),
         interactive: false,
-        color: "#00f2fe",
+        color: ACCURACY_COLOR,
         weight: 1,
         opacity: 0.28,
-        fillColor: "#00f2fe",
+        // Dashed, so the ring reads as "roughly here" at a glance and can't
+        // be mistaken for the solid cordon circle drawn around a selection.
+        dashArray: "3 4",
+        fillColor: ACCURACY_COLOR,
         fillOpacity: 0.07
       }).addTo(map);
       accuracyCircles.set(record.id, circle);
