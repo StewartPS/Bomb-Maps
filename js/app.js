@@ -3174,18 +3174,68 @@ if (typeof COUNTY_BOUNDARIES !== "undefined" && COUNTY_BOUNDARIES) {
 
 function clearCountyOutline() {
   if (countyOutline) { map.removeLayer(countyOutline); countyOutline = null; }
+  hideCountyMask();
+}
+
+/* geojson.io-flavoured bbox area, in square degrees. Only used to rank
+   candidate matches against each other — never shown to a user — so raw
+   lat/lng degrees (rather than a proper equal-area projection) are fine. */
+function geometryBBoxArea(geometry) {
+  let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+  const visit = (ring) => {
+    for (const [x, y] of ring) {
+      if (x < minX) minX = x;
+      if (x > maxX) maxX = x;
+      if (y < minY) minY = y;
+      if (y > maxY) maxY = y;
+    }
+  };
+  if (geometry.type === "Polygon") geometry.coordinates.forEach(visit);
+  else if (geometry.type === "MultiPolygon") geometry.coordinates.forEach((poly) => poly.forEach(visit));
+  else return 0;
+  if (!Number.isFinite(minX) || !Number.isFinite(maxX)) return 0;
+  return Math.max(0, maxX - minX) * Math.max(0, maxY - minY);
+}
+
+/* A real county is on the order of 1° x 1° or more. A coastal heritage-coast
+   strip, a beach, or a single settlement polygon — the kind of thing that
+   used to slip through when this only looked at Nominatim's first result —
+   is nowhere close. Anything under this is treated as "not a county" rather
+   than drawn as if it were one. */
+const MIN_COUNTY_BBOX_AREA_DEG2 = 0.05;
+
+/* Nominatim's top hit for a bare county name is not reliably the
+   administrative boundary — it has previously matched things like a
+   heritage-coast designation that only traces the coastline, which is why
+   the drawn outline hugged the shore and cut inland towns like Newton Abbot
+   out of "Devon" entirely. Asking for several candidates and picking the
+   one that is actually an administrative boundary (and a plausibly
+   county-sized one) fixes that at the source. */
+function pickBestBoundaryMatch(results) {
+  const candidates = (results || [])
+    .filter((hit) => hit && hit.geojson && /Polygon$/.test(hit.geojson.type))
+    .map((hit) => ({ hit, area: geometryBBoxArea(hit.geojson) }));
+
+  const administrative = candidates.filter(
+    (c) => c.hit.class === "boundary" && c.hit.type === "administrative" && c.area >= MIN_COUNTY_BBOX_AREA_DEG2
+  );
+  const pool = administrative.length ? administrative : candidates.filter((c) => c.area >= MIN_COUNTY_BBOX_AREA_DEG2);
+  if (!pool.length) return null;
+
+  pool.sort((a, b) => b.area - a.area);
+  return pool[0].hit;
 }
 
 async function fetchCountyBoundary(name) {
   const url =
-    "https://nominatim.openstreetmap.org/search?format=json&limit=1&polygon_geojson=1" +
+    "https://nominatim.openstreetmap.org/search?format=json&limit=5&polygon_geojson=1" +
     `&countrycodes=gb&q=${encodeURIComponent(`${name}, United Kingdom`)}`;
   const res = await fetch(url, { headers: { "Accept-Language": "en-GB" } });
   if (!res.ok) throw new Error(`Nominatim responded ${res.status}`);
   const data = await res.json();
-  const geometry = data && data[0] && data[0].geojson;
-  if (!geometry || !/Polygon$/.test(geometry.type)) throw new Error("no polygon returned");
-  return geometry;
+  const best = pickBestBoundaryMatch(data);
+  if (!best) throw new Error("no plausible county boundary in results");
+  return best.geojson;
 }
 
 async function drawCountyOutline(name) {
@@ -3205,7 +3255,88 @@ async function drawCountyOutline(name) {
   // The county may have changed while the request was in flight.
   if (activeCounty !== name) return;
   countyOutline = L.geoJSON(geometry, { style: () => COUNTY_OUTLINE_STYLE }).addTo(map);
+  showCountyMask(geometry);
 }
+
+/* ---------- County mask (blur + darken outside the selection) ----------
+   The dashed outline alone says what's in scope; this makes it unmissable
+   by pushing everything outside it back visually — a soft gaussian blur
+   plus a slight darken, so the selected county still reads as sitting on
+   top of the rest of the map rather than being cut out of it.
+
+   Implemented as one absolutely-positioned div over the Leaflet container,
+   clipped to "everything except the county polygon" with an evenodd
+   clip-path. That clip path is expressed in on-screen pixels, so it has to
+   be recomputed whenever the map pans, zooms, or resizes — cheap enough at
+   the point counts this dashed outline uses (see SIMPLIFY_TOLERANCE in
+   tools/fetch-county-boundaries.js), and rAF-throttled either way. */
+let countyMaskEl = null;
+let countyMaskGeometry = null;
+let countyMaskFrame = null;
+
+function ensureCountyMaskEl() {
+  if (countyMaskEl) return countyMaskEl;
+  countyMaskEl = document.createElement("div");
+  countyMaskEl.className = "county-mask";
+  countyMaskEl.setAttribute("aria-hidden", "true");
+  mapEl.appendChild(countyMaskEl);
+  return countyMaskEl;
+}
+
+function countyMaskRings(geometry) {
+  if (!geometry) return [];
+  if (geometry.type === "Polygon") return [geometry.coordinates[0]];
+  if (geometry.type === "MultiPolygon") return geometry.coordinates.map((poly) => poly[0]);
+  return [];
+}
+
+function updateCountyMaskPath() {
+  if (!countyMaskEl || !countyMaskGeometry) return;
+  const { x: w, y: h } = map.getSize();
+
+  // A generous outer rectangle (padded well past the viewport) that gets
+  // holes punched in it — one per county ring — via the evenodd fill rule.
+  const pad = 200;
+  const outer = `M ${-pad} ${-pad} L ${w + pad} ${-pad} L ${w + pad} ${h + pad} L ${-pad} ${h + pad} Z`;
+
+  const holes = countyMaskRings(countyMaskGeometry)
+    .map((ring) => {
+      const pts = ring.map(([lng, lat]) => {
+        const p = map.latLngToContainerPoint([lat, lng]);
+        return `${p.x.toFixed(1)} ${p.y.toFixed(1)}`;
+      });
+      if (pts.length < 3) return "";
+      return `M ${pts.join(" L ")} Z`;
+    })
+    .filter(Boolean)
+    .join(" ");
+
+  const path = `${outer} ${holes}`;
+  countyMaskEl.style.clipPath = `path(evenodd, "${path}")`;
+  countyMaskEl.style.webkitClipPath = `path(evenodd, "${path}")`;
+}
+
+function scheduleCountyMaskUpdate() {
+  if (countyMaskFrame) return;
+  countyMaskFrame = requestAnimationFrame(() => {
+    countyMaskFrame = null;
+    updateCountyMaskPath();
+  });
+}
+
+function showCountyMask(geometry) {
+  countyMaskGeometry = geometry;
+  ensureCountyMaskEl();
+  updateCountyMaskPath();
+  countyMaskEl.classList.add("is-visible");
+}
+
+function hideCountyMask() {
+  countyMaskGeometry = null;
+  if (countyMaskEl) countyMaskEl.classList.remove("is-visible");
+}
+
+map.on("move zoom resize", scheduleCountyMaskUpdate);
 
 const heroEyebrow = document.getElementById("heroEyebrow");
 

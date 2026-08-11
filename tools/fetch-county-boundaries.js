@@ -107,16 +107,57 @@ function countiesFromApp() {
   return [...names].sort();
 }
 
+// geojson.io-flavoured bbox area in square degrees — only used to rank
+// candidate matches against each other, so raw lat/lng degrees are fine.
+function bboxArea(geometry) {
+  let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+  const visit = (ring) => {
+    for (const [x, y] of ring) {
+      if (x < minX) minX = x;
+      if (x > maxX) maxX = x;
+      if (y < minY) minY = y;
+      if (y > maxY) maxY = y;
+    }
+  };
+  if (geometry.type === "Polygon") geometry.coordinates.forEach(visit);
+  else if (geometry.type === "MultiPolygon") geometry.coordinates.forEach((poly) => poly.forEach(visit));
+  else return 0;
+  if (!Number.isFinite(minX) || !Number.isFinite(maxX)) return 0;
+  return Math.max(0, maxX - minX) * Math.max(0, maxY - minY);
+}
+
+// A real county is on the order of 1° x 1° or more. Nominatim's top hit for
+// a bare county name isn't reliably the administrative boundary — it has
+// previously matched things like a heritage-coast designation that only
+// traces the shoreline, which draws an outline hugging the coast and
+// missing inland towns entirely. Asking for several candidates and
+// preferring an actual admin boundary of plausible size fixes that.
+const MIN_COUNTY_BBOX_AREA_DEG2 = 0.05;
+
+function pickBestMatch(results) {
+  const candidates = (results || [])
+    .filter((hit) => hit && hit.geojson && /Polygon$/.test(hit.geojson.type))
+    .map((hit) => ({ hit, area: bboxArea(hit.geojson) }));
+
+  const administrative = candidates.filter(
+    (c) => c.hit.class === "boundary" && c.hit.type === "administrative" && c.area >= MIN_COUNTY_BBOX_AREA_DEG2
+  );
+  const pool = administrative.length ? administrative : candidates.filter((c) => c.area >= MIN_COUNTY_BBOX_AREA_DEG2);
+  if (!pool.length) return null;
+
+  pool.sort((a, b) => b.area - a.area);
+  return pool[0].hit;
+}
+
 async function fetchBoundary(name) {
   const url =
-    "https://nominatim.openstreetmap.org/search?format=json&limit=1&polygon_geojson=1" +
+    "https://nominatim.openstreetmap.org/search?format=json&limit=5&polygon_geojson=1" +
     `&countrycodes=gb&q=${encodeURIComponent(`${name}, United Kingdom`)}`;
   const res = await fetch(url, { headers: { "User-Agent": USER_AGENT, "Accept-Language": "en-GB" } });
   if (!res.ok) throw new Error(`Nominatim responded ${res.status}`);
   const data = await res.json();
-  const hit = data && data[0];
-  if (!hit || !hit.geojson) throw new Error("no result");
-  if (!/Polygon$/.test(hit.geojson.type)) throw new Error(`got ${hit.geojson.type}, not a polygon`);
+  const hit = pickBestMatch(data);
+  if (!hit) throw new Error("no plausible county boundary in results");
   return { geometry: hit.geojson, matchedName: hit.display_name };
 }
 

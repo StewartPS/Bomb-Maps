@@ -113,6 +113,29 @@ body,
   50% { fill-opacity: 0.24; stroke-opacity: 0.45; }
 }
 
+/* ---------- County mask ----------
+   Sits inside #map, above the tile pane (z-index 200) but below markers
+   and popups (500+), clipped by JS (see showCountyMask/updateCountyMaskPath
+   in js/app.js) to everything OUTSIDE the selected county's boundary. The
+   blur is a real backdrop-filter — it blurs the map tiles underneath, not
+   just an opacity trick — so the selected county reads as sharp and in
+   focus against a softened, dimmed backdrop. */
+.county-mask {
+  position: absolute;
+  inset: 0;
+  z-index: 350;
+  pointer-events: none;
+  background: rgba(6, 9, 15, 0.42);
+  -webkit-backdrop-filter: blur(5px);
+  backdrop-filter: blur(5px);
+  opacity: 0;
+  transition: opacity 0.35s ease-in-out;
+}
+
+.county-mask.is-visible {
+  opacity: 1;
+}
+
 * {
   box-sizing: border-box;
 }
