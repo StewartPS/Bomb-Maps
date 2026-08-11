@@ -2,189 +2,120 @@
 /* ============================================================
    FETCH COUNTY BOUNDARIES
    ------------------------------------------------------------
-   Pulls an outline for every county the site covers and writes
-   data/county-boundaries.js, which the map uses to draw the red
-   dashed boundary when a county is selected.
+   Writes data/county-boundaries.js, which the map uses to draw
+   the red dashed boundary when a county is selected.
 
    USAGE
+       npm install @turf/turf          # one-off, build-time only
        node tools/fetch-county-boundaries.js
 
-   Counties are read straight out of js/app.js, so this stays in
-   step with the site: add a town with a new `county` and re-run.
+   WHY NOT JUST ASK NOMINATIM FOR "Devon"?
+   Because that returns the ADMINISTRATIVE county — the area
+   Devon County Council governs — and that deliberately excludes
+   Plymouth and Torbay, which are unitary authorities. Drawing it
+   as "Devon" cuts holes around Plymouth, Torquay, Paignton and
+   Brixham, all of which this site has records for, so records sat
+   visibly outside the boundary of the county they belong to.
+   The same applies to Cornwall, which excludes the Isles of Scilly.
 
-   WHY BOTHER, when the app can fetch outlines at runtime?
-   Because the runtime path asks OpenStreetMap's servers for a
-   polygon every time a new visitor picks a county — slow for
-   them, discourteous to a free service, and broken if it's down.
-   Generating the file once removes all three problems.
+   What a reader means by "Devon" is the CEREMONIAL county, so
+   that is what this builds: the union of the local-authority
+   districts that make it up. The district list is below; add a
+   county by adding its districts.
+
+   SOURCE
+   ONS Local Authority Districts (December 2013) via the
+   martinjc/UK-GeoJSON mirror. Open Government Licence v3;
+   contains Ordnance Survey data (c) Crown copyright.
+
+   Boundaries are modern. They are NOT identical to wartime
+   administrative boundaries — see the comment above
+   buildCounties() in js/app.js.
 
    SIMPLIFICATION
-   Raw county polygons run to tens of thousands of points, which
-   is far more than a dashed outline needs and enough to make the
-   page janky. Points are thinned with Ramer–Douglas–Peucker at a
-   tolerance chosen to stay visually faithful at county zoom.
+   Raw district polygons run to tens of thousands of points, far
+   more than a dashed outline needs and enough to make panning
+   janky, since the county mask re-projects every point on each
+   frame. Thinned with Douglas-Peucker at a tolerance well inside
+   the width of the dashed stroke at county zoom.
    ============================================================ */
 
 const fs = require("fs");
 const path = require("path");
 
+let turf;
+try {
+  turf = require("@turf/turf");
+} catch (e) {
+  console.error("\n  Missing build dependency. Run:\n\n      npm install @turf/turf\n");
+  process.exit(1);
+}
+
 const ROOT = path.resolve(__dirname, "..");
-const APP = path.join(ROOT, "js/app.js");
 const OUT = path.join(ROOT, "data/county-boundaries.js");
 
-const RATE_LIMIT_MS = 1100; // Nominatim: no more than one request per second
-const USER_AGENT = "BombMaps/1.0 (https://bombmaps.co.uk; historical mapping project)";
-const SIMPLIFY_TOLERANCE = 0.002; // degrees, ~200m — invisible at county zoom
+const SOURCE_URL =
+  "https://raw.githubusercontent.com/martinjc/UK-GeoJSON/master/json/administrative/eng/lad.json";
 
-/* ---------- Ramer–Douglas–Peucker ----------
-   Keeps the points that define the shape and drops the ones that sit close
-   to the line between their neighbours. Operating on raw lat/lng degrees is
-   slightly anisotropic at UK latitudes, which is fine here: the tolerance is
-   well below the width of the dashed stroke either way. */
-function perpendicularDistance(p, a, b) {
-  const [x, y] = p, [x1, y1] = a, [x2, y2] = b;
-  const dx = x2 - x1, dy = y2 - y1;
-  if (dx === 0 && dy === 0) return Math.hypot(x - x1, y - y1);
-  const t = ((x - x1) * dx + (y - y1) * dy) / (dx * dx + dy * dy);
-  const clamped = Math.max(0, Math.min(1, t));
-  return Math.hypot(x - (x1 + clamped * dx), y - (y1 + clamped * dy));
-}
+const SIMPLIFY_TOLERANCE = 0.002; // degrees, ~200m
 
-function simplify(points, tolerance) {
-  if (points.length < 3) return points;
-  let maxDistance = 0;
-  let index = 0;
-  for (let i = 1; i < points.length - 1; i++) {
-    const d = perpendicularDistance(points[i], points[0], points[points.length - 1]);
-    if (d > maxDistance) { maxDistance = d; index = i; }
-  }
-  if (maxDistance <= tolerance) return [points[0], points[points.length - 1]];
-  return [
-    ...simplify(points.slice(0, index + 1), tolerance).slice(0, -1),
-    ...simplify(points.slice(index), tolerance)
-  ];
-}
-
-function simplifyGeometry(geometry) {
-  const round = (ring) => ring.map(([lng, lat]) => [Number(lng.toFixed(4)), Number(lat.toFixed(4))]);
-
-  // A simplified ring must still be a ring: at least four points, first equal
-  // to last. Anything that collapses below that is dropped rather than drawn
-  // as a stray line.
-  const doRing = (ring) => {
-    const out = round(simplify(ring, SIMPLIFY_TOLERANCE));
-    if (out.length < 4) return null;
-    const [fx, fy] = out[0];
-    const [lx, ly] = out[out.length - 1];
-    if (fx !== lx || fy !== ly) out.push([fx, fy]);
-    return out;
-  };
-
-  if (geometry.type === "Polygon") {
-    const rings = geometry.coordinates.map(doRing).filter(Boolean);
-    return rings.length ? { type: "Polygon", coordinates: rings } : null;
-  }
-  if (geometry.type === "MultiPolygon") {
-    const polys = geometry.coordinates
-      .map((poly) => poly.map(doRing).filter(Boolean))
-      .filter((poly) => poly.length);
-    return polys.length ? { type: "MultiPolygon", coordinates: polys } : null;
-  }
-  return null;
-}
+/* Ceremonial counties, as the districts they are made of. The names must
+   match LAD13NM in the source exactly. Plymouth and Torbay are listed under
+   Devon, and Isles of Scilly under Cornwall, precisely because the
+   administrative boundaries leave them out. */
+const CEREMONIAL = {
+  Devon: [
+    "East Devon", "Exeter", "Mid Devon", "North Devon", "South Hams",
+    "Teignbridge", "Torridge", "West Devon", "Plymouth", "Torbay"
+  ],
+  Cornwall: ["Cornwall", "Isles of Scilly"]
+};
 
 function countPoints(geometry) {
   const rings = geometry.type === "Polygon" ? geometry.coordinates : geometry.coordinates.flat();
   return rings.reduce((sum, ring) => sum + ring.length, 0);
 }
 
-// Read the county names out of the site's own data rather than keeping a
-// second list here that could drift out of step.
-function countiesFromApp() {
-  const src = fs.readFileSync(APP, "utf8");
-  const names = new Set();
-  for (const m of src.matchAll(/county:\s*"([^"]+)"/g)) names.add(m[1]);
-  return [...names].sort();
-}
-
-// geojson.io-flavoured bbox area in square degrees — only used to rank
-// candidate matches against each other, so raw lat/lng degrees are fine.
-function bboxArea(geometry) {
-  let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
-  const visit = (ring) => {
-    for (const [x, y] of ring) {
-      if (x < minX) minX = x;
-      if (x > maxX) maxX = x;
-      if (y < minY) minY = y;
-      if (y > maxY) maxY = y;
-    }
-  };
-  if (geometry.type === "Polygon") geometry.coordinates.forEach(visit);
-  else if (geometry.type === "MultiPolygon") geometry.coordinates.forEach((poly) => poly.forEach(visit));
-  else return 0;
-  if (!Number.isFinite(minX) || !Number.isFinite(maxX)) return 0;
-  return Math.max(0, maxX - minX) * Math.max(0, maxY - minY);
-}
-
-// A real county is on the order of 1° x 1° or more. Nominatim's top hit for
-// a bare county name isn't reliably the administrative boundary — it has
-// previously matched things like a heritage-coast designation that only
-// traces the shoreline, which draws an outline hugging the coast and
-// missing inland towns entirely. Asking for several candidates and
-// preferring an actual admin boundary of plausible size fixes that.
-const MIN_COUNTY_BBOX_AREA_DEG2 = 0.05;
-
-function pickBestMatch(results) {
-  const candidates = (results || [])
-    .filter((hit) => hit && hit.geojson && /Polygon$/.test(hit.geojson.type))
-    .map((hit) => ({ hit, area: bboxArea(hit.geojson) }));
-
-  const administrative = candidates.filter(
-    (c) => c.hit.class === "boundary" && c.hit.type === "administrative" && c.area >= MIN_COUNTY_BBOX_AREA_DEG2
-  );
-  const pool = administrative.length ? administrative : candidates.filter((c) => c.area >= MIN_COUNTY_BBOX_AREA_DEG2);
-  if (!pool.length) return null;
-
-  pool.sort((a, b) => b.area - a.area);
-  return pool[0].hit;
-}
-
-async function fetchBoundary(name) {
-  const url =
-    "https://nominatim.openstreetmap.org/search?format=json&limit=5&polygon_geojson=1" +
-    `&countrycodes=gb&q=${encodeURIComponent(`${name}, United Kingdom`)}`;
-  const res = await fetch(url, { headers: { "User-Agent": USER_AGENT, "Accept-Language": "en-GB" } });
-  if (!res.ok) throw new Error(`Nominatim responded ${res.status}`);
-  const data = await res.json();
-  const hit = pickBestMatch(data);
-  if (!hit) throw new Error("no plausible county boundary in results");
-  return { geometry: hit.geojson, matchedName: hit.display_name };
+// 4dp is ~11m at these latitudes — far below the dashed stroke's width, and
+// it roughly halves the file size against full precision.
+function roundGeometry(geometry) {
+  const doRing = (ring) => ring.map(([x, y]) => [Number(x.toFixed(4)), Number(y.toFixed(4))]);
+  if (geometry.type === "Polygon") {
+    return { type: "Polygon", coordinates: geometry.coordinates.map(doRing) };
+  }
+  return { type: "MultiPolygon", coordinates: geometry.coordinates.map((p) => p.map(doRing)) };
 }
 
 async function main() {
-  const counties = countiesFromApp();
-  if (!counties.length) {
-    console.error("\nNo counties found in js/app.js. Nothing to do.\n");
-    process.exit(1);
-  }
+  console.log(`\n  Fetching districts from ONS mirror…`);
+  const res = await fetch(SOURCE_URL);
+  if (!res.ok) throw new Error(`source responded ${res.status}`);
+  const source = await res.json();
 
-  console.log(`\n  ${counties.length} counties: ${counties.join(", ")}\n`);
+  const byName = new Map(source.features.map((f) => [f.properties.LAD13NM, f]));
+  console.log(`  ${source.features.length} districts available\n`);
 
   const output = {};
-  for (const name of counties) {
-    try {
-      const { geometry, matchedName } = await fetchBoundary(name);
-      const before = countPoints(geometry);
-      const simplified = simplifyGeometry(geometry);
-      if (!simplified) { console.log(`  ! ${name}: collapsed under simplification, skipped`); continue; }
-      const after = countPoints(simplified);
-      output[name] = simplified;
-      console.log(`  ok  ${name}  ${before} -> ${after} points`);
-      console.log(`      matched: ${matchedName}`);
-    } catch (e) {
-      console.log(`  !   ${name}: ${e.message} — will fall back to a runtime lookup`);
+  for (const [county, districts] of Object.entries(CEREMONIAL)) {
+    const missing = districts.filter((d) => !byName.has(d));
+    if (missing.length) {
+      console.log(`  !   ${county}: no district named ${missing.join(", ")} — skipped`);
+      continue;
     }
-    await new Promise((r) => setTimeout(r, RATE_LIMIT_MS));
+
+    // Merge the districts into one outline so internal council borders don't
+    // get drawn as if they were county boundaries.
+    let merged = turf.feature(byName.get(districts[0]).geometry);
+    for (let i = 1; i < districts.length; i++) {
+      merged = turf.union(turf.featureCollection([merged, turf.feature(byName.get(districts[i]).geometry)]));
+    }
+
+    const before = countPoints(merged.geometry);
+    const simplified = turf.simplify(merged, { tolerance: SIMPLIFY_TOLERANCE, highQuality: false, mutate: false });
+    const geometry = roundGeometry(simplified.geometry);
+
+    output[county] = geometry;
+    console.log(`  ok  ${county}  ${districts.length} districts, ${before} -> ${countPoints(geometry)} points`);
   }
 
   const header = `/* ============================================================
@@ -193,22 +124,33 @@ async function main() {
    Rebuild with: node tools/fetch-county-boundaries.js
    Generated:    ${new Date().toISOString()}
 
-   Outlines simplified to a ~${SIMPLIFY_TOLERANCE * 111}km tolerance, which is
-   well inside the width of the dashed stroke at county zoom.
+   CEREMONIAL counties, built by merging the local-authority
+   districts that make each one up. This matters: the "Devon"
+   administrative boundary is the county council area, which
+   EXCLUDES Plymouth and Torbay because they are unitary
+   authorities. Drawing that as "Devon" punches holes around
+   Plymouth, Torquay, Paignton and Brixham — all of which this
+   site has records for. Cornwall likewise excludes the Isles
+   of Scilly. The ceremonial county is what a reader means by
+   "Devon", so that is what is drawn.
 
-   Modern ceremonial counties, from OpenStreetMap contributors
-   (ODbL). NOT identical to wartime administrative boundaries —
-   see the comment above buildCounties() in js/app.js.
+   Source: ONS Local Authority Districts via martinjc/UK-GeoJSON.
+   Open Government Licence v3; contains OS data (c) Crown copyright.
 
-   A county missing from here is not a failure: the app falls
-   back to fetching that outline from OSM at runtime.
+   Simplified to a ~${SIMPLIFY_TOLERANCE * 111}km tolerance, well inside the
+   width of the dashed stroke at county zoom.
+
+   NOT identical to wartime administrative boundaries — see the
+   comment above buildCounties() in js/app.js.
    ============================================================ */
 const COUNTY_BOUNDARIES = `;
 
   fs.writeFileSync(OUT, `${header}${JSON.stringify(output)};\n`);
-
   const bytes = fs.statSync(OUT).size;
-  console.log(`\n  ${Object.keys(output).length}/${counties.length} written to data/county-boundaries.js (${(bytes / 1024).toFixed(1)} kB)\n`);
+  console.log(`\n  ${Object.keys(output).length}/${Object.keys(CEREMONIAL).length} written to data/county-boundaries.js (${(bytes / 1024).toFixed(1)} kB)\n`);
 }
 
-main();
+main().catch((e) => {
+  console.error(`\n  Failed: ${e.message}\n`);
+  process.exit(1);
+});
