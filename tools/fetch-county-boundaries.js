@@ -33,11 +33,12 @@
    buildCounties() in js/app.js.
 
    SIMPLIFICATION
-   Raw district polygons run to tens of thousands of points, far
-   more than a dashed outline needs and enough to make panning
-   janky, since the county mask re-projects every point on each
-   frame. Thinned with Douglas-Peucker at a tolerance well inside
-   the width of the dashed stroke at county zoom.
+   Raw district polygons run to tens of thousands of points, more
+   than the map needs and enough to bloat the file. Thinned with
+   Douglas-Peucker. The tolerance is a trade: too coarse and the
+   outline visibly leaves the coastline once you zoom past the
+   county view, which reads as a bug rather than as simplification.
+   ~55m holds up to street zoom at a file size the site can carry.
    ============================================================ */
 
 const fs = require("fs");
@@ -57,7 +58,7 @@ const OUT = path.join(ROOT, "data/county-boundaries.js");
 const SOURCE_URL =
   "https://raw.githubusercontent.com/martinjc/UK-GeoJSON/master/json/administrative/eng/lad.json";
 
-const SIMPLIFY_TOLERANCE = 0.002; // degrees, ~200m
+const SIMPLIFY_TOLERANCE = 0.0005; // degrees, ~55m
 
 /* Ceremonial counties, as the districts they are made of. The names must
    match LAD13NM in the source exactly. Plymouth and Torbay are listed under
@@ -76,10 +77,10 @@ function countPoints(geometry) {
   return rings.reduce((sum, ring) => sum + ring.length, 0);
 }
 
-// 4dp is ~11m at these latitudes — far below the dashed stroke's width, and
-// it roughly halves the file size against full precision.
+// 5dp is ~1m at these latitudes. 4dp was enough for a line seen only at
+// county zoom, but the outline is legible at street zoom too.
 function roundGeometry(geometry) {
-  const doRing = (ring) => ring.map(([x, y]) => [Number(x.toFixed(4)), Number(y.toFixed(4))]);
+  const doRing = (ring) => ring.map(([x, y]) => [Number(x.toFixed(5)), Number(y.toFixed(5))]);
   if (geometry.type === "Polygon") {
     return { type: "Polygon", coordinates: geometry.coordinates.map(doRing) };
   }
@@ -137,8 +138,8 @@ async function main() {
    Source: ONS Local Authority Districts via martinjc/UK-GeoJSON.
    Open Government Licence v3; contains OS data (c) Crown copyright.
 
-   Simplified to a ~${SIMPLIFY_TOLERANCE * 111}km tolerance, well inside the
-   width of the dashed stroke at county zoom.
+   Simplified to a ~${Math.round(SIMPLIFY_TOLERANCE * 111000)}m tolerance — fine enough that the
+   outline still tracks the coast when zoomed past county level.
 
    NOT identical to wartime administrative boundaries — see the
    comment above buildCounties() in js/app.js.

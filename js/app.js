@@ -1501,8 +1501,71 @@ const HAS_POTENTIAL_DATA =
   typeof POTENTIAL_BOMB_SITES !== "undefined" && POTENTIAL_BOMB_SITES.length > 0;
 
 // The potential-sites layer is digitised from Plymouth mapping only, so the
-// whole layer belongs to one county for the purposes of dimming it.
+// whole layer belongs to one county for scoping purposes.
 const POTENTIAL_SITES_COUNTY = "Devon";
+
+/* ---------- Which county is a record actually in? ----------
+   Records are grouped into regions for editorial reasons, and a region's
+   county is not always the county the record sits in. The Saltash records
+   are the clear case: they are filed under Plymouth, because that is the
+   raid they belong to, but Saltash is in Cornwall. Taking the county from
+   the region put them in Devon and dropped them out of scope whenever
+   Cornwall was selected — visibly wrong, since they are plotted well the
+   Cornish side of the Tamar.
+
+   So the county comes from the coordinates, tested against the same
+   boundaries the map draws, and falls back to the region's county only when
+   no polygon claims the point (a missing boundary file, or a record just
+   offshore). Results are cached — the answer can't change during a session. */
+const COUNTY_GEOMETRIES =
+  typeof COUNTY_BOUNDARIES !== "undefined" && COUNTY_BOUNDARIES ? COUNTY_BOUNDARIES : {};
+
+function pointInRing(lat, lng, ring) {
+  let inside = false;
+  for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
+    const [xi, yi] = ring[i];
+    const [xj, yj] = ring[j];
+    const straddles = yi > lat !== yj > lat;
+    if (straddles && lng < ((xj - xi) * (lat - yi)) / (yj - yi) + xi) inside = !inside;
+  }
+  return inside;
+}
+
+function pointInGeometry(lat, lng, geometry) {
+  if (!geometry) return false;
+  const polygons = geometry.type === "Polygon" ? [geometry.coordinates] : geometry.coordinates;
+  for (const rings of polygons) {
+    if (!pointInRing(lat, lng, rings[0])) continue;
+    // Ring 0 is the outline; any further ring is a hole punched out of it.
+    let inHole = false;
+    for (let i = 1; i < rings.length; i++) {
+      if (pointInRing(lat, lng, rings[i])) { inHole = true; break; }
+    }
+    if (!inHole) return true;
+  }
+  return false;
+}
+
+const recordCountyCache = new Map();
+
+function recordCounty(record) {
+  if (recordCountyCache.has(record.id)) return recordCountyCache.get(record.id);
+  let county = "";
+  for (const [name, geometry] of Object.entries(COUNTY_GEOMETRIES)) {
+    if (pointInGeometry(record.lat, record.lng, geometry)) { county = name; break; }
+  }
+  if (!county) county = record.regionCounty || "";
+  recordCountyCache.set(record.id, county);
+  return county;
+}
+
+function isOutsideSelection(county) {
+  return activeCounty !== COUNTY_ALL && !!county && county !== activeCounty;
+}
+
+function isRecordOutOfScope(record) {
+  return isOutsideSelection(recordCounty(record));
+}
 
 /* ---------- Modelled years for the potential-sites layer ----------
    The ~3,500 "potential sites" points (see below) carry no individual
@@ -1845,6 +1908,9 @@ function renderPotentialLayer() {
   if (!HAS_POTENTIAL_DATA) return;
   if (!potentialToggle.checked || !potentialSitesData.length) return;
   if (!potentialZoomAllowed()) return;
+  // Plymouth-only data, so the whole layer is out of scope the moment a
+  // county other than Devon is selected.
+  if (isOutsideSelection(POTENTIAL_SITES_COUNTY)) return;
   const yearCeiling = currentYearCeiling();
   // A weight filter isolates high explosives: the potential-sites layer has
   // no per-point weight data, only a type category, so when a weight band is
@@ -1859,11 +1925,6 @@ function renderPotentialLayer() {
   // In heatmap mode the individual dots are replaced by the density layer —
   // still build the layer group (cheap) but don't add it to the map.
   if (heatmapMode) return;
-  // This layer is Plymouth-only, so the whole of it steps back together when
-  // a county other than Devon is selected. Canvas points can't be dimmed
-  // individually from CSS, so the opacity is baked in at draw time.
-  const potentialDim = isOutsideSelection(POTENTIAL_SITES_COUNTY) ? OUT_OF_COUNTY_DIM : 1;
-
   potentialLayer = L.layerGroup(
     points.map((p) => {
       const cat = p.cat || "undifferentiated";
@@ -1872,7 +1933,7 @@ function renderPotentialLayer() {
         radius: 2.5,
         weight: 0,
         fillColor: potentialColors[cat] || potentialColors.undifferentiated,
-        fillOpacity: 0.6 * potentialDim
+        fillOpacity: 0.6
       }).bindTooltip(`${potentialLabels[cat] || potentialLabels.undifferentiated} — est. ${p.estYear}`, { direction: "top", sticky: true });
     })
   ).addTo(map);
@@ -2003,28 +2064,14 @@ const timelineSlider = document.getElementById("timelineSlider");
 const timelineValue = document.getElementById("timelineValue");
 const timelinePlay = document.getElementById("timelinePlay");
 
-/* Records outside the selected county stay on the map but step back, so the
-   selection reads clearly without pretending the neighbouring county was
-   empty — a raid on one side of a county line is often the same night's
-   story as one on the other.
-
-   A record with no county recorded is never dimmed: unclassified is not the
-   same as "somewhere else", and quietly fading it would hide it for good. */
-const OUT_OF_COUNTY_DIM = 0.6;
-
-function isOutsideSelection(county) {
-  return activeCounty !== COUNTY_ALL && !!county && county !== activeCounty;
-}
-
 function markerIcon(record) {
-  const outside = isOutsideSelection(record.regionCounty);
   return L.divIcon({
     className: "",
     iconSize: [28, 28],
     iconAnchor: [14, 14],
     popupAnchor: [0, -16],
     html: `
-      <div class="marker-target marker-${record.status}${outside ? " is-outside-county" : ""}">
+      <div class="marker-target marker-${record.status}">
         <span class="ring-outer"></span>
         <span class="ring-mid"><span class="ring-core"></span></span>
       </div>
@@ -2042,12 +2089,20 @@ function matchesWeightBand(record) {
   return record.weightKg >= min && record.weightKg <= max;
 }
 
+/* Selecting a county now scopes the data, not just the viewport: records in
+   other counties come off the map entirely. Showing them stepped back read
+   as clutter — at a glance you could not tell which plots the selection
+   actually referred to.
+
+   This is the single place scope is decided, so the markers, the accuracy
+   halos, the heatmap and the stats pills can't disagree with each other. */
 function visibleRecords() {
   const yearCeiling = currentYearCeiling();
   return getActiveRecords().filter((record) => {
     const matchesFilter = currentFilter === "all" || record.status === currentFilter;
     const matchesYear = record.sortYear <= yearCeiling;
-    return matchesFilter && matchesYear && matchesWeightBand(record);
+    const inScope = !isRecordOutOfScope(record);
+    return inScope && matchesFilter && matchesYear && matchesWeightBand(record);
   });
 }
 
@@ -2284,19 +2339,15 @@ function renderMarkers() {
   accuracyCircles.clear();
 
   visibleRecords().forEach((record) => {
-    // The accuracy halo belongs to its marker, so it fades with it rather
-    // than leaving a ring at full strength around a stepped-back record.
-    const dim = isOutsideSelection(record.regionCounty) ? OUT_OF_COUNTY_DIM : 1;
-
     if (!heatmapMode) {
       const circle = L.circle([record.lat, record.lng], {
         radius: accuracyRadiusM(record),
         interactive: false,
         color: "#00f2fe",
         weight: 1,
-        opacity: 0.28 * dim,
+        opacity: 0.28,
         fillColor: "#00f2fe",
-        fillOpacity: 0.07 * dim
+        fillOpacity: 0.07
       }).addTo(map);
       accuracyCircles.set(record.id, circle);
     }
@@ -3285,117 +3336,99 @@ async function drawCountyOutline(name) {
   showCountyMask(geometry);
 }
 
-/* ---------- County mask (dim + soften everything outside the selection) ----------
-   The dashed outline alone says what's in scope; this makes it unmissable by
-   pushing the basemap outside it back visually — a light blur plus a slight
-   darken, so the selected county reads as the thing in focus.
+/* ---------- County mask (dim everything outside the selection) ----------
+   The dashed outline says what is in scope; this makes it unmissable by
+   darkening the basemap outside it, so the selected county reads as the
+   thing in focus.
 
-   WHAT IT MUST NOT COVER
-   The records are the point of the map, so the mask sits BELOW every marker
-   and below the boundary outline: a strike just outside the county line is
-   still drawn at full strength, on a de-emphasised basemap. Only the basemap
-   is pushed back, never the data.
+   WHY A LEAFLET POLYGON AND NOT A BLURRED OVERLAY
+   The first version of this was a div with `backdrop-filter: blur()`,
+   clipped to the inverse of the county. It looked right in a still frame
+   and fell apart in motion, for two reasons:
 
-   Getting that ordering right needs a Leaflet pane rather than a plain
-   overlay div. Leaflet's panes (tiles 200, overlay 400, markers 600) all
-   live inside .leaflet-map-pane, which is itself a pane at z-index 400 and
-   therefore a stacking context — so a div parented to the map *container*
-   can only ever be entirely below the map or entirely above it, never
-   between the tiles and the markers. A custom pane at 350 slots in exactly
-   where it needs to be.
+     1. backdrop-filter has to re-blur the map underneath on every single
+        frame of a pan. Over an area this size that is far too much work,
+        and it showed up as strobing and tearing while dragging.
+     2. A plain div in a pane gets no zoom-animation transform. Leaflet
+        animates a zoom by transforming the layers that opt into it — tile
+        layers, and the SVG/canvas renderers. The div was not one of them,
+        so for the length of every zoom the hole sat at the previous zoom's
+        scale while the map moved underneath it. That is the ghosting, and
+        the reason the red outline appeared to come unpinned from the mask.
 
-   Because the mask now lives inside the map pane, it pans with the map for
-   free: the clip path is built in LAYER coordinates, which are fixed while
-   panning and only change on zoom. */
+   A polygon rendered by Leaflet's own SVG renderer has neither problem: it
+   is transformed in step with the tiles during a zoom, it costs nothing to
+   pan because the browser composites it like any other vector, and it needs
+   no manual reprojection at all. The cost is the blur — a vector fill can
+   darken but cannot blur what is behind it. Given the blur was the direct
+   cause of both defects, darkening alone is the better trade.
+
+   The mask lives in its own pane at 350: above the tiles at 200, below the
+   overlay pane at 400 that carries the outline, and below the markers at
+   600. Leaflet's pane z-indexes are only comparable to each other, since
+   they all sit inside .leaflet-map-pane, which is itself a pane at 400 and
+   so a stacking context. */
 const COUNTY_MASK_PANE = "countyMask";
 
-let countyMaskEl = null;
-let countyMaskGeometry = null;
-let countyMaskFrame = null;
+const COUNTY_MASK_STYLE = {
+  stroke: false,
+  fillColor: "#050a14",
+  fillOpacity: 0.34,
+  interactive: false,
+  className: "county-mask-shape"
+};
 
-function ensureCountyMaskEl() {
-  if (countyMaskEl) return countyMaskEl;
-  if (!map.getPane(COUNTY_MASK_PANE)) map.createPane(COUNTY_MASK_PANE);
-  const pane = map.getPane(COUNTY_MASK_PANE);
-  countyMaskEl = document.createElement("div");
-  countyMaskEl.className = "county-mask";
-  countyMaskEl.setAttribute("aria-hidden", "true");
-  pane.appendChild(countyMaskEl);
-  return countyMaskEl;
-}
+/* The mask is one big polygon with the county punched out of it as a hole.
+   Leaflet clips vector layers to the viewport before drawing, so a ring
+   this size costs no more to render than a small one. */
+const COUNTY_MASK_OUTER_RING = [
+  [-85, -179.9],
+  [-85, 179.9],
+  [85, 179.9],
+  [85, -179.9]
+];
 
+let countyMaskLayer = null;
+let countyMaskRenderer = null;
+
+// GeoJSON is [lng, lat] and Leaflet wants [lat, lng]. Only the outer ring of
+// each polygon is used: an inland hole in a county is not something the
+// selection needs to carve back out of the mask.
 function countyMaskRings(geometry) {
   if (!geometry) return [];
-  if (geometry.type === "Polygon") return [geometry.coordinates[0]];
-  if (geometry.type === "MultiPolygon") return geometry.coordinates.map((poly) => poly[0]);
-  return [];
-}
-
-function updateCountyMaskPath() {
-  if (!countyMaskEl || !countyMaskGeometry) return;
-
-  // Cover the viewport with room to spare, so a fast pan can't outrun the
-  // mask's edge before the next update lands.
-  const origin = map.getPixelOrigin();
-  const bounds = map.getPixelBounds();
-  const min = bounds.min.subtract(origin);
-  const max = bounds.max.subtract(origin);
-  const pad = Math.max(max.x - min.x, max.y - min.y);
-
-  const x0 = Math.round(min.x - pad);
-  const y0 = Math.round(min.y - pad);
-  const w = Math.round(max.x - min.x + pad * 2);
-  const h = Math.round(max.y - min.y + pad * 2);
-
-  countyMaskEl.style.left = `${x0}px`;
-  countyMaskEl.style.top = `${y0}px`;
-  countyMaskEl.style.width = `${w}px`;
-  countyMaskEl.style.height = `${h}px`;
-
-  // One big rectangle with a hole punched per county ring, via evenodd.
-  const outer = `M 0 0 L ${w} 0 L ${w} ${h} L 0 ${h} Z`;
-  const holes = countyMaskRings(countyMaskGeometry)
-    .map((ring) => {
-      const pts = ring.map(([lng, lat]) => {
-        const p = map.latLngToLayerPoint([lat, lng]);
-        return `${(p.x - x0).toFixed(1)} ${(p.y - y0).toFixed(1)}`;
-      });
-      if (pts.length < 3) return "";
-      return `M ${pts.join(" L ")} Z`;
-    })
-    .filter(Boolean)
-    .join(" ");
-
-  const path = `${outer} ${holes}`;
-  countyMaskEl.style.clipPath = `path(evenodd, "${path}")`;
-  countyMaskEl.style.webkitClipPath = `path(evenodd, "${path}")`;
-}
-
-function scheduleCountyMaskUpdate() {
-  if (countyMaskFrame) return;
-  countyMaskFrame = requestAnimationFrame(() => {
-    countyMaskFrame = null;
-    updateCountyMaskPath();
-  });
+  const rings =
+    geometry.type === "Polygon"
+      ? [geometry.coordinates[0]]
+      : geometry.type === "MultiPolygon"
+        ? geometry.coordinates.map((poly) => poly[0])
+        : [];
+  return rings
+    .filter((ring) => ring && ring.length >= 3)
+    .map((ring) => ring.map(([lng, lat]) => [lat, lng]));
 }
 
 function showCountyMask(geometry) {
-  countyMaskGeometry = geometry;
-  ensureCountyMaskEl();
-  updateCountyMaskPath();
-  countyMaskEl.classList.add("is-visible");
+  hideCountyMask();
+
+  const holes = countyMaskRings(geometry);
+  if (!holes.length) return;
+
+  if (!map.getPane(COUNTY_MASK_PANE)) map.createPane(COUNTY_MASK_PANE);
+  if (!countyMaskRenderer) countyMaskRenderer = L.svg({ pane: COUNTY_MASK_PANE });
+
+  countyMaskLayer = L.polygon([COUNTY_MASK_OUTER_RING, ...holes], {
+    ...COUNTY_MASK_STYLE,
+    pane: COUNTY_MASK_PANE,
+    renderer: countyMaskRenderer
+  }).addTo(map);
 }
 
 function hideCountyMask() {
-  countyMaskGeometry = null;
-  if (countyMaskEl) countyMaskEl.classList.remove("is-visible");
+  if (countyMaskLayer) {
+    map.removeLayer(countyMaskLayer);
+    countyMaskLayer = null;
+  }
 }
-
-/* Layer coordinates only shift on zoom, so a pan needs nothing beyond
-   re-centring the padded rectangle. `zoomend` rather than `zoom`: during the
-   zoom animation Leaflet transforms the whole map pane, and the mask rides
-   along with the tiles it is masking. */
-map.on("move zoomend resize", scheduleCountyMaskUpdate);
 
 const heroEyebrow = document.getElementById("heroEyebrow");
 
