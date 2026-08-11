@@ -114,38 +114,49 @@ body,
 }
 
 /* ---------- County mask ----------
-   Sits inside #map, clipped by JS (see showCountyMask/updateCountyMaskPath
-   in js/app.js) to everything OUTSIDE the selected county's boundary. The
-   blur is a real backdrop-filter — it blurs the map tiles underneath, not
-   just an opacity trick — so the selected county reads as sharp and in
-   focus against a softened, dimmed backdrop.
+   Dims and softens the BASEMAP outside the selected county, clipped by JS
+   (see showCountyMask / updateCountyMaskPath in js/app.js) to everything
+   outside the boundary. The blur is a real backdrop-filter, so it softens
+   the tiles themselves rather than laying a flat film over them.
 
-   The z-index needs care. Leaflet's individual panes (tiles 200, overlay
-   400, markers 600) all live INSIDE .leaflet-map-pane, which is itself a
-   .leaflet-pane at z-index 400 — so it forms a stacking context and those
-   inner numbers can't be compared with anything outside it. A mask at 350
-   lands underneath the whole map, hidden behind the opaque tiles: that was
-   the original bug here, and it is invisible in any test that hides tiles.
+   It lives in its own Leaflet pane (created in js/app.js) at z-index 350 —
+   above the tile pane at 200, below the overlay pane at 400 and the marker
+   pane at 600. That ordering is the whole point: records stay at full
+   strength everywhere, including just outside the county line, and only the
+   basemap is pushed back. Leaflet's pane z-indexes are only comparable to
+   each other, because they all sit inside .leaflet-map-pane, which is
+   itself a pane at 400 and therefore a stacking context — a mask parented
+   to the map container instead can only ever sit wholly under the map or
+   wholly over it, which is why this needs a pane rather than an overlay.
 
-   450 puts the mask above the entire map pane while staying below the
-   Leaflet control container (.leaflet-top / .leaflet-bottom at 1000), so
-   the zoom buttons and attribution stay sharp and clickable. Out-of-county
-   markers dim along with the tiles, which is the intent — they are context,
-   not the selection — and pointer-events: none keeps them clickable. */
+   Kept deliberately gentle. At 5px blur and 0.42 dim it fought the map for
+   attention and made the boundary read as a hard cut; at 2px and 0.28 the
+   eye still goes straight to the county, but both regions still look like
+   parts of the same map. */
 .county-mask {
   position: absolute;
-  inset: 0;
-  z-index: 450;
   pointer-events: none;
-  background: rgba(6, 9, 15, 0.42);
-  -webkit-backdrop-filter: blur(5px);
-  backdrop-filter: blur(5px);
+  background: rgba(8, 12, 20, 0.28);
+  -webkit-backdrop-filter: blur(2px) saturate(0.82);
+  backdrop-filter: blur(2px) saturate(0.82);
   opacity: 0;
-  transition: opacity 0.35s ease-in-out;
+  transition: opacity 0.45s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .county-mask.is-visible {
   opacity: 1;
+}
+
+/* pointer-events off so clicks fall through to the markers and the map. */
+.leaflet-countyMask-pane {
+  z-index: 350;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .county-mask {
+    transition: none;
+  }
 }
 
 * {
@@ -2123,6 +2134,27 @@ h3 {
   border-radius: 50%;
   place-items: center;
   background: transparent;
+  transition: opacity 0.35s ease-in-out;
+}
+
+/* A record outside the selected county — still on the map, still clickable,
+   but stepped back so the selection reads first. Set in markerIcon() in
+   js/app.js; see the note there on why unclassified records are never
+   dimmed. */
+.marker-target.is-outside-county {
+  opacity: 0.6;
+}
+
+/* Hovering restores it — a stepped-back record is de-emphasised, not
+   demoted, and anything you reach for should meet you at full strength. */
+.marker-target.is-outside-county:hover {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marker-target {
+    transition: none;
+  }
 }
 
 .marker-target .ring-outer {
