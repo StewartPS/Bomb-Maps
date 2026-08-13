@@ -3419,3 +3419,15 @@ h3 {
   opacity: 0;
   visibility: hidden;
 }
+
+
+/* V-weapon layer legend dots. Distinct from the potential-sites palette so
+   the two bulk layers are never confused for one another — one is confirmed
+   impacts, the other is approximate census plotting. */
+.dot.v-weapon-v1 {
+  background: #ff9f43;
+}
+
+.dot.v-weapon-v2 {
+  background: #ff5252;
+}

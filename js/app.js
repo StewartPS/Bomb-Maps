@@ -3744,8 +3744,12 @@ const ALL_BOUNDS = L.latLngBounds(ALL_RECORDS.map((r) => [r.lat, r.lng])).pad(0.
    counties are added the frame would keep shifting under them. A fixed UK
    extent gives the selection a stable, recognisable meaning: everywhere.
 
-   West edge clears Northern Ireland, north edge clears Shetland. */
-const UK_BOUNDS = L.latLngBounds([49.85, -8.65], [60.9, 1.78]);
+   The north edge stops at Orkney rather than Shetland. Shetland sits a
+   further 100 miles out, and including it stretches the frame so tall that
+   everything else shrinks to fit — the whole country ends up smaller on
+   screen for the sake of a corner nobody is looking at. West edge clears
+   Northern Ireland. */
+const UK_BOUNDS = L.latLngBounds([49.85, -8.65], [59.4, 1.78]);
 
 /* Pseudo-region meaning "no town selected". It sits in regionData so the
    selector, hero copy and stats pills can treat it like any other entry,
@@ -3972,11 +3976,52 @@ let heatLayer = null;
 // the floating panels once the page has laid out (see the initial fit at the
 // end of startup), because none of that furniture exists yet at this point.
 const map = L.map("map", {
+  // Plain wheel/two-finger scroll belongs to the page — the map is a
+  // full-height hero and hijacking the wheel traps the reader in it. Pinch
+  // to zoom is wired up separately below, so a trackpad still works.
   scrollWheelZoom: false,
-  zoomControl: false
+  zoomControl: false,
+  /* Leaflet snaps fitBounds to whole zoom levels by default, and a whole
+     level is a factor of two. A region that needs zoom 5.9 gets zoom 5 and
+     sits at roughly half the size it could — which is why selections looked
+     stranded in the middle of an empty frame. Allowing fractional zoom lets
+     a fit land exactly against the edges of the space available.
+
+     zoomDelta stays at 1 so the +/- buttons still move in familiar whole
+     steps; only automatic fitting uses the in-between values. */
+  zoomSnap: 0,
+  zoomDelta: 1,
+  wheelPxPerZoomLevel: 120
 }).fitBounds(UK_BOUNDS);
 
 L.control.zoom({ position: "bottomright" }).addTo(map);
+
+/* ---------- Trackpad pinch-to-zoom ----------
+   scrollWheelZoom is off so that two-finger scrolling still scrolls the
+   page rather than trapping the reader inside a full-height map. The side
+   effect was that a laptop with no mouse had no way to zoom except the +/-
+   buttons, which is a poor experience on the device most people are using.
+
+   macOS (and Windows) report a trackpad pinch as a wheel event with
+   ctrlKey set — the browser's own convention for "this is a zoom gesture,
+   not a scroll". Handling only that case gives pinch-to-zoom back without
+   taking the page scroll away. Zooming around the pointer rather than the
+   map centre keeps whatever you are pointing at under your fingers. */
+map.getContainer().addEventListener(
+  "wheel",
+  (e) => {
+    if (!e.ctrlKey) return; // ordinary scroll — leave it to the page
+    e.preventDefault();
+
+    const delta = -e.deltaY / (e.deltaMode === 1 ? 3 : 100);
+    const target = map.getZoom() + delta;
+    const clamped = Math.max(map.getMinZoom(), Math.min(map.getMaxZoom(), target));
+    if (clamped === map.getZoom()) return;
+
+    map.setZoomAround(map.mouseEventToContainerPoint(e), clamped, { animate: false });
+  },
+  { passive: false }
+);
 
 /* ---------- Theme: Light / System / Dark ----------
    The <html data-theme> attribute is set before first paint by the inline
@@ -4104,6 +4149,80 @@ setTimeout(() => map.invalidateSize(), 300);
    500+ markers — regular SVG/DOM markers would be far too slow at this count.
 ------------------------------------------------------------------------- */
 const potentialPane = L.canvas({ padding: 0.5 });
+
+/* ---------- V-weapon impacts, London ----------
+   A second bulk layer, kept separate from the potential-sites layer on
+   purpose. The Plymouth points are approximate positions digitised from
+   census mapping; these are confirmed V1 and V2 impact sites transcribed
+   from the LCC bomb damage maps. Same visual grammar, different meaning and
+   a different licence — folding them into one toggle would quietly claim a
+   confidence neither dataset has on its own.
+
+   Attribution is required: CC-BY-4.0, Liam Shaw, DOI 10.5281/zenodo.14883986,
+   after Laurence Ward's published maps. It is surfaced in the panel, not
+   buried in a data file.
+
+   Only ~120 points at present, so unlike the 3,000-point Plymouth layer this
+   one needs no zoom gate — it stays legible at county zoom. */
+const V_WEAPON_DATA = typeof V_WEAPON_IMPACTS !== "undefined" && V_WEAPON_IMPACTS ? V_WEAPON_IMPACTS : [];
+const HAS_V_WEAPON_DATA = V_WEAPON_DATA.length > 0;
+
+const vWeaponPane = L.canvas({ padding: 0.5 });
+const vWeaponColors = { V1: "#ff9f43", V2: "#ff5252" };
+const vWeaponLabels = { V1: "V1 flying bomb", V2: "V2 rocket" };
+
+// London-only data, so it follows the same county scoping as everything else.
+const V_WEAPON_COUNTY = "Greater London";
+
+let vWeaponLayer = null;
+
+const vWeaponRow = document.getElementById("vWeaponRow");
+const vWeaponToggle = document.getElementById("vWeaponToggle");
+const vWeaponCount = document.getElementById("vWeaponCount");
+const vWeaponLegend = document.getElementById("vWeaponLegend");
+
+function clearVWeaponLayer() {
+  if (vWeaponLayer) { map.removeLayer(vWeaponLayer); vWeaponLayer = null; }
+}
+
+function renderVWeaponLayer() {
+  clearVWeaponLayer();
+  if (!HAS_V_WEAPON_DATA) return;
+  if (vWeaponLegend) vWeaponLegend.hidden = !(vWeaponToggle && vWeaponToggle.checked);
+  if (!vWeaponToggle || !vWeaponToggle.checked) return;
+  // Out of scope when a county other than London is selected.
+  if (isOutsideSelection(V_WEAPON_COUNTY)) return;
+  if (heatmapMode) return;
+
+  vWeaponLayer = L.layerGroup(
+    V_WEAPON_DATA.map((point) => {
+      const colour = vWeaponColors[point.t] || vWeaponColors.V2;
+      const place = point.s || "Location not named";
+      const page = point.p ? ` (Ward, p${point.p})` : "";
+      return L.circleMarker([point.lat, point.lng], {
+        renderer: vWeaponPane,
+        radius: 3,
+        weight: 0,
+        fillColor: colour,
+        fillOpacity: 0.75
+      }).bindTooltip(`${vWeaponLabels[point.t] || point.t} — ${place}${page}`, {
+        direction: "top",
+        sticky: true
+      });
+    })
+  ).addTo(map);
+}
+
+function initVWeaponLayer() {
+  if (!vWeaponRow) return;
+  // The row stays hidden entirely when the data file is absent, rather than
+  // offering a toggle that does nothing.
+  vWeaponRow.hidden = !HAS_V_WEAPON_DATA;
+  if (!HAS_V_WEAPON_DATA) return;
+  if (vWeaponCount) vWeaponCount.textContent = V_WEAPON_DATA.length.toLocaleString("en-GB");
+  if (vWeaponToggle) vWeaponToggle.addEventListener("change", renderVWeaponLayer);
+  renderVWeaponLayer();
+}
 let potentialLayer = null;
 let potentialSitesData = [];
 const potentialToggle = document.getElementById("potentialToggle");
@@ -4719,6 +4838,12 @@ function closeDetailPanel() {
   detailPanel.hidden = true;
   clearDetailCordon();
   syncPanelStacking();
+
+  // Put the map back where it was before the record was opened.
+  if (viewBeforeDetail) {
+    map.flyTo(viewBeforeDetail.center, viewBeforeDetail.zoom, { duration: 0.7 });
+    viewBeforeDetail = null;
+  }
 }
 
 if (cordonPeek) {
@@ -4735,6 +4860,16 @@ window.addEventListener("resize", syncPanelStacking);
 
 if (detailClose) detailClose.addEventListener("click", closeDetailPanel);
 
+/* Where the map was before a record was opened, so closing the panel can
+   put it back. Opening a record flies the map right in; without this, the
+   reader has to zoom and pan their way out again to carry on browsing —
+   and after a few records they have lost their place entirely.
+
+   Captured only on the FIRST selection: clicking from one record straight
+   to another keeps the original view, so "close" always means "back to
+   where I was reading", not "back to the last pin I looked at". */
+let viewBeforeDetail = null;
+
 function selectRecord(id, pan = true) {
   const active = getActiveRecords();
   const record = active.find((item) => item.id === id) || visibleRecords()[0] || active[0];
@@ -4742,8 +4877,11 @@ function selectRecord(id, pan = true) {
 
   const marker = markers.get(record.id);
   if (marker && pan) {
+    if (!viewBeforeDetail) {
+      viewBeforeDetail = { center: map.getCenter(), zoom: map.getZoom() };
+    }
     const recordZoom = Math.max(map.getZoom(), 15);
-  map.flyTo(centreForChrome([record.lat, record.lng], recordZoom), recordZoom, { duration: 0.9 });
+    map.flyTo(centreForChrome([record.lat, record.lng], recordZoom), recordZoom, { duration: 0.9 });
   }
   drawDetailCordon(record);
   openDetailPanel(record);
@@ -5992,6 +6130,49 @@ function countyMaskRings(geometry) {
     .map((ring) => ring.map(([lng, lat]) => [lat, lng]));
 }
 
+/* What a county selection should frame is the COUNTY, not the records in
+   it. buildCounties() derives its bounds from record positions, which is
+   fine for a county whose records are spread through it and wrong for one
+   where they are not: every Devon record sits in the south, so fitting them
+   pushed the whole northern half of the county off the top of the screen
+   while the outline carried on past the edge.
+
+   Fitting the boundary geometry instead guarantees the shape you just
+   selected is the shape you can see. Records-derived bounds remain the
+   fallback for a county with no boundary in the generated file. */
+const countyBoundsCache = new Map();
+
+function countyViewBounds(name) {
+  if (name === COUNTY_ALL) return UK_BOUNDS;
+  if (countyBoundsCache.has(name)) return countyBoundsCache.get(name);
+
+  const geometry = COUNTY_GEOMETRIES[name];
+  let bounds = null;
+
+  if (geometry) {
+    const rings =
+      geometry.type === "Polygon"
+        ? geometry.coordinates
+        : geometry.coordinates.flat();
+    rings.forEach((ring) => {
+      ring.forEach(([lng, lat]) => {
+        const point = L.latLng(lat, lng);
+        bounds = bounds ? bounds.extend(point) : L.latLngBounds(point, point);
+      });
+    });
+  }
+
+  if (!bounds || !bounds.isValid()) {
+    const entry = COUNTIES.get(name);
+    bounds = entry ? entry.bounds : UK_BOUNDS;
+  } else {
+    bounds = bounds.pad(0.02);
+  }
+
+  countyBoundsCache.set(name, bounds);
+  return bounds;
+}
+
 function showCountyMask(geometry) {
   hideCountyMask();
 
@@ -6046,10 +6227,10 @@ function switchCounty(county, opts) {
   // change already.
   renderMarkers();
   renderPotentialLayer();
+  renderVWeaponLayer();
 
   if (!fly) return;
-  const bounds = target === COUNTY_ALL ? UK_BOUNDS : COUNTIES.get(target).bounds;
-  fitBoundsInView(bounds, { duration: 1 });
+  fitBoundsInView(countyViewBounds(target), { duration: 1 });
 }
 
 /* Kept for the search box: picking a town still needs to fly there, and to
@@ -6198,6 +6379,7 @@ function initInfoTips() {
 initInfoTips();
 
 initTimeline();
+initVWeaponLayer();
 renderMarkers();
 
 /* ---------- Remembered view state ----------
@@ -6243,7 +6425,7 @@ function restoreUiState() {
 
   if (savedCounty && savedCounty !== activeCounty && COUNTIES.has(savedCounty)) {
     switchCounty(savedCounty, { fly: false });
-    map.fitBounds(COUNTIES.get(savedCounty).bounds, fitOptionsForChrome({ animate: false }));
+    map.fitBounds(countyViewBounds(savedCounty), fitOptionsForChrome({ animate: false }));
     restoredView = true;
   }
 
