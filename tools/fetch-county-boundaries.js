@@ -78,7 +78,33 @@ const CEREMONIAL = {
     "Bath and North East Somerset", "North Somerset"
   ],
   // Bristol is its own ceremonial county, NOT part of Somerset.
-  Bristol: ["Bristol, City of"]
+  Bristol: ["Bristol, City of"],
+  // Greater London is the 32 boroughs plus the City of London.
+  "Greater London": [
+    "City of London", "Barking and Dagenham", "Barnet", "Bexley", "Brent",
+    "Bromley", "Camden", "Croydon", "Ealing", "Enfield", "Greenwich",
+    "Hackney", "Hammersmith and Fulham", "Haringey", "Harrow", "Havering",
+    "Hillingdon", "Hounslow", "Islington", "Kensington and Chelsea",
+    "Kingston upon Thames", "Lambeth", "Lewisham", "Merton", "Newham",
+    "Redbridge", "Richmond upon Thames", "Southwark", "Sutton",
+    "Tower Hamlets", "Waltham Forest", "Wandsworth", "Westminster"
+  ],
+  // Portsmouth and Southampton are unitary authorities, ceremonially Hampshire.
+  Hampshire: [
+    "Basingstoke and Deane", "East Hampshire", "Eastleigh", "Fareham",
+    "Gosport", "Hart", "Havant", "New Forest", "Rushmoor", "Test Valley",
+    "Winchester", "Portsmouth", "Southampton"
+  ],
+  // Medway (Chatham, Rochester, Gillingham) is unitary, ceremonially Kent.
+  Kent: [
+    "Ashford", "Canterbury", "Dartford", "Dover", "Gravesham", "Maidstone",
+    "Sevenoaks", "Shepway", "Swale", "Thanet", "Tonbridge and Malling",
+    "Tunbridge Wells", "Medway"
+  ],
+  // Sussex is TWO ceremonial counties, not one. Brighton and Hove is
+  // unitary, ceremonially East Sussex.
+  "East Sussex": ["Eastbourne", "Hastings", "Lewes", "Rother", "Wealden", "Brighton and Hove"],
+  "West Sussex": ["Adur", "Arun", "Chichester", "Crawley", "Horsham", "Mid Sussex", "Worthing"]
 };
 
 function countPoints(geometry) {

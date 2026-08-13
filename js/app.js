@@ -536,6 +536,134 @@ const exeterRecords = [
       { label: "BBC News: Exeter WW2 bomb detonated after homes evacuated", url: "https://feeds.bbci.co.uk/news/uk-england-devon-56221697" },
       { label: "Zetica UXO: Large evacuation as Army detonates 1,000kg UXB", url: "https://zeticauxo.com/news/large-evacuation-as-army-detonates-1000kg-uxb-found-in-exeter/" }
     ]
+  },
+  {
+    id: "exeter-okehampton-street-1942",
+    title: "Okehampton Street, St Thomas",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "23 April 1942",
+    sortYear: 1942,
+    confidence: "Confirmed event, street-derived point",
+    lat: 50.7183,
+    lng: -3.5425,
+    bombType: "HE",
+    casualtiesNote: "Sources give four or five killed in Okehampton Street, with eight injured.",
+    summary: "The opening Baedeker attack on Exeter, by around 49 bombers, largely missed the city centre in heavy cloud. Seven high-explosive bombs fell on St Thomas and Marsh Barton west of the Exe, damaging some 200 houses.",
+    note: "Okehampton Street is in Exeter St Thomas, not the town of Okehampton — an easy confusion when reading wartime records.",
+    sources: [
+      { label: "Exeter Memories: Air raids on Exeter 1940-1942", url: "https://www.exetermemories.co.uk/em/_events/airraids.php" },
+      { label: "Wikipedia: Exeter Blitz", url: "https://en.wikipedia.org/wiki/Exeter_Blitz" }
+    ]
+  },
+  {
+    id: "exeter-pennsylvania-1942",
+    title: "Pennsylvania & Newtown",
+    status: "historic",
+    statusLabel: "Historic bombing area",
+    date: "25 April 1942",
+    sortYear: 1942,
+    confidence: "Rough area",
+    lat: 50.73115,
+    lng: -3.5335,
+    bombType: "HE",
+    casualties: 73,
+    casualtiesNote: "73 killed, with 20 seriously and 53 slightly injured.",
+    summary: "Two waves of bombers attacked in clear conditions, preceded by parachute flares, striking Culverland Road, Cumberland Terrace, Morgan Square, King Street, Fore Street and Paris Street.",
+    note: "The deadliest of the April Baedeker attacks on Exeter and the second-deadliest raid on the city, after 4 May.",
+    sources: [
+      { label: "Exeter Memories: Air raids on Exeter 1940-1942", url: "https://www.exetermemories.co.uk/em/_events/airraids.php" }
+    ]
+  },
+  {
+    id: "exeter-dellers-cafe-1942",
+    title: "Deller's Cafe, Bedford Street",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "4 May 1942",
+    sortYear: 1942,
+    confidence: "Confirmed event, landmark point",
+    lat: 50.7233,
+    lng: -3.5295,
+    bombType: "incendiary",
+    summary: "Deller's Cafe, a landmark galleried tea room and one of the best-known social venues in the city, was burnt out during the Baedeker raid.",
+    note: "Its loss is still cited as one of the most-mourned casualties of the Exeter Blitz — a reminder that what a city misses is not always what was most valuable.",
+    sources: [
+      { label: "Exeter Memories: The Exeter Blitz", url: "https://www.exetermemories.co.uk/em/exeterblitz.php" }
+    ]
+  },
+  {
+    id: "exeter-lower-market-1942",
+    title: "The Lower Market, Milk Street",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "4 May 1942",
+    sortYear: 1942,
+    confidence: "Confirmed event, approximate point",
+    lat: 50.7224,
+    lng: -3.5343,
+    bombType: "incendiary",
+    summary: "The Lower Market, a Greek Revival market hall of 1835-37, was gutted in the raid, along with the top of Fore Street and much of South Street.",
+    note: "Its surviving shell was demolished in the 1960s — like Bedford Circus, lost to post-war clearance rather than to the bombing itself.",
+    sources: [
+      { label: "Exeter Memories: The Exeter Blitz", url: "https://www.exetermemories.co.uk/em/exeterblitz.php" }
+    ]
+  },
+  {
+    id: "exeter-city-library-1942",
+    title: "Exeter City Library, Castle Street",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "4 May 1942",
+    sortYear: 1942,
+    confidence: "Confirmed event, landmark point",
+    lat: 50.72555,
+    lng: -3.53,
+    bombType: "incendiary",
+    summary: "The City Library was burnt out, with roughly one million books lost, including much of the Devon and Exeter Institution's holdings and the city's irreplaceable local archive.",
+    note: "One of the worst single losses of documentary heritage in the English blitz. It is also why some Exeter incidents are harder to research than those elsewhere — the records burned with the building.",
+    sources: [
+      { label: "Exeter Memories: The Exeter Blitz", url: "https://www.exetermemories.co.uk/em/exeterblitz.php" },
+      { label: "Wikipedia: Exeter Blitz", url: "https://en.wikipedia.org/wiki/Exeter_Blitz" }
+    ]
+  },
+  {
+    id: "exeter-heavitree-1940",
+    title: "Heavitree parachute mines",
+    status: "historic",
+    statusLabel: "Historic bombing area",
+    date: "28 November 1940",
+    sortYear: 1940,
+    confidence: "Confirmed event, approximate point",
+    lat: 50.7224,
+    lng: -3.5035,
+    bombType: "parachute-mine",
+    casualties: 4,
+    casualtiesNote: "Four killed and 26 injured.",
+    summary: "Two parachute mines fell on Heavitree, causing damage across more than thirty streets including Woodstock Road and Cranbrook Road.",
+    note: "The most destructive attack on Exeter before the 1942 Baedeker raids.",
+    sources: [
+      { label: "Exeter Memories: Air raids on Exeter 1940-1942", url: "https://www.exetermemories.co.uk/em/_events/airraids.php" }
+    ]
+  },
+  {
+    id: "exeter-holloway-street-1942",
+    title: "Holloway Street & Isca Road",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "30 December 1942",
+    sortYear: 1942,
+    confidence: "Confirmed event, street-derived point",
+    lat: 50.7196,
+    lng: -3.5288,
+    bombType: "HE",
+    weightKg: 500,
+    casualties: 19,
+    summary: "Six 500kg bombs fell across Holloway Street, Isca Road, South Street, Willeys Avenue and the Topsham Road area, killing nineteen people.",
+    note: "The last significant raid on Exeter.",
+    sources: [
+      { label: "Exeter Memories: Air raids on Exeter 1940-1942", url: "https://www.exetermemories.co.uk/em/_events/airraids.php" }
+    ]
   }
 ];
 
@@ -1736,7 +1864,1607 @@ const burnhamRecords = [
   }
 ];
 
+/* ---------- London, Hampshire, Kent and Sussex ----------
+   Sussex is TWO ceremonial counties, East and West, not one — East Grinstead
+   (West Sussex) and Brighton (East Sussex) are filed separately for that
+   reason. Portsmouth, Southampton, Medway and Brighton & Hove are unitary
+   authorities but ceremonially belong to their historic counties, the same
+   pattern as Plymouth and Torbay in Devon.
+
+   London is a selection and can only ever be one: around 30,000 civilians
+   were killed there. What follows is the incidents that are individually
+   documented and located, spread across the city rather than concentrated
+   in the East End, and covering the V-weapon campaign as well as the Blitz.
+------------------------------------------------------------------- */
+const londonRecords = [
+  {
+    id: "croydon-airport-1940",
+    title: "Croydon Airport & Purley Way factories",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "15 August 1940",
+    sortYear: 1940,
+    confidence: "Confirmed event, landmark point",
+    lat: 51.35603,
+    lng: -0.1166,
+    bombType: "HE",
+    casualties: 68,
+    casualtiesNote: "62 civilians, five airmen of No. 111 Squadron and one from Station Headquarters. More than 35 of the dead were at the British N.S.F. factory.",
+    summary: "Twenty-two Messerschmitt Bf 110 fighter-bombers of Erprobungsgruppe 210 attacked the aerodrome and the factories along Purley Way, hitting the terminal, the armoury and the Bourjois and British N.S.F. works. Around 200 houses on the Waddon estate were damaged and 180 people made homeless.",
+    note: "The first major raid on the Greater London area. The casualties were spread across the adjacent factory sites rather than concentrated at the marker.",
+    sources: [
+      { label: "Historic Croydon Airport Trust: World War II military operations", url: "https://www.historiccroydonairport.org.uk/history/world-war-ii-military-operations/" }
+    ]
+  },
+  {
+    id: "south-hallsville-1940",
+    title: "South Hallsville School, Canning Town",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "10 September 1940",
+    sortYear: 1940,
+    confidence: "Confirmed event, approximate point (school destroyed, site redeveloped)",
+    lat: 51.516,
+    lng: 0.0145,
+    bombType: "parachute-mine",
+    casualtiesNote: "Deliberately left blank. The official figure was around 70; local residents and campaigners have long maintained the true toll was closer to 600. The wartime press blackout means the difference has never been settled.",
+    summary: "Families made homeless by earlier raids were sheltering in the school basement, waiting for evacuation buses that had not arrived, when the building took a direct hit and collapsed into the basement.",
+    note: "A wartime press blackout suppressed the location, the details and the photographs, which is why the death toll remains contested more than eighty years later. The disaster contributed to the decision to open Underground stations as public shelters.",
+    sources: [
+      { label: "London Borough of Newham: honouring the hidden victims of the Blitz", url: "https://www.newham.gov.uk/news/article/540/mayor-of-newham-and-school-children-honour-the-hidden-victims-of-the-blitz" }
+    ]
+  },
+  {
+    id: "balham-station-1940",
+    title: "Balham Underground station, Wandsworth",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "14 October 1940",
+    sortYear: 1940,
+    confidence: "Confirmed event, landmark point",
+    lat: 51.44327,
+    lng: -0.15264,
+    bombType: "HE",
+    weightKg: 1400,
+    casualtiesNote: "Sources give between 64 and 68 killed: the Commonwealth War Graves Commission records 66, other accounts give 68 (64 shelterers and four railway staff). More than 70 were injured.",
+    summary: "A 1,400kg bomb fell on Balham High Road above the northern end of the platform tunnels, collapsing the northbound tunnel and flooding it with earth and water from fractured mains and sewers. Hundreds of people were sheltering below at the time.",
+    note: "The Northern line stayed closed between Tooting Bec and Clapham Common until 12 January 1941.",
+    sources: [
+      { label: "Wikipedia: Balham tube station", url: "https://en.wikipedia.org/wiki/Balham_tube_station" }
+    ]
+  },
+  {
+    id: "bank-station-1941",
+    title: "Bank Underground station, City of London",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "11 January 1941",
+    sortYear: 1941,
+    confidence: "Confirmed event, landmark point",
+    lat: 51.5134,
+    lng: -0.089,
+    bombType: "HE",
+    casualties: 56,
+    casualtiesNote: "56 killed and 69 seriously injured is the figure on the 2017 memorial plaque and in standard accounts. A higher figure of 160 has appeared in some recent commemorations and should be treated as contested.",
+    summary: "A bomb struck the Central line booking hall and the blast travelled down the stairs and escalators onto the crowded platforms below. The explosion left a crater roughly 120 by 100 feet in the roadway, later bridged with a Bailey bridge to restore traffic.",
+    note: "The station was closed for two months.",
+    sources: [
+      { label: "London Remembers: Bank Station WW2 bomb memorial", url: "https://www.londonremembers.com/memorials/bank-station-ww2-bomb" },
+      { label: "Wikipedia: Bank and Monument stations", url: "https://en.wikipedia.org/wiki/Bank_and_Monument_stations" }
+    ]
+  },
+  {
+    id: "cafe-de-paris-1941",
+    title: "Cafe de Paris, Coventry Street",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "8 March 1941",
+    sortYear: 1941,
+    confidence: "Confirmed event, landmark point",
+    lat: 51.5104,
+    lng: -0.133,
+    bombType: "HE",
+    weightKg: 50,
+    casualties: 34,
+    casualtiesNote: "At least 34 killed and around 80 injured. Higher figures circulate in popular accounts; 34 is the sourced minimum.",
+    summary: "A 50kg bomb fell through a ventilation shaft into the basement ballroom at 3-4 Coventry Street and detonated in front of the stage shortly after the evening performance began. Among the dead were the bandleader Ken Johnson and members of his band.",
+    note: "Rescue was delayed because the street frontage appeared undamaged. Looting of the dead and injured led to Scots Guards being posted to secure the site.",
+    sources: [
+      { label: "Wikipedia: Cafe de Paris, London", url: "https://en.wikipedia.org/wiki/Caf%C3%A9_de_Paris,_London" }
+    ]
+  },
+  {
+    id: "palace-of-westminster-1941",
+    title: "Palace of Westminster — Commons Chamber",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "10-11 May 1941",
+    sortYear: 1941,
+    confidence: "Confirmed event, landmark point",
+    lat: 51.4995,
+    lng: -0.1248,
+    bombType: "incendiary",
+    casualtiesNote: "No Palace-specific death toll is given by the parliamentary sources consulted. The House of Lords Library records 1,436 civilian deaths across London on that night's raid — a city-wide figure, not one for this site.",
+    summary: "On the heaviest night of the London Blitz, incendiary and high-explosive bombs struck the Palace of Westminster. The Commons Chamber was gutted by fire, the roof of Westminster Hall was set alight, and the Lords Chamber and Clock Tower were damaged.",
+    note: "The Commons sat in the Lords Chamber from June 1941 until 1950, when Giles Gilbert Scott's replacement Chamber opened.",
+    sources: [
+      { label: "House of Lords Library: Bombing of the Houses of Parliament", url: "https://lordslibrary.parliament.uk/research-briefings/lif-2016-0028/" },
+      { label: "UK Parliament: Bomb damage", url: "https://www.parliament.uk/about/living-heritage/building/palace/architecture/palacestructure/bomb-damage/" }
+    ]
+  },
+  {
+    id: "sandhurst-road-school-1943",
+    title: "Sandhurst Road School, Catford",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "20 January 1943",
+    sortYear: 1943,
+    confidence: "Confirmed event, landmark point",
+    lat: 51.4478,
+    lng: -0.0095,
+    bombType: "HE",
+    weightKg: 500,
+    casualties: 44,
+    casualtiesNote: "38 children and six staff. Thirty-two children died at the school and six later in hospital; around 60 people were injured.",
+    summary: "A Focke-Wulf Fw 190 fighter-bomber struck the school at about half past twelve during a low-level daylight raid. The air-raid siren had not sounded before the aircraft arrived, and most of the dead were children eating lunch in the dining hall.",
+    note: "Thirty-one children and one teacher were buried together at Hither Green Cemetery before a crowd of more than 7,000 mourners.",
+    sources: [
+      { label: "Wikipedia: Bombing of Sandhurst Road School", url: "https://en.wikipedia.org/wiki/Bombing_of_Sandhurst_Road_School" }
+    ]
+  },
+  {
+    id: "grove-road-v1-1944",
+    title: "Grove Road railway bridge, Bow — first V-1 on London",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "13 June 1944",
+    sortYear: 1944,
+    confidence: "Confirmed event, landmark point",
+    lat: 51.5293,
+    lng: -0.0392,
+    bombType: "V1",
+    casualties: 6,
+    casualtiesNote: "Six killed and 42 injured.",
+    summary: "The first V-1 flying bomb to reach London fell on the railway bridge carrying the Liverpool Street to Stratford line over Grove Road, Mile End. Houses in Antill Road and neighbouring streets were wrecked and the line was severed.",
+    note: "Services resumed within about 40 hours on a temporary bridge. An English Heritage blue plaque on the bridge records the event.",
+    sources: [
+      { label: "English Heritage: The First Flying Bomb on London", url: "https://www.english-heritage.org.uk/visit/blue-plaques/flying-bomb/" }
+    ]
+  },
+  {
+    id: "guards-chapel-1944",
+    title: "Guards' Chapel, Wellington Barracks",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "18 June 1944",
+    sortYear: 1944,
+    confidence: "Confirmed event, landmark point",
+    lat: 51.5013,
+    lng: -0.1345,
+    bombType: "V1",
+    casualties: 121,
+    casualtiesNote: "121 killed and 141 injured, service personnel and civilians together.",
+    summary: "A V-1 struck the Guards' Chapel during Sunday morning service, collapsing the concrete roof onto the congregation. It was the deadliest single V-1 incident of the war in London.",
+    note: "The chapel was rebuilt in a modernist style and completed in 1963.",
+    sources: [
+      { label: "Wikipedia: Guards' Chapel, Wellington Barracks", url: "https://en.wikipedia.org/wiki/Guards_Chapel,_Wellington_Barracks" }
+    ]
+  },
+  {
+    id: "aldwych-v1-1944",
+    title: "Aldwych, Westminster",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "30 June 1944",
+    sortYear: 1944,
+    confidence: "Confirmed event, street-derived point",
+    lat: 51.5129,
+    lng: -0.1178,
+    bombType: "V1",
+    casualties: 48,
+    casualtiesNote: "48 killed and around 200 seriously injured. A figure of 198 deaths appears in some retellings and is most likely a confusion with the number injured.",
+    summary: "A V-1 cut out over Waterloo and dived into the roadway outside Adastral House, opposite Bush House, shortly after two in the afternoon. The street was crowded with office workers returning from lunch and queuing at the post office, and many of the dead were young women clerical staff.",
+    sources: [
+      { label: "Flying Bombs and Rockets: V1 The Aldwych", url: "http://www.flyingbombsandrockets.com/V1_maintxtd.html" }
+    ]
+  },
+  {
+    id: "sloane-court-1944",
+    title: "Sloane Court East, Chelsea",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "3 July 1944",
+    sortYear: 1944,
+    confidence: "Confirmed event, landmark point",
+    lat: 51.4901,
+    lng: -0.1568,
+    bombType: "V1",
+    casualties: 77,
+    casualtiesNote: "74 US Army personnel and three civilians. The costliest single V-1 incident for American forces in Britain.",
+    summary: "A V-1 fell on Sloane Court East early in the morning as American servicemen billeted in the requisitioned flats were assembling in the street.",
+    note: "A stone tablet on the boundary wall of the Duke of York's Headquarters, opposite the junction with Sloane Court East, records the dead.",
+    sources: [
+      { label: "IWM War Memorials Register: Sloane Court Chelsea V1 Incident 1944", url: "https://memorials.iwm.org.uk/memorial/23188" }
+    ]
+  },
+  {
+    id: "staveley-road-v2-1944",
+    title: "Staveley Road, Chiswick — first V-2 on Britain",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "8 September 1944",
+    sortYear: 1944,
+    confidence: "Confirmed event, landmark point",
+    lat: 51.482,
+    lng: -0.261,
+    bombType: "V2",
+    casualties: 3,
+    casualtiesNote: "Three killed, including a three-year-old girl, and 19 injured.",
+    summary: "At 6.37pm the first V-2 rocket to strike Britain fell on Staveley Road near the junction with Burlington Lane, leaving a crater about thirty feet across and destroying houses. The rocket had been launched from Wassenaar in the occupied Netherlands.",
+    note: "A granite memorial stone was placed near the impact point in 2004.",
+    sources: [
+      { label: "Wikipedia: Staveley Road", url: "https://en.wikipedia.org/wiki/Staveley_Road" }
+    ]
+  },
+  {
+    id: "new-cross-woolworths-1944",
+    title: "Woolworths, New Cross Road, Deptford",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "25 November 1944",
+    sortYear: 1944,
+    confidence: "Confirmed event, landmark point",
+    lat: 51.4753,
+    lng: -0.0378,
+    bombType: "V2",
+    casualties: 168,
+    casualtiesNote: "168 killed, including 33 children, and around 122 injured.",
+    summary: "A V-2 struck the crowded Woolworths store on New Cross Road at 12.26pm on a Saturday, collapsing the building and devastating the adjoining Co-operative store and nearby offices. The blast overturned lorries and threw debris up to half a mile.",
+    note: "It remains one of the worst single civilian-casualty incidents on British soil during the war. Memorial plaques mark the site.",
+    sources: [
+      { label: "Historic England: Devastating V2 rocket attack on Woolworths, New Cross", url: "https://heritagecalling.com/2019/11/25/devastating-v2-rocket-attack-on-woolworths-new-cross-london/" },
+      { label: "Woolworths Museum: Remember New Cross", url: "https://www.woolworthsmuseum.co.uk/1940s-remembernewcross.htm" }
+    ]
+  },
+  {
+    id: "smithfield-market-1945",
+    title: "Smithfield Market, Farringdon",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "8 March 1945",
+    sortYear: 1945,
+    confidence: "Confirmed event, landmark point",
+    lat: 51.5203,
+    lng: -0.1055,
+    bombType: "V2",
+    casualties: 110,
+    casualtiesNote: "110 killed and 366 injured. A small number of accounts date the strike to 9 March; the memorial on site records 8 March 1945.",
+    summary: "A V-2 struck the market at the junction of Charterhouse Street and Farringdon Road late on a weekday morning, the buildings collapsing into the railway tunnels beneath. The death toll was high because crowds had gathered for a rare consignment of rabbit meat during rationing.",
+    note: "A brass memorial disc, its pattern based on a cross-section of a V-2, marks the site at the J J Mack Building.",
+    sources: [
+      { label: "Flying Bombs and Rockets: V2 Smithfield Market", url: "http://www.flyingbombsandrockets.com/V2_maintextd.html" },
+      { label: "IanVisits: A new memorial marks the site of the Smithfield Market bombing", url: "https://www.ianvisits.co.uk/articles/a-new-memorial-marks-the-site-of-londons-smithfield-market-bombing-78603/" }
+    ]
+  },
+  {
+    id: "hughes-mansions-1945",
+    title: "Hughes Mansions, Vallance Road, Stepney — last V-2 on London",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "27 March 1945",
+    sortYear: 1945,
+    confidence: "Confirmed event, landmark point",
+    lat: 51.5209,
+    lng: -0.0596,
+    bombType: "V2",
+    casualties: 134,
+    summary: "At 7.21am a V-2 struck Hughes Mansions on Vallance Road, destroying the central block of the flats and killing 134 men, women and children, many of them from the local Jewish community. It was the last V-2 to fall on London.",
+    note: "A memorial plaque in the rear courtyard records the names of the dead.",
+    sources: [
+      { label: "London Remembers: Hughes Mansions memorial", url: "https://www.londonremembers.com/memorials/hughes-mansions" }
+    ]
+  },
+  {
+    id: "kynaston-road-1945",
+    title: "Kynaston Road, Orpington — last V-2 death in Britain",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "27 March 1945",
+    sortYear: 1945,
+    confidence: "Confirmed event, street-derived point (the house has been rebuilt)",
+    lat: 51.3812,
+    lng: 0.1,
+    bombType: "V2",
+    casualties: 1,
+    casualtiesNote: "Ivy Millichamp, aged 34, killed in the kitchen of her home. Twenty-four people were injured.",
+    summary: "One of the final two V-2 rockets launched at Britain struck Kynaston Road, Orpington, leaving a crater around forty feet across and twenty feet deep.",
+    note: "Ivy Millichamp was the last civilian killed by enemy action in Britain during the Second World War.",
+    sources: [
+      { label: "Bromley Times: Tale of Orpington woman killed by Hitler's final V2", url: "https://www.bromleytimes.co.uk/news/tale-of-orpington-woman-killed-by-hitler-s-final-v2-uncovered-in-new-book-1-1649097" }
+    ]
+  },
+  {
+    id: "grange-walk-bermondsey-2015",
+    title: "Grange Walk, Bermondsey",
+    status: "found",
+    statusLabel: "Found UXO",
+    date: "23 March 2015",
+    sortYear: 2015,
+    confidence: "Confirmed incident, landmark point",
+    lat: 51.4976,
+    lng: -0.077,
+    bombType: "HE",
+    weightKg: 250,
+    cordonRadiusM: 200,
+    disposal: "Removed under escort by the Royal Logistic Corps to a quarry in Kent for controlled detonation.",
+    evacuationNote: "Hundreds of homes evacuated within a 200m cordon, two primary schools closed and around 100 residents rehoused overnight.",
+    casualties: 0,
+    summary: "A German bomb about five feet long was uncovered on a demolition site at the corner of The Grange and Grange Walk.",
+    note: "Reported weights conflict: the BBC gives 250kg, while some contemporary reports described it as roughly 1,000lb.",
+    sources: [
+      { label: "BBC News: Bermondsey bomb safely removed", url: "https://feeds.bbci.co.uk/news/uk-england-london-32030875" },
+      { label: "London SE1: Unexploded bomb found on Bermondsey building site", url: "https://www.london-se1.co.uk/news/view/8154" }
+    ]
+  },
+  {
+    id: "empire-way-wembley-2015",
+    title: "Empire Way, Wembley",
+    status: "found",
+    statusLabel: "Found UXO",
+    date: "21 May 2015",
+    sortYear: 2015,
+    confidence: "Confirmed incident, approximate point",
+    lat: 51.5548,
+    lng: -0.2833,
+    bombType: "HE",
+    weightKg: 50,
+    disposal: "Removed by the Army and detonated in Bedfordshire.",
+    evacuationNote: "About 300 properties evacuated, including television studios then in use, with around 70 people spending the night in an evacuation centre.",
+    casualties: 0,
+    summary: "A 50kg German bomb was found on a building site roughly 200 metres from Wembley Stadium. The Army said the device posed a genuine risk to life.",
+    sources: [
+      { label: "BBC News: Wembley WW2 live bomb posed 'risk to life'", url: "https://feeds.bbci.co.uk/news/uk-england-london-32841971" }
+    ]
+  }
+];
+
+const southamptonRecords = [
+  {
+    id: "supermarine-woolston-1940",
+    title: "Supermarine Aviation Works, Woolston",
+    status: "reported",
+    statusLabel: "Reported target area",
+    date: "26 September 1940",
+    sortYear: 1940,
+    confidence: "Confirmed event, landmark point",
+    lat: 50.8975,
+    lng: -1.3892,
+    bombType: "HE",
+    casualtiesNote: "Figures depend on which raid is counted. The Spitfire Society gives 36 killed and 60 seriously injured in Southampton on 26 September; a combined total of 110 is given for the raids of 24 and 26 September together.",
+    summary: "The Luftwaffe made two daylight raids on the riverside factory building Spitfires, with around 60 Heinkel He 111s escorted by Bf 110s. Most bombs overshot into surrounding residential streets and factory shelters; only seven hit the Woolston works.",
+    note: "Production was suspended and Spitfire manufacture was afterwards dispersed across the region — the raid achieved less than the casualty figures suggest.",
+    sources: [
+      { label: "The Spitfire Society: Luftwaffe raid on Southampton, 26 September 1940", url: "https://www.spitfiresociety.org/blogcontent-13-2-luftwaffe-raid-on-southampton---26-september-1940" },
+      { label: "Wikipedia: Southampton Blitz", url: "https://en.wikipedia.org/wiki/Southampton_Blitz" }
+    ]
+  },
+  {
+    id: "woolston-railway-arch-1940",
+    title: "Railway arch shelter, Woolston",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "26 September 1940",
+    sortYear: 1940,
+    confidence: "Confirmed event, approximate point",
+    lat: 50.9035,
+    lng: -1.3825,
+    bombType: "HE",
+    casualties: 7,
+    summary: "About twenty people sheltering in a disused brick tunnel in the railway embankment were buried when a bomb collapsed the entrance. Rescuers dug survivors out by hand despite an unexploded bomb nearby, and recovery of the dead continued for almost 24 hours.",
+    sources: [
+      { label: "The Supermariners: The Fatal Railway Arch", url: "https://supermariners.wordpress.com/2021/07/09/the-fatal-railway-arch/" }
+    ]
+  },
+  {
+    id: "northam-gasworks-1940",
+    title: "Northam Gasworks",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "26 September 1940",
+    sortYear: 1940,
+    confidence: "Confirmed event, approximate point",
+    lat: 50.9105,
+    lng: -1.3865,
+    bombType: "HE",
+    casualties: 11,
+    summary: "Bombs aimed at the Itchen industrial corridor struck the gasworks at Northam during the same daylight raid that targeted Supermarine, killing eleven workers.",
+    sources: [
+      { label: "Wikipedia: Southampton Blitz", url: "https://en.wikipedia.org/wiki/Southampton_Blitz" }
+    ]
+  },
+  {
+    id: "civic-centre-art-gallery-1940",
+    title: "Civic Centre Art Gallery school shelter",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "6 November 1940",
+    sortYear: 1940,
+    confidence: "Confirmed site, building-level",
+    lat: 50.90635,
+    lng: -1.4067,
+    bombType: "HE",
+    weightKg: 227,
+    casualties: 35,
+    casualtiesNote: "35 killed including 14 or 15 children. Of the fifteen children sheltering in the basement, only one survived.",
+    summary: "A 500lb bomb fell through the roof of the art gallery in a daylight raid and exploded in the lower floors, where a school class was sheltering during an art lesson.",
+    sources: [
+      { label: "Historic Southampton: Postcards from the Blitz", url: "https://historicsouthampton.co.uk/postcards-from-the-blitz/" },
+      { label: "Wikipedia: Southampton Blitz", url: "https://en.wikipedia.org/wiki/Southampton_Blitz" }
+    ]
+  },
+  {
+    id: "holyrood-church-1940",
+    title: "Holyrood Church, High Street",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "30 November 1940",
+    sortYear: 1940,
+    confidence: "Confirmed site (fixed, well-known landmark)",
+    lat: 50.8976,
+    lng: -1.4027,
+    bombType: "incendiary",
+    casualtiesNote: "No deaths are attributed to the church itself. The raid of 30 November killed 137 people across the town, 96 of them in air raid shelters — a town-wide figure.",
+    summary: "The medieval church took a direct hit and was burnt out, leaving a shell. Around 800 high-explosive bombs and 9,000 incendiaries fell on the town centre that night.",
+    note: "The ruins were dedicated in 1957 as a memorial to Merchant Navy seafarers and now house a Titanic memorial fountain.",
+    sources: [
+      { label: "Wikipedia: Holyrood Church, Southampton", url: "https://en.wikipedia.org/wiki/Holyrood_Church,_Southampton" },
+      { label: "Historic Southampton: Postcards from the Blitz", url: "https://historicsouthampton.co.uk/postcards-from-the-blitz/" }
+    ]
+  },
+  {
+    id: "above-bar-street-1940",
+    title: "Above Bar Street",
+    status: "historic",
+    statusLabel: "Historic bombing area",
+    date: "30 November 1940",
+    sortYear: 1940,
+    confidence: "Rough area",
+    lat: 50.9021,
+    lng: -1.4043,
+    bombType: "incendiary",
+    casualtiesNote: "No site-specific figure. 137 people were killed across Southampton on 30 November 1940, and 214 across the raids of 23 and 30 November together.",
+    summary: "Southampton's principal shopping street, including the Regal Cinema and Above Bar Church, was gutted in the raid of 30 November 1940.",
+    note: "Around 45,000 buildings across the town were damaged or destroyed during the campaign — proportionally the heaviest housing loss of any UK city, at 12.5 per cent of stock. Southampton's war dead totalled 631.",
+    sources: [
+      { label: "Historic Southampton: Postcards from the Blitz", url: "https://historicsouthampton.co.uk/postcards-from-the-blitz/" },
+      { label: "Wikipedia: Southampton Blitz", url: "https://en.wikipedia.org/wiki/Southampton_Blitz" }
+    ]
+  },
+  {
+    id: "cumberland-place-2024",
+    title: "Cumberland Place, city centre",
+    status: "found",
+    statusLabel: "Found UXO",
+    date: "14 March 2024",
+    sortYear: 2024,
+    confidence: "Confirmed incident, approximate point",
+    lat: 50.9081,
+    lng: -1.4084,
+    bombType: "unspecified",
+    casualties: 0,
+    evacuationNote: "Office workers and gym users evacuated; cordons placed at Commercial Road and Watts Park.",
+    summary: "Suspected unexploded ordnance was found near Cumberland Place in the city centre shortly after 10am. Military bomb disposal experts attended and closures were lifted by early afternoon.",
+    sources: [
+      { label: "BBC News: Unexploded ordnance found in Southampton city centre", url: "https://feeds.bbci.co.uk/news/uk-england-hampshire-68565342" }
+    ]
+  }
+];
+
+const portsmouthRecords = [
+  {
+    id: "portsmouth-guildhall-1941",
+    title: "Portsmouth Guildhall",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "10 January 1941",
+    sortYear: 1941,
+    confidence: "Confirmed site (fixed, well-known landmark)",
+    lat: 50.7983,
+    lng: -1.0919,
+    bombType: "incendiary",
+    casualtiesNote: "No deaths are attributed to the Guildhall itself. 172 people were killed across Portsmouth on the night of 10/11 January 1941 — a city-wide figure. Portsmouth's war total was 930 dead and 2,837 injured across 67 major raids.",
+    summary: "The Guildhall was struck by multiple incendiaries and completely gutted. An observer described ribbons of green fire dropping down the side of the building as the copper of the cupola melted.",
+    note: "The civic silver was recovered from a basement safe. The building was not rebuilt until the 1950s.",
+    sources: [
+      { label: "Portsmouth Guildhall: 80 years on — Portsmouth and the Blitz", url: "https://www.portsmouthguildhall.org.uk/2021/01/08/80-years-on-portsmouth-and-the-blitz/" },
+      { label: "Daly History Blog: The Portsmouth Blitz, 70 years on", url: "https://dalyhistory.wordpress.com/2011/01/11/the-portsmouth-blitz-70-years-on/" }
+    ]
+  },
+  {
+    id: "besant-road-shelter-1941",
+    title: "Besant Road shelter, Arundel Street",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "10 January 1941",
+    sortYear: 1941,
+    confidence: "Confirmed event, landmark point",
+    lat: 50.7997,
+    lng: -1.0836,
+    bombType: "HE",
+    casualtiesNote: "Sources conflict sharply: contemporary and secondary accounts give 47 killed by a direct hit on the shelter, while the memorial plaque on the site states 80 men, women and children died — though only 76 names are listed on it.",
+    summary: "An underground shelter serving the Arundel Street area took a direct hit during Portsmouth's heaviest raid. Most of the dead were buried together in Kingston Cemetery.",
+    note: "A memorial plaque marks the site at the junction of Arundel Street and Holbrook Road.",
+    sources: [
+      { label: "Memorials in Portsmouth: Besant Road air raid shelter", url: "https://www.memorialsinportsmouth.co.uk/city-centre/besant-road-shelter.htm" },
+      { label: "Daly History Blog: 69 years ago, the Portsmouth Blitz", url: "https://dalyhistory.wordpress.com/2010/01/11/69-years-ago-the-portsmouth-blitz-pt-2/" }
+    ]
+  },
+  {
+    id: "portsmouth-dockyard-1941",
+    title: "Royal Dockyard, Portsea & Landport",
+    status: "reported",
+    statusLabel: "Reported target area",
+    date: "10 January 1941",
+    sortYear: 1941,
+    confidence: "Strategic target area",
+    lat: 50.8017,
+    lng: -1.1075,
+    bombType: "incendiary",
+    casualtiesNote: "No site-specific figure available. The city-wide toll for the night was 172.",
+    summary: "The naval dockyard and the adjoining Portsea and Landport districts were among the principal targets of the 10 January raid, alongside the power station, six churches, a hospital and three cinemas. Around 40,000 incendiaries and 140 tons of high explosive fell over roughly seven hours, starting 2,314 fires and fracturing 60 water mains.",
+    note: "The city's records manager recorded that survivors found large parts of Portsea, Landport and Southsea were smoking ruins.",
+    sources: [
+      { label: "Portsmouth Guildhall: 80 years on — Portsmouth and the Blitz", url: "https://www.portsmouthguildhall.org.uk/2021/01/08/80-years-on-portsmouth-and-the-blitz/" }
+    ]
+  },
+  {
+    id: "langstone-decoy-1941",
+    title: "Langstone Harbour decoy site",
+    status: "reported",
+    statusLabel: "Reported target area",
+    date: "17 April 1941",
+    sortYear: 1941,
+    confidence: "Rough area",
+    lat: 50.818,
+    lng: -1.02,
+    bombType: "unspecified",
+    casualties: 0,
+    summary: "Around 200 air-dropped munitions fell on a decoy site in Langstone Harbour rather than on the city — a successful use of the deception sites built to draw bombing away from populated Portsmouth.",
+    note: "Recorded because the decoys are part of the story of why bombs fell where they did. Portsmouth also built a deep shelter into Portsdown Hill in 1942, designed to hold 2,500 people.",
+    sources: [
+      { label: "Liberation Route Europe: The Portsmouth Blitz", url: "https://www.liberationroute.com/en/stories/437/the-portsmouth-blitz" }
+    ]
+  },
+  {
+    id: "portsmouth-harbour-2016",
+    title: "Portsmouth Harbour, off Gunwharf",
+    status: "found",
+    statusLabel: "Found UXO",
+    date: "23 November 2016",
+    sortYear: 2016,
+    confidence: "Confirmed incident, approximate point (found underwater)",
+    lat: 50.7965,
+    lng: -1.105,
+    bombType: "HE",
+    weightKg: 227,
+    cordonRadiusM: 500,
+    disposal: "Towed out and detonated about 1.5 miles east of the Isle of Wight.",
+    evacuationNote: "Gunwharf Quays, Old Portsmouth, the Historic Dockyard, Portsmouth Harbour station and the Gosport and Wightlink ferry terminals all cleared.",
+    casualties: 0,
+    summary: "A 500lb German bomb was found in Portsmouth Harbour early one morning, prompting a 500m exclusion zone across the waterfront.",
+    note: "The Royal Navy noted that such devices still pose a very serious threat when they are moved — the reason a find that has lain harmlessly for eighty years still closes a city centre.",
+    sources: [
+      { label: "BBC News: Portsmouth evacuations prompted by WW2 bomb find", url: "https://feeds.bbci.co.uk/news/uk-england-hampshire-37997259" }
+    ]
+  }
+];
+
+const hampshireWiderRecords = [
+  {
+    id: "gosport-forton-road-1940",
+    title: "St Vincent sports ground, Forton Road, Gosport",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "12 August 1940",
+    sortYear: 1940,
+    confidence: "Confirmed event, approximate point",
+    lat: 50.797,
+    lng: -1.13,
+    bombType: "HE",
+    casualties: 15,
+    casualtiesNote: "At least fifteen: twelve military personnel, ten of them from barrage balloon squadrons, two civilian groundsmen, and at least three further civilians.",
+    summary: "Junkers Ju 87 Stukas attacked the 933 Barrage Balloon Squadron site at St Vincent sports ground, part of a raid of more than 150 aircraft. The railway line to Fareham is thought to have given the pilots their run-in.",
+    note: "Most of the servicemen killed were buried in the war graves section of Ann's Hill Cemetery.",
+    sources: [
+      { label: "Barrage Balloon Reunion Club: Tragic loss of life at 933 Barrage Balloon Squadron, Gosport", url: "http://www.bbrclub.org/Tragic%20Loss%20of%20Life%20at%20933%20Barrage%20Balloon%20Squadron%20at%20Gosport%2012th%20August%201940.htm" }
+    ]
+  },
+  {
+    id: "basingstoke-church-square-1940",
+    title: "Church Square, Basingstoke",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "16 August 1940",
+    sortYear: 1940,
+    confidence: "Confirmed event, landmark point",
+    lat: 51.2662,
+    lng: -1.0878,
+    bombType: "HE",
+    casualties: 10,
+    summary: "Basingstoke's largest raid struck the area around Church Square and Church Lane at about the time most people were leaving work. St Michael's Church was left with only one intact window and the Methodist church needed extensive restoration.",
+    note: "A motorcyclist was killed and a resident was shot by machine-gun fire during the same attack.",
+    sources: [
+      { label: "Max Love: World War Two, Basingstoke", url: "http://www.maxlove.co.uk/ww2.htm" },
+      { label: "Alton Herald: The day the bombs fell on Farnborough and Bordon", url: "https://www.altonherald.com/news/nostalgia-the-day-the-bombs-fell-on-farnborough-and-bordon-706790" }
+    ]
+  },
+  {
+    id: "rae-farnborough-1940",
+    title: "Royal Aircraft Establishment, Farnborough",
+    status: "reported",
+    statusLabel: "Reported target area",
+    date: "16 August 1940",
+    sortYear: 1940,
+    confidence: "Strategic target area",
+    lat: 51.283,
+    lng: -0.754,
+    bombType: "HE",
+    casualties: 3,
+    casualtiesNote: "Three Home Guard members killed at Farnborough. Around 166 civilian deaths were recorded across southern England that day — a regional figure that should not be attributed to Farnborough.",
+    summary: "A large Luftwaffe formation crossed the coast near the Solent and split into groups of eight or nine aircraft, striking the Royal Aircraft Establishment as well as Bordon Camp and Basingstoke.",
+    note: "Broken cloud hampered Fighter Command's interception of the roughly 200 bombers dispersed that day.",
+    sources: [
+      { label: "Alton Herald: The day the bombs fell on Farnborough and Bordon", url: "https://www.altonherald.com/news/nostalgia-the-day-the-bombs-fell-on-farnborough-and-bordon-706790" }
+    ]
+  },
+  {
+    id: "winchester-hyde-street-1943",
+    title: "Hyde Street, Winchester",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "9 February 1943",
+    sortYear: 1943,
+    confidence: "Confirmed event, street-derived point",
+    lat: 51.068,
+    lng: -1.3168,
+    bombType: "HE",
+    casualties: 7,
+    summary: "A bomb fell beside a bus stop on Hyde Street, killing seven people waiting for a bus. A first bomb had hit the Theatre Royal on Jewry Street and five more fell in nearby gardens without fatalities.",
+    note: "These were the only bombs to directly hit Winchester during the entire war — a reminder that proximity to a target city was not the same as being one.",
+    sources: [
+      { label: "Culture on Call (Hampshire Cultural Trust): Winchester during modern war", url: "https://www.cultureoncall.com/winchester-wars/" }
+    ]
+  },
+  {
+    id: "hogmoor-bordon-2024",
+    title: "Hogmoor Inclosure, Bordon",
+    status: "found",
+    statusLabel: "Found UXO",
+    date: "16 January 2024",
+    sortYear: 2024,
+    confidence: "Confirmed incident, approximate point",
+    lat: 51.116,
+    lng: -0.868,
+    bombType: "HE",
+    cordonRadiusM: 1500,
+    initialCordonRadiusM: 200,
+    disposal: "Destroyed in a controlled explosion behind a blast wall built from more than 300 tonnes of imported sand.",
+    evacuationNote: "Properties evacuated and the gas supply cut before detonation.",
+    casualties: 0,
+    summary: "Construction workers redeveloping the former army training area found a German WWII bomb at Hogmoor Inclosure. The controlled explosion was heard up to fifteen miles away.",
+    sources: [
+      { label: "Zetica UXO: Controlled explosion as WWII German UXB found in Bordon", url: "https://zeticauxo.com/news/controlled-explosion-as-wwii-german-uxb-found-in-bordon/" },
+      { label: "Surrey Live: Bordon homes evacuated after Second World War bomb discovered", url: "https://www.getsurrey.co.uk/news/surrey-news/bordon-homes-evacuated-after-german-16956447" }
+    ]
+  }
+];
+
+const canterburyRecords = [
+  {
+    id: "canterbury-baedeker-1942",
+    title: "St George's Street & the Longmarket",
+    status: "historic",
+    statusLabel: "Historic bombing area",
+    date: "1 June 1942",
+    sortYear: 1942,
+    confidence: "Rough area",
+    lat: 51.2783,
+    lng: 1.0834,
+    bombType: "incendiary",
+    casualties: 43,
+    casualtiesNote: "43 killed and around 100 injured across the city — a city-wide total for the raid, not a figure for this street.",
+    summary: "In the early hours the Luftwaffe struck Canterbury as part of the Baedeker reprisal raids for the RAF attack on Cologne. The commercial heart of the city around St George's Street and the Longmarket was gutted; 800 buildings were destroyed and around 6,000 more damaged.",
+    note: "The burnt-out St George's clock tower survives as a marker of the destroyed quarter.",
+    sources: [
+      { label: "KentOnline: 75th anniversary of the Baedeker Blitz on Canterbury", url: "https://www.kentonline.co.uk/canterbury/news/the-day-bombs-fell-like-126561/" },
+      { label: "IWM: What were the Baedeker raids?", url: "https://www.iwm.org.uk/history/what-were-the-baedeker-raids" }
+    ]
+  },
+  {
+    id: "canterbury-cathedral-1942",
+    title: "Canterbury Cathedral — Library & Deanery",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "1 June 1942",
+    sortYear: 1942,
+    confidence: "Confirmed event, landmark point",
+    lat: 51.2803,
+    lng: 1.0825,
+    bombType: "incendiary",
+    casualtiesNote: "No casualties are attributed to the Cathedral precincts.",
+    summary: "Sixteen bombs fell in the immediate vicinity of the cathedral, but the church itself survived largely undamaged. The Cathedral Library and the Deanery were badly damaged, and four fire watchers on the roof extinguished incendiaries before they could take hold.",
+    note: "The medieval stained glass had been removed and stored beforehand; later Victorian windows left in place were destroyed. The cathedral's survival owed as much to the men on its roof as to luck.",
+    sources: [
+      { label: "Canterbury Cathedral Learning: World War Two", url: "https://learning.canterbury-cathedral.org/a-walk-through-time/ww2/" }
+    ]
+  }
+];
+
+const doverRecords = [
+  {
+    id: "dover-cross-channel-shelling",
+    title: "Dover town centre — cross-Channel shelling",
+    status: "historic",
+    statusLabel: "Historic bombing area",
+    date: "1940-1944",
+    sortYear: 1940,
+    confidence: "Rough area",
+    lat: 51.1279,
+    lng: 1.3117,
+    bombType: "shell",
+    casualtiesNote: "216 civilians killed, 344 severely and 416 slightly injured in Dover across the whole war. This is a town-wide, war-long total covering both shelling and bombing, not a figure for any one impact.",
+    summary: "From 1940 to 1944 Dover was bombarded by German long-range artillery on the French coast around Cap Gris-Nez, some 21 miles away — a form of attack unique in Britain and the origin of the town's Hellfire Corner name. Borough records count 2,226 shells landing on the town and 686 in the surrounding district, alongside 464 high-explosive bombs and three parachute mines.",
+    note: "Shells, not bombs. The 380mm guns at Cap Gris-Nez fired projectiles containing around 70kg of explosive. There were 3,059 air-raid alerts, and 10,056 buildings were damaged, 957 of them destroyed. Sources disagree on the date of the first shell, giving either 12 or 22 August 1940.",
+    sources: [
+      { label: "Dover Museum: Cross Channel Shelling, World War Two", url: "https://www.dovermuseum.co.uk/Information-Resources/The-Collection/Cross-Channel-Shelling,-World-War-Two.aspx" },
+      { label: "Dover-Kent.co.uk: Dover in the Second World War — bombing and shelling", url: "https://www.dover-kent.co.uk/ww2_bombing.html" }
+    ]
+  },
+  {
+    id: "barwicks-cave-1944",
+    title: "Barwick's Cave shelter, Snargate Street",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "26 September 1944",
+    sortYear: 1944,
+    confidence: "Confirmed event, landmark point",
+    lat: 51.1236,
+    lng: 1.3072,
+    bombType: "shell",
+    weightKg: 1000,
+    casualties: 1,
+    casualtiesNote: "Patience Ransley, aged 63 — the last civilian death from cross-Channel shelling.",
+    summary: "The final enemy shell to land on Kent struck the cliff above Barwick's Cave, one of Dover's deep cliff shelters, at 7.15pm. It passed through a grave in the cemetery above and bored a further 24 feet through solid chalk before detonating about seven feet above the shelter's reinforced concrete roof.",
+    note: "A 16-inch shell fired from the Lindemann Battery near Sangatte. The shelter ran through from Snargate Street to Durham Hill; the marker is the Snargate Street end.",
+    sources: [
+      { label: "Dover's History Archive: The Unlikely Death of Patience Ransley", url: "https://www.dover.uk.com/history/1944/the-unlikely-death-of-patience-ransley" },
+      { label: "The Dover Society: Last enemy shell to land in Kent, September 1944", url: "https://thedoversociety.co.uk/2-last-enemy-shell-to-land-in-kent-sept-1944/" }
+    ]
+  }
+];
+
+const folkestoneRecords = [
+  {
+    id: "folkestone-bridge-street-1944",
+    title: "Bridge Street, Folkestone",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "3 July 1944",
+    sortYear: 1944,
+    confidence: "Confirmed event, street-derived point",
+    lat: 51.0806,
+    lng: 1.1832,
+    bombType: "V1",
+    casualties: 3,
+    casualtiesNote: "Three killed, including the licensee of the Wheatsheaf Inn, and sixty injured.",
+    summary: "A V-1 flying bomb crashed into Bridge Street near the harbour, destroying nine houses and the Wheatsheaf Inn.",
+    note: "Folkestone recorded 123 civilian deaths, 778 injuries and 14,141 properties damaged across the war. Like Dover, it was shelled from France as well as bombed; its worst shelling day was 14 September 1944.",
+    sources: [
+      { label: "Folkestone Families: WWII civilian deaths roll", url: "http://freepages.rootsweb.com/~folkestonefamilies/genealogy/wwiicivil.htm" }
+    ]
+  }
+];
+
+const ashfordRecords = [
+  {
+    id: "ashford-great-raid-1943",
+    title: "Ashford Railway Works, Newtown",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "24 March 1943",
+    sortYear: 1943,
+    confidence: "Confirmed event, landmark point",
+    lat: 51.14,
+    lng: 0.8785,
+    bombType: "HE",
+    casualtiesNote: "Sources give between 53 and 60 killed, with 150 to 250 injured. KentOnline's 2023 anniversary piece gives 53 killed and more than 150 injured.",
+    summary: "Fifteen Focke-Wulf 190 fighter-bombers attacked Ashford in a low-level daylight raid at about ten in the morning, coming in out of the sun with the railway works as the primary target. Around 13,500kg of high explosive was dropped.",
+    note: "Bombs also struck the Stanhay works, Hayward's garage, Snashall's bakery and the tannery at Dover Place, with damage along Milton, Star, Hardinge and Beaver Roads. Beaver Road School was destroyed but no children were killed there.",
+    sources: [
+      { label: "KentOnline: 80 years since the Second World War bombing in Ashford which claimed 53 lives", url: "https://www.kentonline.co.uk/ashford/news/now-people-panic-when-a-firework-goes-off-we-got-used-to-b-284161/" }
+    ]
+  },
+  {
+    id: "little-chart-v1-1944",
+    title: "Church of St Mary, Little Chart",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "16 August 1944",
+    sortYear: 1944,
+    confidence: "Confirmed site, building-level",
+    lat: 51.1616,
+    lng: 0.7833,
+    bombType: "V1",
+    casualties: 0,
+    summary: "A V-1 heading for London was shot down by a fighter over Little Chart and fell onto the medieval Church of St Mary at about eight in the evening. The nave, north aisle, chancel and north chapel were destroyed.",
+    note: "The west tower of about 1500 and part of the chancel survive as a listed ruin. No injuries were reported — one of many V-1s brought down over Kent short of their target, which is why the county was called bomb alley.",
+    sources: [
+      { label: "Kent Historic Environment Record: Ruins of Church of St Mary, Little Chart", url: "https://heritage.kent.gov.uk/Monument/MKE22073" }
+    ]
+  }
+];
+
+const maidstoneRecords = [
+  {
+    id: "maidstone-mill-street-1940",
+    title: "Mill Street, Maidstone",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "31 October 1940",
+    sortYear: 1940,
+    confidence: "Confirmed event, street-derived point",
+    lat: 51.2723,
+    lng: 0.5205,
+    bombType: "HE",
+    casualtiesNote: "Deaths occurred but no figure is given in the source consulted, so none is asserted here.",
+    summary: "A lone Dornier 17 bombed Mill Street shortly before nine in the morning — the last bombs to fall on the town during the Battle of Britain period. The intended target was the Rootes Motors repair workshops, which built and repaired military vehicles.",
+    note: "Shops and offices in Mill Street were heavily damaged and the town's trolleybus system had to be re-routed.",
+    sources: [
+      { label: "KentOnline: Onslaught from the air remembered", url: "https://www.kentonline.co.uk/maidstone/news/onslaught-from-the-air-remembere-a41954/" }
+    ]
+  }
+];
+
+const ramsgateRecords = [
+  {
+    id: "ramsgate-five-minute-raid-1940",
+    title: "Ramsgate town centre — the five-minute raid",
+    status: "historic",
+    statusLabel: "Historic bombing area",
+    date: "24 August 1940",
+    sortYear: 1940,
+    confidence: "Rough area",
+    lat: 51.3339,
+    lng: 1.4183,
+    bombType: "HE",
+    casualties: 31,
+    casualtiesNote: "29 civilians and two soldiers killed; ten seriously and forty slightly injured.",
+    summary: "The Luftwaffe dropped more than 500 bombs on Ramsgate in roughly five minutes, damaging or destroying some 1,200 houses.",
+    note: "The town's deep shelter tunnels, completed shortly before, are credited with keeping the death toll far lower than the scale of destruction would suggest — around 300 families later lived in them permanently. Fireman Moore received the George Medal for dragging a wounded colleague to safety under machine-gun fire.",
+    sources: [
+      { label: "Ramsgate Tunnels: Ramsgate bombing, August 1940", url: "https://www.ramsgatetunnels.org/ramsgate-bombing-august-1940/" },
+      { label: "Historic England: Ramsgate Tunnels case study", url: "https://historicengland.org.uk/research/heritage-counts/2018-heritage-in-commercial-use/case-studies/ramsgate-tunnels/" }
+    ]
+  }
+];
+
+const medwayRecords = [
+  {
+    id: "chatham-dockyard-1940",
+    title: "Chatham Dockyard",
+    status: "reported",
+    statusLabel: "Reported target area",
+    date: "19 August 1940",
+    sortYear: 1940,
+    confidence: "Strategic target area",
+    lat: 51.3985,
+    lng: 0.5291,
+    bombType: "HE",
+    casualties: 3,
+    casualtiesNote: "Three dockyard workers killed and two wounded in the 19 August raid. The raids of 27-28 August killed 21 and seriously wounded 19 across the Medway Towns as a whole — not at the dockyard alone.",
+    summary: "Chatham Dockyard, the Nore Command's principal naval base, was bombed on 19 August 1940. The nights of 27 and 28 August brought what contemporary records describe as one of the Medway Towns' worst attacks of the war.",
+    note: "Bombs later fell on dockyard buildings including the Fitted Rigging House, the Locomotive Shop and the Factory.",
+    sources: [
+      { label: "Kent Archaeology: Defending Chatham 1939-1941", url: "https://www.kentarchaeology.org.uk/books/defending-chatham-1939-1941" },
+      { label: "Chatham Historic Dockyard Trust: Chatham during the war", url: "https://thedockyard.co.uk/news/ve80-chatham-during-the-war/" }
+    ]
+  },
+  {
+    id: "ordnance-street-chatham-1940",
+    title: "Ordnance Street, Chatham",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "December 1940",
+    sortYear: 1940,
+    confidence: "Confirmed event, street-derived point",
+    lat: 51.3823,
+    lng: 0.5206,
+    bombType: "parachute-mine",
+    casualties: 24,
+    summary: "Twenty-four people were killed when parachute mines fell on Ordnance Street, destroying homes including that of the Thorn family, who died together.",
+    note: "Survivor Steve Foy, ten years old at the time, campaigned for years for a permanent memorial; a plaque naming the dead was unveiled in 2014 at the spot where the second mine came down. The source gives the month but not the day, so no exact date is asserted.",
+    sources: [
+      { label: "KentOnline: Chatham memorial unveiled to remember 24 killed in Ordnance Street", url: "https://www.kentonline.co.uk/medway/news/wartime-memorial-unveiled-24709/" }
+    ]
+  },
+  {
+    id: "rochester-wickham-street-1941",
+    title: "Wickham Street, Rochester",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "8 April 1941",
+    sortYear: 1941,
+    confidence: "Confirmed event, street-derived point",
+    lat: 51.3878,
+    lng: 0.5062,
+    bombType: "HE",
+    casualties: 11,
+    casualtiesNote: "Eleven killed, among them three firefighters of the Rochester Auxiliary Fire Service and a two-year-old boy. More than a hundred were injured.",
+    summary: "High-explosive bombs, parachute mines and around 1,000 incendiaries fell on Rochester overnight, destroying dozens of homes in the Wickham Street area.",
+    note: "An ARP officer's account records residents sweeping up glass and debris almost immediately afterwards.",
+    sources: [
+      { label: "KentOnline: Eleven died when bombs fell on a Rochester street 75 years ago", url: "https://www.kentonline.co.uk/medway/news/mayhem-and-death-on-a-93963/" }
+    ]
+  },
+  {
+    id: "upchurch-v1-1944",
+    title: "Oak Lane railway bridge, Upchurch",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "16 August 1944",
+    sortYear: 1944,
+    confidence: "Confirmed event, approximate point",
+    lat: 51.36,
+    lng: 0.634,
+    bombType: "V1",
+    casualties: 8,
+    casualtiesNote: "Seven train passengers and one railway worker sheltering beneath the bridge. Around 200 people were injured, eighteen of them seriously.",
+    summary: "A V-1 destroyed the railway bridge carrying the line over Oak Lane at Upchurch. The Victoria to Ramsgate train, carrying around 400 passengers, arrived moments later and ran into the gap.",
+    note: "The driver reported his hat being blown off and a cloud of smoke ahead before the crash. A replacement structure was in place within three days.",
+    sources: [
+      { label: "KentOnline: Historian unearths new details of the Upchurch doodlebug train crash", url: "https://www.kentonline.co.uk/sittingbourne/news/doodlebug-crash-7081/" }
+    ]
+  }
+];
+
+const kingsHillRecords = [
+  {
+    id: "kings-hill-2024",
+    title: "King's Hill, former RAF West Malling",
+    status: "found",
+    statusLabel: "Found UXO",
+    date: "January 2024",
+    sortYear: 2024,
+    confidence: "Confirmed incident, approximate point",
+    lat: 51.2793,
+    lng: 0.4025,
+    bombType: "HE",
+    weightKg: 50,
+    disposal: "Destroyed in a controlled explosion the following day, behind blast mitigation installed by an EOD team.",
+    evacuationNote: "A school and several neighbouring premises evacuated behind a police cordon.",
+    casualties: 0,
+    summary: "A 50kg German unexploded bomb was uncovered during construction work at King's Hill, on the site of the former RAF West Malling airfield, which was heavily attacked during the Battle of Britain.",
+    note: "A second 50kg German bomb had been found and destroyed at the same site in June 2023. Wartime airfields remain among the most reliable places to find unexploded ordnance eighty years on.",
+    sources: [
+      { label: "Zetica UXO: Another 50kg WWII bomb found at King's Hill in Kent", url: "https://zeticauxo.com/news/another-wwii-bomb-found-at-kings-hill/" },
+      { label: "KentOnline: Second World War bomb discovered in Kings Hill", url: "https://www.kentonline.co.uk/malling/news/unearthed-bomb-likely-to-be-detonated-tomorrow-213033/" }
+    ]
+  }
+];
+
+const brightonRecords = [
+  {
+    id: "kemp-town-odeon-1940",
+    title: "Odeon Cinema, Kemp Town",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "14 September 1940",
+    sortYear: 1940,
+    confidence: "Confirmed event, landmark point",
+    lat: 50.8187,
+    lng: -0.1268,
+    bombType: "HE",
+    weightKg: 50,
+    casualtiesNote: "Published figures for the raid range from 52 to 59 killed, of whom roughly six to twelve died inside the cinema itself. Royal Pavilion & Museums gives 52 across the raid; other accounts give 54 or 59.",
+    summary: "A lone Dornier Do 17, pursued by Spitfires, jettisoned twenty 50kg bombs over Kemp Town at about half past three on a Saturday afternoon. Two struck the Odeon cinema at 38 St George's Road during a children's matinee.",
+    note: "Brighton's deadliest air raid of the war. Other bombs fell in Edward Street, Upper Rock Gardens, Hereford Street, Upper Bedford Street, Rock Street and Kemp Town Place.",
+    sources: [
+      { label: "Royal Pavilion & Museums: Brighton's deadliest bombing raid of WW2", url: "https://ww2.brightonmuseums.org/looking-forwards-reflecting-back/brightons-deadliest-bombing-raid-of-ww2/" },
+      { label: "Wikipedia: Brighton Blitz", url: "https://en.wikipedia.org/wiki/Brighton_Blitz" }
+    ]
+  },
+  {
+    id: "london-road-viaduct-1943",
+    title: "London Road Viaduct, Brighton",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "25 May 1943",
+    sortYear: 1943,
+    confidence: "Confirmed site (fixed, well-known landmark)",
+    lat: 50.8368,
+    lng: -0.1355,
+    bombType: "HE",
+    weightKg: 500,
+    casualties: 24,
+    casualtiesNote: "24 killed — ten men, twelve women and two children — with 58 seriously and 69 slightly injured.",
+    summary: "Between 25 and 30 Focke-Wulf Fw 190 fighter-bombers attacked Brighton in a low-level daylight raid, demolishing a central pier of the London Road railway viaduct. Around 150 homes were destroyed and more than 500 people displaced.",
+    note: "The most structurally destructive raid of the war on the town. The Black Rock gasworks was also set ablaze.",
+    sources: [
+      { label: "Wikipedia: Brighton Blitz", url: "https://en.wikipedia.org/wiki/Brighton_Blitz" }
+    ]
+  },
+  {
+    id: "hove-walsingham-terrace-1943",
+    title: "Walsingham Terrace & Rutland Gardens, Hove",
+    status: "historic",
+    statusLabel: "Historic bombing area",
+    date: "9 March 1943",
+    sortYear: 1943,
+    confidence: "Confirmed event, approximate point (four streets affected)",
+    lat: 50.8272,
+    lng: -0.1935,
+    bombType: "HE",
+    casualties: 12,
+    casualtiesNote: "Twelve killed: six women, four men, one child and one serviceman.",
+    summary: "Fighter-bombers struck west Hove at 4.55pm, hitting Walsingham Terrace, Rutland Gardens, Shelley Road and Amherst Crescent with bombs and cannon fire. It was Hove's worst single raid.",
+    note: "Hove recorded 91 exploding high-explosive bombs, 1,272 incendiaries, two sea mines and four unexploded bombs between 1939 and 1944, with 30 people killed overall — town-wide figures, not for this site.",
+    sources: [
+      { label: "Hove in the Past (Judy Middleton): Hove and the Second World War", url: "https://hovehistory.blogspot.com/2016/11/hove-and-second-world-war.html" }
+    ]
+  }
+];
+
+const eastbourneRecords = [
+  {
+    id: "eastbourne-station-1940",
+    title: "Eastbourne railway station",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "26 October 1940",
+    sortYear: 1940,
+    confidence: "Confirmed event, landmark point",
+    lat: 50.769,
+    lng: 0.2807,
+    bombType: "HE",
+    casualties: 4,
+    casualtiesNote: "Four killed that day when a bomb struck a train standing in the station.",
+    summary: "A bomb hit a train at Eastbourne railway station, one of many raids on what the Home Office designated the most raided town in the South East region.",
+    note: "Town-wide totals vary widely and should be treated with care: 187 civilians are recorded as dying in the borough through enemy action, a Civil Defence regional officer cited 96 enemy air attacks — more than any other town in the region — and one oral-history account says over 400 bombs fell between July 1940 and December 1941.",
+    sources: [
+      { label: "Heritage Eastbourne: Peace! But Eastbourne remembers", url: "https://heritageeastbourne.home.blog/2020/05/06/peace-but-eastbourne-remembers/" },
+      { label: "Unknown Kent & Sussex: When Eastbourne suffered bombing devastation", url: "https://unknownkentandsussex.co.uk/when-eastbourne-suffered-bombing-devastation/" }
+    ]
+  }
+];
+
+const hastingsRecords = [
+  {
+    id: "hastings-silverhill-1943",
+    title: "Silverhill & Battle Road, Hastings",
+    status: "historic",
+    statusLabel: "Historic bombing area",
+    date: "11 March 1943",
+    sortYear: 1943,
+    confidence: "Rough area",
+    lat: 50.8697,
+    lng: 0.556,
+    bombType: "HE",
+    casualties: 38,
+    casualtiesNote: "The highest fatality count of any single raid on Hastings.",
+    summary: "A low-level tip-and-run fighter-bomber attack struck Combermere Road, Battle Road, St Matthew's School and Alma Terrace.",
+    note: "The raid was spread across several separated streets, so this is an area marker rather than a located impact point.",
+    sources: [
+      { label: "Historical Hastings: Air Raids", url: "https://historymap.info/Air_Raids" }
+    ]
+  },
+  {
+    id: "hastings-swan-inn-1943",
+    title: "The Swan Inn, High Street, Old Town",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "23 May 1943",
+    sortYear: 1943,
+    confidence: "Confirmed site, building-level",
+    lat: 50.8566,
+    lng: 0.5946,
+    bombType: "HE",
+    casualtiesNote: "Fifteen or sixteen killed at the Swan itself — eleven customers, two staff and two children per the Friends of Hastings Cemetery; a newspaper feature gives sixteen. Across Hastings that day 25 were killed and 85 injured.",
+    summary: "Around ten fighter-bombers crossed the coast at the eastern end of Hastings and dived to rooftop height, dropping high-explosive bombs on the Old Town. The Swan Inn was destroyed, along with Swan Terrace and the Albany Hotel.",
+    note: "The Swan site is now a Garden of Remembrance, and the victims lie in the Civilian War Dead plot at Hastings Cemetery.",
+    sources: [
+      { label: "Friends of Hastings Cemetery: Swan Inn 1943", url: "https://friendsofhastingscemetery.org.uk/swaninn.html" },
+      { label: "Historical Hastings: Air Raids", url: "https://historymap.info/Air_Raids" }
+    ]
+  }
+];
+
+const bexhillRecords = [
+  {
+    id: "bexhill-suffolk-house-1943",
+    title: "Suffolk House, Brassey Road, Bexhill-on-Sea",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "2 January 1943",
+    sortYear: 1943,
+    confidence: "Confirmed event, street-derived point",
+    lat: 50.8412,
+    lng: 0.4707,
+    bombType: "HE",
+    casualties: 4,
+    casualtiesNote: "Ada Mary Adamson, Jane Charlotte Cana, Edith Lilian Corke and Eleanor May Coventry.",
+    summary: "A tip-and-run raid destroyed Suffolk House in Brassey Road, killing four residents.",
+    note: "53 civilians were killed within Bexhill borough by enemy action during the war — a borough-wide figure. A memorial to them was installed at Marina Court Gardens in 2015.",
+    sources: [
+      { label: "Bexhill Museum: Civilian War Dead", url: "https://www.bexhillmuseum.org.uk/access-centre/second-world-war-2/civilian-war-dead/" }
+    ]
+  },
+  {
+    id: "birling-gap-2016",
+    title: "Birling Gap beach",
+    status: "found",
+    statusLabel: "Found UXO",
+    date: "22 March 2016",
+    sortYear: 2016,
+    confidence: "Confirmed incident, approximate point",
+    lat: 50.7418,
+    lng: 0.2004,
+    bombType: "unspecified",
+    disposal: "Moved into the water by a Royal Navy bomb disposal team and destroyed in a controlled explosion.",
+    casualties: 0,
+    summary: "A member of the public found a heavily corroded Second World War shell on the beach at Birling Gap. The beach was cleared and the device destroyed at about half past four; it reopened shortly after five.",
+    note: "The shell was too corroded to carry identifying marks — a common outcome for coastal finds, and the reason many are recorded as unspecified.",
+    sources: [
+      { label: "Sussex Express: Bomb disposal teams handle explosion at Birling Gap", url: "https://www.sussexexpress.co.uk/news/bomb-disposal-teams-handle-explosion-at-birling-gap-1255717" }
+    ]
+  }
+];
+
+const eastGrinsteadRecords = [
+  {
+    id: "whitehall-cinema-1943",
+    title: "Whitehall Cinema, London Road, East Grinstead",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "9 July 1943",
+    sortYear: 1943,
+    confidence: "Confirmed site, building-level",
+    lat: 51.1268,
+    lng: -0.0108,
+    bombType: "HE",
+    weightKg: 500,
+    casualties: 108,
+    casualtiesNote: "108 killed and 235 injured — the largest loss of life in any air raid in Sussex. Twenty-two of the dead are buried in a communal grave at Mount Noddy Cemetery.",
+    summary: "A single twin-engined German bomber attacked the town centre in daylight. A 500kg bomb hit the Whitehall Cinema, which held 184 people, many of them children who had come straight from school.",
+    note: "Seven bombs fell in total, including two 50kg devices on Bridgland's Ironmongers and Rice Brothers and a further 500kg bomb near the Methodist Church.",
+    sources: [
+      { label: "East Grinstead Town Council: Whitehall Cinema bombing", url: "https://www.eastgrinstead.gov.uk/the-council/services/burial-services/history-of-mount-noddy/whitehall-cinema-bombing" },
+      { label: "Spartacus Educational: Bombing of the Whitehall Cinema", url: "https://spartacus-educational.com/2WWwhitehall.htm" }
+    ]
+  }
+];
+
+const petworthRecords = [
+  {
+    id: "petworth-boys-school-1942",
+    title: "Petworth Boys' School",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "29 September 1942",
+    sortYear: 1942,
+    confidence: "Confirmed event, approximate point",
+    lat: 50.9878,
+    lng: -0.61,
+    bombType: "HE",
+    casualties: 32,
+    casualtiesNote: "Around 32 killed, including 28 boys.",
+    summary: "A Junkers Ju 88 bombed the boys' school at Petworth, killing around thirty-two people, most of them pupils.",
+    note: "One of the most devastating single incidents of the war in rural West Sussex, commemorated by a memorial cross registered with the Imperial War Museum.",
+    sources: [
+      { label: "West Sussex County Council: Petworth bombing case study", url: "http://www2.westsussex.gov.uk/learning-resources/LR/learning/learning_resources/wartime_west_sussex_1939-45/case_studies_for_teachers/petworth_bombing.html" }
+    ]
+  }
+];
+
+const fordRecords = [
+  {
+    id: "rnas-ford-1940",
+    title: "RNAS Ford (HMS Peregrine)",
+    status: "reported",
+    statusLabel: "Reported target area",
+    date: "18 August 1940",
+    sortYear: 1940,
+    confidence: "Strategic target area",
+    lat: 50.8181,
+    lng: -0.5878,
+    bombType: "HE",
+    casualties: 28,
+    summary: "A formation of Stuka dive bombers attacked the Fleet Air Arm station at Ford during the Battle of Britain, wrecking airfield buildings and the landing ground.",
+    note: "Some of the dead are buried in Clymping churchyard. The station passed to the RAF shortly afterwards.",
+    sources: [
+      { label: "Yapton & Ford Local History Group: RNAS Ford / HMS Peregrine, 18 August 1940", url: "http://yaptonhistory.org.uk/places/ford-aerodrome/rnas-ford-hms-peregrine/" }
+    ]
+  }
+];
+
+const shorehamRecords = [
+  {
+    id: "shoreham-coal-wharf-1940",
+    title: "Shoreham Harbour coal wharf",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "20 October 1940",
+    sortYear: 1940,
+    confidence: "Confirmed event, approximate point",
+    lat: 50.8306,
+    lng: -0.2597,
+    bombType: "HE",
+    casualties: 5,
+    casualtiesNote: "Five killed, including 17-year-old Home Guard member George Earthey.",
+    summary: "Bombs struck the Shoreham Shipping Coal Company wharf in the harbour.",
+    note: "Thirty-seven raids were made on Shoreham and Southwick during the war, causing 17 deaths and 108 injuries, with over 100 high-explosive bombs and more than 2,000 incendiaries recorded — town-wide figures.",
+    sources: [
+      { label: "shorehambysea.com: Bombing and other incidents during WW2", url: "https://www.shorehambysea.com/bombing-incidents-ww2/" }
+    ]
+  },
+  {
+    id: "west-wittering-2024",
+    title: "West Wittering beach",
+    status: "found",
+    statusLabel: "Found UXO",
+    date: "26 May 2024",
+    sortYear: 2024,
+    confidence: "Rough area",
+    lat: 50.7737,
+    lng: -0.911,
+    bombType: "unspecified",
+    disposal: "Controlled explosion on the beach by an Explosive Ordnance Disposal team.",
+    casualties: 0,
+    summary: "Suspected ordnance was reported on West Wittering beach at 3.26pm on the Sunday of the late-May bank holiday. Coastguard crews cordoned the object until an EOD team arrived, standing down at 7.15pm.",
+    sources: [
+      { label: "Sussex Express: West Sussex beach evacuated after bomb was exploded", url: "https://www.sussexexpress.co.uk/news/people/west-sussex-beach-evacuated-as-bomb-exploded-4645546" }
+    ]
+  },
+  {
+    id: "arundel-river-arun-2025",
+    title: "River Arun bank, Queen Street, Arundel",
+    status: "found",
+    statusLabel: "Found UXO",
+    date: "3 May 2025",
+    sortYear: 2025,
+    confidence: "Confirmed incident, street-derived point",
+    lat: 50.8523,
+    lng: -0.5527,
+    bombType: "unspecified",
+    disposal: "Made safe by a Royal Navy bomb disposal unit the following morning.",
+    evacuationNote: "A cordon was placed and residents asked to avoid the area rather than evacuate.",
+    casualties: 0,
+    summary: "An unexploded bomb was found at about one in the afternoon on the bank of the River Arun near Queen Street, bringing central Arundel to a standstill. Tidal conditions prevented access until the next morning.",
+    sources: [
+      { label: "ITV News Meridian: Unexploded bomb brings Arundel to a standstill", url: "https://www.itv.com/news/meridian/2025-05-03/unexploded-bomb-brings-arundel-to-a-standstill" }
+    ]
+  }
+];
+
+const redruthRecords = [
+  {
+    id: "redruth-bassett-street-1941",
+    title: "Bassett Street & Bond Street, Redruth",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "20 March 1941",
+    sortYear: 1941,
+    confidence: "Confirmed event, street-derived point",
+    lat: 50.233,
+    lng: -5.2274,
+    bombType: "HE",
+    casualties: 6,
+    casualtiesNote: "Six killed and twelve injured, five of them seriously.",
+    summary: "A lone raider followed a train into Redruth and bombed the station area and town centre, dropping eleven bombs on Bassett Street, Bond Street, Wesley Street and West Trewirgie.",
+    note: "One of the eleven bombs, at East End, failed to explode.",
+    sources: [
+      { label: "The Bombing of Redruth on 20 March 1941", url: "https://djwilson22.wordpress.com/2018/11/10/the-bombing-of-redruth-on-20th-march-1941/" },
+      { label: "Cornwall Railway Society: Cornish Railways War Diary", url: "https://www.cornwallrailwaysociety.org.uk/cornish-railways-war-diary.html" }
+    ]
+  }
+];
+
+const parRecords = [
+  {
+    id: "par-docks-1941",
+    title: "Par Docks, St Austell",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "13 April 1941",
+    sortYear: 1941,
+    confidence: "Confirmed event, approximate point",
+    lat: 50.3462,
+    lng: -4.706,
+    bombType: "HE",
+    casualties: 1,
+    casualtiesNote: "One soldier killed and two others injured.",
+    summary: "Three high-explosive bombs fell near the entrance to Par Docks, damaging the permanent way.",
+    note: "Further bombs fell in the St Austell district on 23 June and 13 November 1941 without fatalities.",
+    sources: [
+      { label: "Cornwall Railway Society: Cornish Railways War Diary", url: "https://www.cornwallrailwaysociety.org.uk/cornish-railways-war-diary.html" }
+    ]
+  }
+];
+
+const hayleRecords = [
+  {
+    id: "hayle-copperhouse-1941",
+    title: "Copperhouse railway cutting, Hayle",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "30 October 1941",
+    sortYear: 1941,
+    confidence: "Confirmed event, approximate point",
+    lat: 50.1875,
+    lng: -5.4145,
+    bombType: "HE",
+    casualties: 0,
+    summary: "Bombs fell on the main railway line in the Copperhouse cutting, blocking both tracks and severing the West Cornwall main line. Both lines were cleared by the following day.",
+    note: "Recorded because the railway was itself a target: cutting the line to the far west mattered more than the buildings above it.",
+    sources: [
+      { label: "Cornwall Railway Society: Cornish Railways War Diary", url: "https://www.cornwallrailwaysociety.org.uk/cornish-railways-war-diary.html" }
+    ]
+  }
+];
+
 const regionData = {
+  london: {
+    label: "London",
+    short: "London",
+    county: "Greater London",
+    accent: "var(--amber)",
+    records: londonRecords,
+    center: [51.5074, -0.1278],
+    zoom: 11,
+    raidNights: 71,
+    hasPotential: false
+  },
+  southampton: {
+    label: "Southampton, Hampshire",
+    short: "Southampton",
+    county: "Hampshire",
+    accent: "var(--amber)",
+    records: southamptonRecords,
+    center: [50.9045, -1.4043],
+    zoom: 13,
+    raidNights: 57,
+    hasPotential: false
+  },
+  portsmouth: {
+    label: "Portsmouth, Hampshire",
+    short: "Portsmouth",
+    county: "Hampshire",
+    accent: "var(--amber)",
+    records: portsmouthRecords,
+    center: [50.7989, -1.0912],
+    zoom: 13,
+    raidNights: 67,
+    hasPotential: false
+  },
+  hampshireWider: {
+    label: "Wider Hampshire",
+    short: "Wider Hampshire",
+    county: "Hampshire",
+    accent: "var(--amber)",
+    records: hampshireWiderRecords,
+    center: [51.05, -1.0],
+    zoom: 10,
+    raidNights: null,
+    hasPotential: false
+  },
+  canterbury: {
+    label: "Canterbury, Kent",
+    short: "Canterbury",
+    county: "Kent",
+    accent: "var(--amber)",
+    records: canterburyRecords,
+    center: [51.2798, 1.083],
+    zoom: 15,
+    raidNights: null,
+    hasPotential: false
+  },
+  dover: {
+    label: "Dover, Kent",
+    short: "Dover",
+    county: "Kent",
+    accent: "var(--amber)",
+    records: doverRecords,
+    center: [51.1258, 1.3094],
+    zoom: 14,
+    raidNights: null,
+    hasPotential: false
+  },
+  folkestone: {
+    label: "Folkestone, Kent",
+    short: "Folkestone",
+    county: "Kent",
+    accent: "var(--amber)",
+    records: folkestoneRecords,
+    center: [51.0806, 1.1832],
+    zoom: 15,
+    raidNights: null,
+    hasPotential: false
+  },
+  ashford: {
+    label: "Ashford & Little Chart, Kent",
+    short: "Ashford",
+    county: "Kent",
+    accent: "var(--amber)",
+    records: ashfordRecords,
+    center: [51.1508, 0.831],
+    zoom: 12,
+    raidNights: null,
+    hasPotential: false
+  },
+  maidstone: {
+    label: "Maidstone, Kent",
+    short: "Maidstone",
+    county: "Kent",
+    accent: "var(--amber)",
+    records: maidstoneRecords,
+    center: [51.2723, 0.5205],
+    zoom: 15,
+    raidNights: null,
+    hasPotential: false
+  },
+  ramsgate: {
+    label: "Ramsgate, Kent",
+    short: "Ramsgate",
+    county: "Kent",
+    accent: "var(--amber)",
+    records: ramsgateRecords,
+    center: [51.3339, 1.4183],
+    zoom: 14,
+    raidNights: null,
+    hasPotential: false
+  },
+  medway: {
+    label: "Medway, Kent",
+    short: "Medway",
+    county: "Kent",
+    accent: "var(--amber)",
+    records: medwayRecords,
+    center: [51.386, 0.55],
+    zoom: 12,
+    raidNights: null,
+    hasPotential: false
+  },
+  kingsHill: {
+    label: "King's Hill, Kent",
+    short: "King's Hill",
+    county: "Kent",
+    accent: "var(--amber)",
+    records: kingsHillRecords,
+    center: [51.2793, 0.4025],
+    zoom: 14,
+    raidNights: null,
+    hasPotential: false
+  },
+  brighton: {
+    label: "Brighton & Hove, East Sussex",
+    short: "Brighton & Hove",
+    county: "East Sussex",
+    accent: "var(--amber)",
+    records: brightonRecords,
+    center: [50.8279, -0.1519],
+    zoom: 13,
+    raidNights: null,
+    hasPotential: false
+  },
+  eastbourne: {
+    label: "Eastbourne, East Sussex",
+    short: "Eastbourne",
+    county: "East Sussex",
+    accent: "var(--amber)",
+    records: eastbourneRecords,
+    center: [50.769, 0.2807],
+    zoom: 14,
+    raidNights: 96,
+    hasPotential: false
+  },
+  hastings: {
+    label: "Hastings, East Sussex",
+    short: "Hastings",
+    county: "East Sussex",
+    accent: "var(--amber)",
+    records: hastingsRecords,
+    center: [50.8631, 0.5753],
+    zoom: 13,
+    raidNights: null,
+    hasPotential: false
+  },
+  bexhill: {
+    label: "Bexhill & Birling Gap, East Sussex",
+    short: "Bexhill",
+    county: "East Sussex",
+    accent: "var(--amber)",
+    records: bexhillRecords,
+    center: [50.7915, 0.3355],
+    zoom: 11,
+    raidNights: null,
+    hasPotential: false
+  },
+  eastGrinstead: {
+    label: "East Grinstead, West Sussex",
+    short: "East Grinstead",
+    county: "West Sussex",
+    accent: "var(--amber)",
+    records: eastGrinsteadRecords,
+    center: [51.1268, -0.0108],
+    zoom: 15,
+    raidNights: null,
+    hasPotential: false
+  },
+  petworth: {
+    label: "Petworth, West Sussex",
+    short: "Petworth",
+    county: "West Sussex",
+    accent: "var(--amber)",
+    records: petworthRecords,
+    center: [50.9878, -0.61],
+    zoom: 14,
+    raidNights: null,
+    hasPotential: false
+  },
+  ford: {
+    label: "Ford, West Sussex",
+    short: "Ford",
+    county: "West Sussex",
+    accent: "var(--amber)",
+    records: fordRecords,
+    center: [50.8181, -0.5878],
+    zoom: 14,
+    raidNights: null,
+    hasPotential: false
+  },
+  shorehamArun: {
+    label: "Shoreham, Arundel & West Wittering, West Sussex",
+    short: "Shoreham & Arun",
+    county: "West Sussex",
+    accent: "var(--amber)",
+    records: shorehamRecords,
+    center: [50.82, -0.58],
+    zoom: 10,
+    raidNights: null,
+    hasPotential: false
+  },
+  redruth: {
+    label: "Redruth, Cornwall",
+    short: "Redruth",
+    county: "Cornwall",
+    accent: "var(--cyan)",
+    records: redruthRecords,
+    center: [50.233, -5.2274],
+    zoom: 15,
+    raidNights: null,
+    hasPotential: false
+  },
+  par: {
+    label: "Par & St Austell, Cornwall",
+    short: "Par & St Austell",
+    county: "Cornwall",
+    accent: "var(--cyan)",
+    records: parRecords,
+    center: [50.3462, -4.706],
+    zoom: 14,
+    raidNights: null,
+    hasPotential: false
+  },
+  hayle: {
+    label: "Hayle, Cornwall",
+    short: "Hayle",
+    county: "Cornwall",
+    accent: "var(--cyan)",
+    records: hayleRecords,
+    center: [50.1875, -5.4145],
+    zoom: 14,
+    raidNights: null,
+    hasPotential: false
+  },
   bristol: {
     label: "Bristol",
     short: "Bristol",
