@@ -2010,6 +2010,15 @@ const ALL_RECORDS = TOWN_KEYS.flatMap((key) => regionData[key].records);
 // Padded box that holds every plotted record — the opening view.
 const ALL_BOUNDS = L.latLngBounds(ALL_RECORDS.map((r) => [r.lat, r.lng])).pad(0.08);
 
+/* "All counties" is a step back to national context rather than a fit to the
+   data. Fitting the records themselves just frames the South West, which
+   tells a visitor nothing about WHERE the South West is — and as more
+   counties are added the frame would keep shifting under them. A fixed UK
+   extent gives the selection a stable, recognisable meaning: everywhere.
+
+   West edge clears Northern Ireland, north edge clears Shetland. */
+const UK_BOUNDS = L.latLngBounds([49.85, -8.65], [60.9, 1.78]);
+
 /* Pseudo-region meaning "no town selected". It sits in regionData so the
    selector, hero copy and stats pills can treat it like any other entry,
    but it's flagged isAll so the menu builder can pin it to the top rather
@@ -2230,12 +2239,14 @@ function currentYearCeiling() {
 let heatmapMode = false;
 let heatLayer = null;
 
-// Opens on the full extent of the data rather than one city, so the first
-// thing a visitor sees is how much is plotted and where.
+// Opens on the whole UK, matching the "All counties" selection the map
+// starts on. This is a provisional view: it is re-fitted with padding for
+// the floating panels once the page has laid out (see the initial fit at the
+// end of startup), because none of that furniture exists yet at this point.
 const map = L.map("map", {
   scrollWheelZoom: false,
   zoomControl: false
-}).fitBounds(ALL_BOUNDS);
+}).fitBounds(UK_BOUNDS);
 
 L.control.zoom({ position: "bottomright" }).addTo(map);
 
@@ -3003,7 +3014,8 @@ function selectRecord(id, pan = true) {
 
   const marker = markers.get(record.id);
   if (marker && pan) {
-    map.flyTo([record.lat, record.lng], Math.max(map.getZoom(), 15), { duration: 0.9 });
+    const recordZoom = Math.max(map.getZoom(), 15);
+  map.flyTo(centreForChrome([record.lat, record.lng], recordZoom), recordZoom, { duration: 0.9 });
   }
   drawDetailCordon(record);
   openDetailPanel(record);
@@ -3190,6 +3202,112 @@ const endLiveIncidentBtn = document.getElementById("endLiveIncidentBtn");
 const siteHeader = document.querySelector(".site-header");
 const mapEl = document.getElementById("map");
 
+/* ---------- Fitting around the map's own furniture ----------
+   The map is full-bleed, and everything else floats on top of it: the hero
+   copy, the control panel, the county selector, the stats pills, the record
+   detail panel, the disclaimer. Leaflet knows nothing about any of it, so
+   flyToBounds centres a county in the whole container — and a good third of
+   that container is behind the sidebar. Somerset ended up shoved right and
+   tucked under the stats pills, with dead space where the panel sits.
+
+   These helpers measure whatever chrome is actually on screen at the moment
+   of the move and convert it into Leaflet padding. Measuring rather than
+   hard-coding matters: the control panel is a left sidebar on desktop and a
+   bottom sheet on a phone, and the detail panel is only sometimes open. */
+const MAP_CHROME_SELECTORS = [
+  ".hero-intro",
+  ".control-panel",
+  ".location-select",
+  ".map-stats",
+  ".detail-panel",
+  ".map-disclaimer",
+  ".cordon-card"
+];
+
+const MAP_FIT_GAP = 18;        // breathing room between the county and the chrome
+const MAX_INSET_RATIO = 0.42;  // never surrender more than this share of an axis
+
+function isElementShowing(el) {
+  if (!el || el.hidden || !el.offsetParent) return false;
+  const cs = getComputedStyle(el);
+  return cs.display !== "none" && cs.visibility !== "hidden" && Number(cs.opacity) !== 0;
+}
+
+function mapViewInsets() {
+  const insets = { top: 0, right: 0, bottom: 0, left: 0 };
+  const mapRect = map.getContainer().getBoundingClientRect();
+  if (!mapRect.width || !mapRect.height) return insets;
+
+  MAP_CHROME_SELECTORS.forEach((selector) => {
+    document.querySelectorAll(selector).forEach((el) => {
+      if (!isElementShowing(el)) return;
+      const r = el.getBoundingClientRect();
+      if (!r.width || !r.height) return;
+
+      const left = r.left - mapRect.left;
+      const top = r.top - mapRect.top;
+      const right = mapRect.right - r.right;
+      const bottom = mapRect.bottom - r.bottom;
+
+      // Each panel could be treated as claiming space from any of the four
+      // edges. Pick whichever costs the least, measured as a fraction of that
+      // axis — that keeps the largest usable area free.
+      //
+      // Nearest-edge is the obvious rule and it is wrong: the control panel
+      // is tall enough to sit closer to the bottom of the map than to the
+      // left, so it got treated as a bottom sheet and swallowed 40% of the
+      // height instead of 33% of the width. Costing the options fixes that,
+      // and still does the right thing on a phone, where the panel really is
+      // a bottom sheet — wide and short, so the vertical claim is cheapest.
+      const options = [
+        { side: "left", size: left + r.width, frac: (left + r.width) / mapRect.width },
+        { side: "right", size: right + r.width, frac: (right + r.width) / mapRect.width },
+        { side: "top", size: top + r.height, frac: (top + r.height) / mapRect.height },
+        { side: "bottom", size: bottom + r.height, frac: (bottom + r.height) / mapRect.height }
+      ];
+      const cheapest = options.reduce((a, b) => (b.frac < a.frac ? b : a));
+      insets[cheapest.side] = Math.max(insets[cheapest.side], cheapest.size);
+    });
+  });
+
+  // Padding that eats the viewport would defeat the point of the fit.
+  const maxX = mapRect.width * MAX_INSET_RATIO;
+  const maxY = mapRect.height * MAX_INSET_RATIO;
+  insets.left = Math.min(insets.left, maxX);
+  insets.right = Math.min(insets.right, maxX);
+  insets.top = Math.min(insets.top, maxY);
+  insets.bottom = Math.min(insets.bottom, maxY);
+  return insets;
+}
+
+function fitOptionsForChrome(extra) {
+  const i = mapViewInsets();
+  return Object.assign(
+    {
+      paddingTopLeft: L.point(i.left + MAP_FIT_GAP, i.top + MAP_FIT_GAP),
+      paddingBottomRight: L.point(i.right + MAP_FIT_GAP, i.bottom + MAP_FIT_GAP)
+    },
+    extra || {}
+  );
+}
+
+function fitBoundsInView(bounds, opts) {
+  map.flyToBounds(bounds, fitOptionsForChrome(opts));
+}
+
+/* A town, or a single record, has a centre and a zoom rather than bounds, so
+   padding does not apply. The equivalent fix is to shift the centre by half
+   the imbalance in the chrome: the target then lands in the middle of the
+   visible strip instead of behind the sidebar. */
+function centreForChrome(latlng, zoom) {
+  const i = mapViewInsets();
+  const dx = (i.left - i.right) / 2;
+  const dy = (i.top - i.bottom) / 2;
+  if (!dx && !dy) return L.latLng(latlng);
+  const point = map.project(latlng, zoom).subtract([dx, dy]);
+  return map.unproject(point, zoom);
+}
+
 let liveIncident = false;
 let cordonCircle = null;
 let cordonCenterMarker = null;
@@ -3240,7 +3358,8 @@ function placeCordon(lat, lng, radiusM) {
     dashArray: liveIncident ? null : "4 6",
     className: liveIncident ? "cordon-pulse" : ""
   }).addTo(map);
-  map.flyTo([lat, lng], Math.max(map.getZoom(), 14), { duration: 0.7 });
+  const cordonZoom = Math.max(map.getZoom(), 14);
+  map.flyTo(centreForChrome([lat, lng], cordonZoom), cordonZoom, { duration: 0.7 });
   setCordonResult(
     `${liveIncident ? "Live" : "Simulated"} cordon set — ${cordonRadiusM}m evacuation radius.`,
     "neutral"
@@ -3880,7 +3999,7 @@ async function runRemoteSearch(query) {
     radius: 7, weight: 2, color: "#0b0f17", fillColor: "#00f2fe", fillOpacity: 1
   }).addTo(map);
 
-  map.flyTo([place.lat, place.lng], 15, { duration: 1 });
+  map.flyTo(centreForChrome([place.lat, place.lng], 15), 15, { duration: 1 });
 
   // Say plainly whether there is anything plotted nearby, rather than
   // dropping someone on a blank street and leaving them to guess.
@@ -4201,8 +4320,8 @@ function switchCounty(county, opts) {
   renderPotentialLayer();
 
   if (!fly) return;
-  if (target === COUNTY_ALL) map.flyToBounds(ALL_BOUNDS, { duration: 1 });
-  else map.flyToBounds(COUNTIES.get(target).bounds, { duration: 1 });
+  const bounds = target === COUNTY_ALL ? UK_BOUNDS : COUNTIES.get(target).bounds;
+  fitBoundsInView(bounds, { duration: 1 });
 }
 
 /* Kept for the search box: picking a town still needs to fly there, and to
@@ -4221,7 +4340,7 @@ function switchRegion(region, opts) {
   if (cfg.county && cfg.county !== activeCounty) {
     switchCounty(cfg.county, { fly: false });
   }
-  if (fly) map.flyTo(cfg.center, cfg.zoom, { duration: 1 });
+  if (fly) map.flyTo(centreForChrome(cfg.center, cfg.zoom), cfg.zoom, { duration: 1 });
 }
 
 initLocationMenu();
@@ -4376,6 +4495,10 @@ function saveUiState() {
   } catch (e) { /* storage unavailable — session-only, not worth surfacing */ }
 }
 
+// Set when saved state has already framed the map, so the national opening
+// fit doesn't then yank the view back out to the whole UK.
+let restoredView = false;
+
 function restoreUiState() {
   let st;
   try {
@@ -4392,7 +4515,8 @@ function restoreUiState() {
 
   if (savedCounty && savedCounty !== activeCounty && COUNTIES.has(savedCounty)) {
     switchCounty(savedCounty, { fly: false });
-    map.fitBounds(COUNTIES.get(savedCounty).bounds);
+    map.fitBounds(COUNTIES.get(savedCounty).bounds, fitOptionsForChrome({ animate: false }));
+    restoredView = true;
   }
 
   const statusBtn = [...filterButtons].find((b) => b.dataset.filter === st.filter);
@@ -4511,3 +4635,19 @@ if (coffeeBtn && COFFEE_URL) {
     updateProgress();
   }
 })();
+
+/* The map's opening fitBounds runs while the page is still assembling, before
+   the control panel and the pills have a size to measure — so the UK ends up
+   centred behind them. This re-runs the same fit once layout has settled and
+   the chrome can actually be measured. Two frames rather than one: the first
+   lets the panels lay out, the second lets any late-loading webfont reflow
+   settle before we take their measurements.
+
+   Skipped when saved state has already framed a county, so a returning
+   visitor isn't pulled back out to the national view. */
+requestAnimationFrame(() => {
+  requestAnimationFrame(() => {
+    if (restoredView || activeCounty !== COUNTY_ALL) return;
+    map.fitBounds(UK_BOUNDS, fitOptionsForChrome({ animate: false }));
+  });
+});
