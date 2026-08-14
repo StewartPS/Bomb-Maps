@@ -6514,6 +6514,41 @@ function restoreUiState() {
 
 restoreUiState();
 
+/* ---------- Deep links from the static record pages ----------
+   Every record now also exists as its own crawlable page under /records/,
+   and those pages link back here with ?record=<id>. Honouring that param is
+   what makes the link a real one: someone arriving from a search result
+   lands on the map with that incident already open, rather than on the
+   national view with no idea where to look.
+
+   Read after restoreUiState so an explicit link always beats whatever the
+   visitor was last looking at — the URL is the more recent intent. */
+(function applyDeepLink() {
+  let params;
+  try {
+    params = new URLSearchParams(window.location.search);
+  } catch (e) {
+    return;
+  }
+
+  const county = params.get("county");
+  if (county && COUNTIES.has(county)) switchCounty(county, { fly: false });
+
+  const recordId = params.get("record");
+  if (!recordId) return;
+
+  const record = ALL_RECORDS.find((r) => r.id === recordId);
+  if (!record) return;
+
+  // Put the map in the right county first, so the record isn't filtered out
+  // of scope by a county selection carried over from a previous visit.
+  const recordsCounty = recordCounty(record);
+  if (recordsCounty && recordsCounty !== activeCounty) {
+    switchCounty(recordsCounty, { fly: false });
+  }
+  selectRecord(record.id, true);
+})();
+
 /* ---------- Map accuracy notice ----------
    Rendered hidden and shown here, so it never flashes up for someone who has
    already dismissed it. The dismissal persists, which is only acceptable

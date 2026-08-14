@@ -3,19 +3,71 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Bomb Maps — WWII bombing and UXO records across Devon and Cornwall</title>
-    <meta name="description" content="An interactive map of Second World War bombing and unexploded-ordnance records across Devon and Cornwall, drawn from the Town Clerk's wartime bomb book, council incident reports and digitised bomb census maps.">
+    <title>Bomb Maps — where WWII bombs fell on southern England | Interactive map</title>
+    <meta name="description" content="An interactive map of 156 researched Second World War bombing and unexploded-ordnance records across Devon, Cornwall, Somerset, Bristol, London, Hampshire, Kent and Sussex — with dates, casualties and sources for each.">
     <link rel="canonical" href="https://bombmaps.co.uk/">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
 
-    <!-- Social preview. Replace og:image with a real 1200x630 screenshot of the
-         map before sharing publicly — without it, links unfurl as bare text. -->
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="Bomb Maps">
     <meta property="og:url" content="https://bombmaps.co.uk/">
-    <meta property="og:title" content="Bomb Maps — WWII bombing and UXO records across Devon and Cornwall">
-    <meta property="og:description" content="Where the bombs fell on Devon and Cornwall, 1940–44 — and where unexploded ordnance still surfaces today.">
+    <meta property="og:title" content="Bomb Maps — where WWII bombs fell on southern England">
+    <meta property="og:description" content="156 researched WWII bombing and unexploded-ordnance records across nine counties, plotted with dates, casualties and sources.">
+    <meta property="og:image" content="https://bombmaps.co.uk/og-image.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Bomb Maps — an interactive map of WWII bombing records across southern England">
     <meta property="og:locale" content="en_GB">
     <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="https://bombmaps.co.uk/og-image.png">
+
+    <!-- Structured data. The Dataset type is the honest description of what
+         this is, and it makes the collection eligible for Google's dataset
+         surfaces; WebSite carries the name for the site-name treatment in
+         results. Counts here are updated by tools/build-seo-pages.js. -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "WebSite",
+          "@id": "https://bombmaps.co.uk/#website",
+          "url": "https://bombmaps.co.uk/",
+          "name": "Bomb Maps",
+          "description": "Interactive map of Second World War bombing and unexploded-ordnance records across southern England.",
+          "inLanguage": "en-GB"
+        },
+        {
+          "@type": "Dataset",
+          "@id": "https://bombmaps.co.uk/#dataset",
+          "name": "WWII bombing and unexploded-ordnance records, southern England",
+          "description": "156 individually researched and sourced records of Second World War bombing incidents and modern unexploded-ordnance finds across Devon, Cornwall, Somerset, Bristol, Greater London, Hampshire, Kent, East Sussex and West Sussex, plus bulk layers of digitised bomb-census points for Plymouth and V-weapon impact sites for London.",
+          "url": "https://bombmaps.co.uk/",
+          "isAccessibleForFree": true,
+          "creator": { "@type": "Organization", "name": "Bomb Maps", "url": "https://bombmaps.co.uk/" },
+          "spatialCoverage": {
+            "@type": "Place",
+            "name": "Southern England",
+            "geo": {
+              "@type": "GeoShape",
+              "box": "49.85 -6.5 51.75 1.5"
+            }
+          },
+          "temporalCoverage": "1939/2026",
+          "keywords": [
+            "WWII bombing",
+            "Second World War",
+            "unexploded ordnance",
+            "UXO",
+            "bomb census",
+            "the Blitz",
+            "air raids",
+            "local history"
+          ]
+        }
+      ]
+    }
+    </script>
 
     <!-- Inline SVG favicon: a target/bullseye echoing the map markers. No extra
          request, no binary file to keep in the repo. -->
@@ -147,10 +199,10 @@
          old files until the cache expires. Changing the query string makes
          the URL new, so the browser has no choice but to fetch it.
 
-         To release: find and replace ?v=1.10.4 with the next number in BOTH
+         To release: find and replace ?v=1.11.0 with the next number in BOTH
          index.html and news.html. Nothing else needs touching.
          ============================================================ -->
-    <link rel="stylesheet" href="css/style.css?v=1.10.4">
+    <link rel="stylesheet" href="css/style.css?v=1.11.0">
   </head>
   <body>
     <header class="site-header">
@@ -708,6 +760,25 @@
           <li><a href="https://www.cornish-times.co.uk/news/restored-graves-unveiled-for-firefighters-killed-in-wartime-tragedy-900335" target="_blank" rel="noopener">Cornish Times: Restored graves unveiled for firefighters killed in wartime tragedy</a></li>
           <li>London V1 &amp; V2 impact points: <a href="https://doi.org/10.5281/zenodo.14883986" target="_blank" rel="noopener">Liam Shaw, &ldquo;V1 and V2 impact sites in London&rdquo; (Zenodo, 2025)</a>, licensed CC&nbsp;BY&nbsp;4.0, transcribed from the bomb damage maps published in Laurence Ward, <em>The London County Council Bomb Damage Maps 1939&ndash;1945</em> (Thames &amp; Hudson, 2015). London County Council area only.</li>
         </ul>
+
+        <!-- Internal links to the generated county pages. The sitemap lists
+             them, but a crawler that can follow links from the homepage finds
+             them faster and treats them as more connected to the site than
+             orphan URLs. Readers get a text index of the map, too. -->
+        <div class="county-index">
+          <h3>Browse records by county</h3>
+          <ul class="county-index-list">
+            <li><a href="/counties/devon/">WWII bombs in Devon</a></li>
+            <li><a href="/counties/cornwall/">WWII bombs in Cornwall</a></li>
+            <li><a href="/counties/somerset/">WWII bombs in Somerset</a></li>
+            <li><a href="/counties/bristol/">WWII bombs in Bristol</a></li>
+            <li><a href="/counties/greater-london/">WWII bombs in Greater London</a></li>
+            <li><a href="/counties/hampshire/">WWII bombs in Hampshire</a></li>
+            <li><a href="/counties/kent/">WWII bombs in Kent</a></li>
+            <li><a href="/counties/east-sussex/">WWII bombs in East Sussex</a></li>
+            <li><a href="/counties/west-sussex/">WWII bombs in West Sussex</a></li>
+          </ul>
+        </div>
       </section>
     </main>
 
@@ -722,12 +793,12 @@
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="https://unpkg.com/leaflet.heat@0.2.0/dist/leaflet-heat.js"></script>
-    <script src="data/potential-bomb-sites.js?v=1.10.4"></script>
+    <script src="data/potential-bomb-sites.js?v=1.11.0"></script>
     <!-- Optional, generated by tools/fetch-county-boundaries.js. Ships empty;
          until it's populated the app fetches outlines from OSM at runtime. -->
-    <script src="data/county-boundaries.js?v=1.10.4"></script>
+    <script src="data/county-boundaries.js?v=1.11.0"></script>
     <!-- V1/V2 impact points, London. CC-BY-4.0, see the file header. -->
-    <script src="data/v-weapon-impacts.js?v=1.10.4"></script>
-    <script src="js/app.js?v=1.10.4"></script>
+    <script src="data/v-weapon-impacts.js?v=1.11.0"></script>
+    <script src="js/app.js?v=1.11.0"></script>
   </body>
 </html>

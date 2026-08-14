@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://bombmaps.co.uk/sitemap.xml
