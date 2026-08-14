@@ -4015,6 +4015,35 @@ const map = L.map("map", {
 
 L.control.zoom({ position: "bottomright" }).addTo(map);
 
+/* ---------- Marker size follows zoom ----------
+   The record markers are a fixed 28px, which is right when you are looking at
+   one town and far too big when you are looking at the whole country: at
+   national zoom a hundred-odd 28px targets merge into one unreadable clot,
+   and the map stops showing where things are and starts showing only that
+   there were a lot of them.
+
+   Scaling them down as you zoom out keeps the distribution legible without
+   changing what is plotted. It is a CSS custom property on the map container
+   rather than a re-render, so it costs nothing and every marker — including
+   ones added later by a filter change — picks it up for free.
+
+   The anchor stays put because the icon is centred on its point
+   (iconAnchor 14,14) and the transform scales from the middle. */
+const MARKER_SCALE_MIN = 0.4;
+const MARKER_SCALE_MIN_ZOOM = 6;   // national view: smallest
+const MARKER_SCALE_FULL_ZOOM = 12; // town view: full size
+
+function updateMarkerScale() {
+  const zoom = map.getZoom();
+  const span = MARKER_SCALE_FULL_ZOOM - MARKER_SCALE_MIN_ZOOM;
+  const progress = Math.max(0, Math.min(1, (zoom - MARKER_SCALE_MIN_ZOOM) / span));
+  const scale = MARKER_SCALE_MIN + progress * (1 - MARKER_SCALE_MIN);
+  map.getContainer().style.setProperty("--marker-scale", scale.toFixed(3));
+}
+
+map.on("zoom zoomend", updateMarkerScale);
+updateMarkerScale();
+
 /* ---------- Trackpad pinch-to-zoom ----------
    scrollWheelZoom is off so that two-finger scrolling still scrolls the
    page rather than trapping the reader inside a full-height map. The side
@@ -4195,11 +4224,6 @@ const V_WEAPON_COUNTY = "Greater London";
 
 let vWeaponLayer = null;
 
-const vWeaponRow = document.getElementById("vWeaponRow");
-const vWeaponToggle = document.getElementById("vWeaponToggle");
-const vWeaponCount = document.getElementById("vWeaponCount");
-const vWeaponLegend = document.getElementById("vWeaponLegend");
-
 function clearVWeaponLayer() {
   if (vWeaponLayer) { map.removeLayer(vWeaponLayer); vWeaponLayer = null; }
 }
@@ -4207,8 +4231,6 @@ function clearVWeaponLayer() {
 function renderVWeaponLayer() {
   clearVWeaponLayer();
   if (!HAS_V_WEAPON_DATA) return;
-  if (vWeaponLegend) vWeaponLegend.hidden = !(vWeaponToggle && vWeaponToggle.checked);
-  if (!vWeaponToggle || !vWeaponToggle.checked) return;
   // Out of scope when a county other than London is selected.
   if (isOutsideSelection(V_WEAPON_COUNTY)) return;
   if (heatmapMode) return;
@@ -4232,14 +4254,12 @@ function renderVWeaponLayer() {
   ).addTo(map);
 }
 
+/* No toggle: these are simply drawn, like the record markers. A checkbox for
+   a 118-point layer added a control to the panel without adding a decision
+   worth making — the points are either relevant to what you are looking at
+   (London) or already scoped out. Attribution moved to the Sources list,
+   which is where it belongs anyway and where CC-BY needs it to stay. */
 function initVWeaponLayer() {
-  if (!vWeaponRow) return;
-  // The row stays hidden entirely when the data file is absent, rather than
-  // offering a toggle that does nothing.
-  vWeaponRow.hidden = !HAS_V_WEAPON_DATA;
-  if (!HAS_V_WEAPON_DATA) return;
-  if (vWeaponCount) vWeaponCount.textContent = V_WEAPON_DATA.length.toLocaleString("en-GB");
-  if (vWeaponToggle) vWeaponToggle.addEventListener("change", renderVWeaponLayer);
   renderVWeaponLayer();
 }
 let potentialLayer = null;

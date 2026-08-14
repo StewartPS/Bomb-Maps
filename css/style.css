@@ -2114,7 +2114,14 @@ h3 {
   border-radius: 50%;
   place-items: center;
   background: transparent;
-  transition: opacity 0.35s ease-in-out;
+  /* Shrinks as the map zooms out so a national view reads as a distribution
+     rather than a blob. --marker-scale is set on the map container by
+     updateMarkerScale() in js/app.js; the 1 fallback means a marker is
+     full size if that never runs. Scaling from the centre keeps each marker
+     over its own coordinate, since the icon is centre-anchored. */
+  transform: scale(var(--marker-scale, 1));
+  transform-origin: 50% 50%;
+  transition: opacity 0.35s ease-in-out, transform 0.18s ease-out;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -3446,16 +3453,6 @@ h3 {
   visibility: hidden;
 }
 
-
-/* Separates the second bulk layer from the first. Without it the V-weapon
-   toggle butted straight up against the potential-sites zoom note and read
-   as part of it, which is exactly the confusion the two layers are kept
-   apart to avoid. */
-#vWeaponRow {
-  margin-top: 4px;
-  padding-top: 10px;
-  border-top: 1px solid rgba(255, 253, 247, 0.12);
-}
 
 /* V-weapon layer legend dots. Distinct from the potential-sites palette so
    the two bulk layers are never confused for one another — one is confirmed
