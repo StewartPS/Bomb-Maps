@@ -2820,11 +2820,20 @@ h3 {
 
   /* Map first, at a height that leaves room to see it and the controls
      together on a phone without either feeling cramped. svh keeps it stable
-     when mobile Safari shows and hides its URL bar. */
+     when mobile Safari shows and hides its URL bar.
+
+     The height is published as a custom property because the map-anchored
+     furniture needs it: once .hero-overlay flows below the map, .hero is far
+     taller than the map, so anything anchored with `bottom` lands under the
+     controls instead of over the map. The min-height is folded into the
+     value with max() so the property always equals the rendered height. */
+  :root {
+    --hero-map-h: max(min(58svh, 520px), 320px);
+  }
+
   .hero-map {
     position: relative;
-    height: min(58svh, 520px);
-    min-height: 320px;
+    height: var(--hero-map-h);
     border-radius: 0;
   }
 
@@ -2975,12 +2984,25 @@ h3 {
     grid-template-columns: 1fr 1fr;
   }
 
-  /* Two compact pills rather than a wide bar that crowds the map. */
+  /* Two compact pills rather than a wide bar that crowds the map.
+
+     Anchored to the bottom of the MAP, not the bottom of the hero. `bottom`
+     resolves against .hero, which on a phone continues past the map to hold
+     the controls — so `bottom: 12px` dropped the pills on top of the bomb
+     weight filters. Setting `top` to the map's height and then lifting the
+     element by its own height puts them back over the map's bottom-right
+     corner, where they sit on desktop. The disclaimer above solves the same
+     problem by pinning to the top; these read better at the bottom. */
   .map-stats {
-    top: auto;
-    right: 12px;
-    bottom: 12px;
-    left: auto;
+    top: var(--hero-map-h);
+    /* Bottom-LEFT on a phone. The zoom buttons live bottom-right and the
+       attribution runs along the bottom edge, so the desktop corner is the
+       one corner already spoken for. The extra lift clears the attribution
+       strip rather than sitting on top of it. */
+    left: 12px;
+    right: auto;
+    bottom: auto;
+    transform: translateY(calc(-100% - 26px));
     flex-direction: row;
     gap: 8px;
     padding: 7px 10px;
@@ -3056,8 +3078,12 @@ h3 {
     grid-template-columns: 1fr;
   }
 
-  .hero-map {
-    height: min(52svh, 420px);
+  /* Set the variable, not the height. .hero-map reads its height from
+     --hero-map-h, and so does the map-anchored furniture — overriding the
+     height directly here left the two disagreeing, which put the stats pills
+     69px below the map instead of inside it. One value, one place. */
+  :root {
+    --hero-map-h: min(52svh, 420px);
   }
 }
 
@@ -3420,6 +3446,16 @@ h3 {
   visibility: hidden;
 }
 
+
+/* Separates the second bulk layer from the first. Without it the V-weapon
+   toggle butted straight up against the potential-sites zoom note and read
+   as part of it, which is exactly the confusion the two layers are kept
+   apart to avoid. */
+#vWeaponRow {
+  margin-top: 4px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255, 253, 247, 0.12);
+}
 
 /* V-weapon layer legend dots. Distinct from the potential-sites palette so
    the two bulk layers are never confused for one another — one is confirmed

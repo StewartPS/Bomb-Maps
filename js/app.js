@@ -1954,6 +1954,25 @@ const londonRecords = [
     ]
   },
   {
+    id: "old-palace-school-1941",
+    title: "Old Palace School, Poplar",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "20 April 1941",
+    sortYear: 1941,
+    confidence: "Confirmed event, landmark point (a new school stands on the site)",
+    lat: 51.5142,
+    lng: -0.0158,
+    bombType: "parachute-mine",
+    casualties: 34,
+    casualtiesNote: "Thirteen from the London Fire Brigade and Auxiliary Fire Service in London, and twenty-one from AFS Beckenham who had come in to help. Among them were firewomen, messengers and a despatch rider.",
+    summary: "The school was in use as an Auxiliary Fire Service sub-station during the heavy raid on the night of 19-20 April 1941. A parachute mine struck the building, destroying it and killing everyone inside.",
+    note: "The largest single loss of fire brigade personnel in English history. Lansbury Lawrence Primary School now stands on the site and carries a memorial plaque. Recorded here after a submitted dataset placed a 240-death incident at Waterloo Bridge on this same night — no such incident could be corroborated, and this appears to be the raid it was reaching for.",
+    sources: [
+      { label: "Wikipedia: 1941 Old Palace School bombing", url: "https://en.wikipedia.org/wiki/1941_Old_Palace_School_bombing" }
+    ]
+  },
+  {
     id: "cafe-de-paris-1941",
     title: "Cafe de Paris, Coventry Street",
     status: "historic",
@@ -5110,10 +5129,25 @@ function mapViewInsets() {
       const r = el.getBoundingClientRect();
       if (!r.width || !r.height) return;
 
-      const left = r.left - mapRect.left;
-      const top = r.top - mapRect.top;
-      const right = mapRect.right - r.right;
-      const bottom = mapRect.bottom - r.bottom;
+      /* Only panels that actually sit ON the map can hide any of it. On a
+         phone the layout changes shape: the control panel and hero copy stop
+         floating over the map and flow underneath it instead. They obscure
+         nothing there, but their rectangles are still measurable, and
+         counting them was reserving a slab of the map for furniture that had
+         already moved out of the way. */
+      const overlapsMap =
+        r.right > mapRect.left &&
+        r.left < mapRect.right &&
+        r.bottom > mapRect.top &&
+        r.top < mapRect.bottom;
+      if (!overlapsMap) return;
+
+      // Clamped to the map, so a panel hanging off an edge claims only the
+      // part of the map it actually covers.
+      const left = Math.max(0, r.left - mapRect.left);
+      const top = Math.max(0, r.top - mapRect.top);
+      const right = Math.max(0, mapRect.right - r.right);
+      const bottom = Math.max(0, mapRect.bottom - r.bottom);
 
       // Each panel could be treated as claiming space from any of the four
       // edges. Pick whichever costs the least, measured as a fraction of that
@@ -5125,11 +5159,13 @@ function mapViewInsets() {
       // height instead of 33% of the width. Costing the options fixes that,
       // and still does the right thing on a phone, where the panel really is
       // a bottom sheet — wide and short, so the vertical claim is cheapest.
+      const w = Math.min(r.width, mapRect.width);
+      const h = Math.min(r.height, mapRect.height);
       const options = [
-        { side: "left", size: left + r.width, frac: (left + r.width) / mapRect.width },
-        { side: "right", size: right + r.width, frac: (right + r.width) / mapRect.width },
-        { side: "top", size: top + r.height, frac: (top + r.height) / mapRect.height },
-        { side: "bottom", size: bottom + r.height, frac: (bottom + r.height) / mapRect.height }
+        { side: "left", size: left + w, frac: (left + w) / mapRect.width },
+        { side: "right", size: right + w, frac: (right + w) / mapRect.width },
+        { side: "top", size: top + h, frac: (top + h) / mapRect.height },
+        { side: "bottom", size: bottom + h, frac: (bottom + h) / mapRect.height }
       ];
       const cheapest = options.reduce((a, b) => (b.frac < a.frac ? b : a));
       insets[cheapest.side] = Math.max(insets[cheapest.side], cheapest.size);
