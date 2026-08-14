@@ -104,7 +104,28 @@ const CEREMONIAL = {
   // Sussex is TWO ceremonial counties, not one. Brighton and Hove is
   // unitary, ceremonially East Sussex.
   "East Sussex": ["Eastbourne", "Hastings", "Lewes", "Rother", "Wealden", "Brighton and Hove"],
-  "West Sussex": ["Adur", "Arun", "Chichester", "Crawley", "Horsham", "Mid Sussex", "Worthing"]
+  "West Sussex": ["Adur", "Arun", "Chichester", "Crawley", "Horsham", "Mid Sussex", "Worthing"],
+
+  /* The northern metropolitan counties. These are metropolitan counties
+     rather than ceremonial mergers, so each list is simply its boroughs —
+     none of the unitary-authority trap that Plymouth and Torbay set for
+     Devon. Hull is the exception: it is a unitary authority and sits
+     ceremonially inside the East Riding. */
+  Merseyside: ["Knowsley", "Liverpool", "St. Helens", "Sefton", "Wirral"],
+  "Greater Manchester": [
+    "Bolton", "Bury", "Manchester", "Oldham", "Rochdale", "Salford",
+    "Stockport", "Tameside", "Trafford", "Wigan"
+  ],
+  "West Midlands": [
+    "Birmingham", "Coventry", "Dudley", "Sandwell", "Solihull", "Walsall",
+    "Wolverhampton"
+  ],
+  "South Yorkshire": ["Barnsley", "Doncaster", "Rotherham", "Sheffield"],
+  "East Riding of Yorkshire": ["East Riding of Yorkshire", "Kingston upon Hull, City of"],
+  "Tyne and Wear": [
+    "Gateshead", "Newcastle upon Tyne", "North Tyneside", "South Tyneside",
+    "Sunderland"
+  ]
 };
 
 function countPoints(geometry) {

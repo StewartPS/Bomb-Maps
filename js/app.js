@@ -3230,7 +3230,1127 @@ const hayleRecords = [
   }
 ];
 
+/* ---------- The northern cities ----------
+   Merseyside, Greater Manchester, the West Midlands, South Yorkshire, Hull
+   and Tyne and Wear. These are metropolitan counties, so unlike Devon or
+   Somerset there is no unitary-authority trap in their boundaries — Hull
+   aside, which sits ceremonially in the East Riding.
+
+   One thing dominates the sourcing here and is worth stating plainly: for
+   the big northern raids the famous number is almost always a CITY-WIDE
+   total for a whole night, not a figure for any one building. Coventry's
+   568, Manchester's 684, Liverpool's ~1,900, Hull's ~1,200 — attaching any
+   of those to a single pin would be a lie by placement. Where that is the
+   only figure available it is recorded in casualtiesNote and the record
+   carries no casualty number of its own.
+------------------------------------------------------------------- */
+const liverpoolRecords = [
+  {
+    id: "durning-road-1940",
+    title: "Durning Road shelter, Edge Hill",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "29 November 1940",
+    sortYear: 1940,
+    confidence: "Confirmed site, building-level",
+    lat: 53.4032,
+    lng: -2.9501,
+    bombType: "parachute-mine",
+    weightKg: 1000,
+    casualties: 166,
+    casualtiesNote: "National Museums Liverpool and the University of Liverpool both give 'at least 166'. The University notes the real toll may be higher, because the records of the night were overwhelmed.",
+    summary: "A parachute mine struck the Edge Hill Training College on Durning Road, collapsing the building onto around 300 people sheltering in its basement. Boiling water from ruptured heating boilers, escaping gas and fire compounded the disaster and hampered rescue.",
+    note: "Widely reported as the single worst civilian incident of the war in Britain, a description attributed to Churchill. The raid began on the night of 28 November; the mine fell in the early hours of the 29th, which is why sources differ on the date.",
+    sources: [
+      { label: "National Museums Liverpool: Durning Road, Edge Hill", url: "https://www.liverpoolmuseums.org.uk/artifact/durning-road-edge-hill" },
+      { label: "University of Liverpool: Remembering the Durning Road tragedy", url: "https://news.liverpool.ac.uk/2024/11/07/when-liverpool-burned-the-university-remembers-the-durning-road-tragedy/" }
+    ]
+  },
+  {
+    id: "ss-malakand-1941",
+    title: "SS Malakand, Huskisson Dock",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "4 May 1941",
+    sortYear: 1941,
+    confidence: "Confirmed event, landmark point",
+    lat: 53.4356,
+    lng: -3.0072,
+    bombType: "HE",
+    casualties: 4,
+    summary: "The Brocklebank cargo ship Malakand, loaded with about 1,000 tons of munitions, caught fire during the May Blitz while berthed in Huskisson Branch Dock No. 2. Hours after the raid ended her cargo detonated, destroying the entire branch dock.",
+    note: "Debris was thrown up to two and a half miles; a two-ton anchor landed a mile and a half away at Bootle General Hospital. Accounts of the cause differ — the Imperial War Museum's memorial record attributes the fire to a burning barrage balloon, while other accounts say that fire was put out and the ship was ignited by burning dock sheds.",
+    sources: [
+      { label: "IWM War Memorials Register: SS Malakand memorial", url: "https://memorials.iwm.org.uk/memorial/110491" },
+      { label: "National Museums Liverpool: Huskisson Dock after the Malakand explosion", url: "https://www.liverpoolmuseums.org.uk/artifact/photographs-of-huskisson-dock-liverpool-following-explosion-of-brocklebank-ship-malakand" }
+    ]
+  },
+  {
+    id: "mill-road-infirmary-1941",
+    title: "Mill Road Infirmary, Everton",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "3 May 1941",
+    sortYear: 1941,
+    confidence: "Confirmed event, approximate point",
+    lat: 53.4212,
+    lng: -2.9663,
+    bombType: "HE",
+    casualties: 80,
+    casualtiesNote: "Approximately 80. The figure is an estimate rather than a confirmed count, and the source notes the true number is likely higher.",
+    summary: "A direct hit destroyed three ward blocks of Mill Road Infirmary, including the maternity ward, killing mothers, newborn babies and medical staff. Surviving patients were transferred to Broadgreen Hospital.",
+    note: "Superintendent Leonard Findlay received the George Medal and Matron Gertrude Riding the OBE for their conduct that night. The hospital site is now an industrial estate.",
+    sources: [
+      { label: "Liverpool Blitz 70: The bombing of Mill Road Hospital", url: "http://www.liverpoolblitz70.co.uk/2011/04/08/the-bombing-of-mill-road-hospital/" }
+    ]
+  },
+  {
+    id: "st-lukes-liverpool-1941",
+    title: "St Luke's Church, Berry Street",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "6 May 1941",
+    sortYear: 1941,
+    confidence: "Confirmed site (fixed, well-known landmark)",
+    lat: 53.4019,
+    lng: -2.9754,
+    bombType: "incendiary",
+    casualtiesNote: "No casualties are recorded for this site. The figures often quoted alongside it — over 1,900 killed and nearly 1,500 seriously injured — are city-wide totals for the whole May Blitz week of 1-8 May 1941.",
+    summary: "An incendiary set fire to St Luke's just after midnight, gutting the interior and roof and bringing down the bells, while the outer walls largely survived. The shell was deliberately left standing as a memorial to the May Blitz.",
+    note: "Known locally as the Bombed Out Church, it remains a civic landmark and events venue.",
+    sources: [
+      { label: "St Luke's Bombed Out Church: The story", url: "https://www.slboc.com/the-story" },
+      { label: "IWM: The Liverpool Blitz", url: "https://www.iwm.org.uk/history/the-liverpool-blitz" }
+    ]
+  }
+];
+
+const bootleRecords = [
+  {
+    id: "bootle-coop-shelter-1941",
+    title: "Co-op shelter, Stanley Road, Bootle",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "7 May 1941",
+    sortYear: 1941,
+    confidence: "Confirmed event, street-derived point",
+    lat: 53.4466,
+    lng: -2.994,
+    bombType: "HE",
+    casualtiesNote: "Deliberately left blank. The source records only that 'many' died, and that 40 of the bodies at the temporary mortuary were never identified, several of them from this shelter. No reliable count exists.",
+    summary: "A high-explosive bomb struck the Co-operative store at 340 Stanley Road, whose basement was in use as a public shelter, reached through the billiards hall on the corner of Ash Street. The front wall was blown out and the upper floors collapsed onto those below.",
+    note: "Bootle was, proportionally, the most heavily bombed borough in the country: the Imperial War Museum records that 8,000 of its 17,000 houses were destroyed or damaged in the May Blitz.",
+    sources: [
+      { label: "Liverpool Blitz 70: Co-op shelter", url: "https://www.liverpoolblitz70.co.uk/tag/co-op-shelter/" },
+      { label: "IWM: The Liverpool Blitz", url: "https://www.iwm.org.uk/history/the-liverpool-blitz" }
+    ]
+  },
+  {
+    id: "north-atlantic-avenue-2024",
+    title: "North Atlantic Avenue, Bootle",
+    status: "found",
+    statusLabel: "Found UXO",
+    date: "22 October 2024",
+    sortYear: 2024,
+    confidence: "Confirmed incident, approximate point",
+    lat: 53.478,
+    lng: -2.982,
+    bombType: "unspecified",
+    disposal: "The first device was taken to Ainsdale Beach near Southport and detonated by an Army EOD team; the second was removed for disposal elsewhere.",
+    casualties: 0,
+    summary: "Two suspected WWII bombs were found two days apart at a building site on North Atlantic Avenue. Dunnings Bridge Road was closed in both directions while they were dealt with.",
+    note: "The second device was found on 24 October. Nobody was hurt and the roads reopened afterwards.",
+    sources: [
+      { label: "BBC News: Second unexploded bomb found in street", url: "https://feeds.bbci.co.uk/news/articles/c5yp30y03y2o" },
+      { label: "ITV News Granada: Second unexploded bomb found on construction site", url: "https://www.itv.com/news/granada/2024-10-24/second-unexploded-bomb-found-on-construction-site" }
+    ]
+  }
+];
+
+const wirralRecords = [
+  {
+    id: "laird-street-1941",
+    title: "Laird Street, Birkenhead",
+    status: "historic",
+    statusLabel: "Historic bombing area",
+    date: "12 March 1941",
+    sortYear: 1941,
+    confidence: "Confirmed event, approximate point (a run of houses, not one address)",
+    lat: 53.3982,
+    lng: -3.0335,
+    bombType: "parachute-mine",
+    casualties: 31,
+    casualtiesNote: "Compiled by a local-history project from Commonwealth War Graves Commission and civilian war dead address records, covering Laird Street numbers 294-346 and the neighbouring Bertha Street and Miriam Place.",
+    summary: "During Birkenhead's heaviest raids of the war, parachute land mines detonated in Laird Street, flattening a long run of terraced housing. Casualties extended into the streets behind.",
+    note: "The parachute-mine identification rests on eyewitness testimony and the damage pattern rather than an official record. Birkenhead's war death toll of 442 is a borough-wide figure, not one for this street.",
+    sources: [
+      { label: "Blitz Incidents: Birkenhead, Laird Street, 12 March 1941", url: "http://blitzincidents.blogspot.com/2015/01/birkenhead-laird-street-12th-march-1941.html" }
+    ]
+  },
+  {
+    id: "wallasey-lancaster-avenue-1941",
+    title: "Lancaster Avenue & Church Street, Wallasey",
+    status: "historic",
+    statusLabel: "Historic bombing area",
+    date: "12-14 March 1941",
+    sortYear: 1941,
+    confidence: "Rough area",
+    lat: 53.4193,
+    lng: -3.0405,
+    bombType: "HE",
+    casualties: 174,
+    casualtiesNote: "174 killed and 158 seriously injured across the WHOLE of Wallasey during the three-night March raid, not at Lancaster Avenue alone. Wallasey's war total is given as 324 by one local source and 332 by another.",
+    summary: "Wallasey's most severe raid of the war fell across three nights in March 1941, with the heaviest destruction in Church Street, Lancaster Avenue and Foxhey Road. Eleven churches were damaged and around 10,000 people were made homeless.",
+    note: "A baby was recovered alive from the Lancaster Avenue rubble after three and a half days, shielded by her parents' bodies and a Victorian cradle. Across the war Wallasey recorded 658 high-explosive bombs and thousands of incendiaries.",
+    sources: [
+      { label: "History of the Wirral: Wallasey — the Blitz", url: "http://www.wirralhistory.uk/wallaseyblitz.html" }
+    ]
+  }
+];
+
+const stHelensRecords = [
+  {
+    id: "jubits-lane-1941",
+    title: "Jubits Lane, Sutton Manor, St Helens",
+    status: "found",
+    statusLabel: "Found UXO",
+    date: "May 1941",
+    sortYear: 1941,
+    confidence: "Confirmed event, approximate point",
+    lat: 53.4295,
+    lng: -2.716,
+    bombType: "HE",
+    casualties: 0,
+    summary: "An unexploded bomb lodged at 80 Jubits Lane in Sutton Manor took around six weeks to make safe, and nearby St Theresa's school stayed closed until June.",
+    note: "Other St Helens ordnance recorded nearby includes a 500lb bomb in a field between Lea Green Road and Scots Avenue, and incendiaries that burned into the carriageway of Walkers Lane. St Helens is poorly documented compared with Liverpool; this rests on a single local-history account.",
+    sources: [
+      { label: "Sutton Beauty & Heritage: Sutton St Helens at war", url: "https://www.suttonbeauty.org.uk/suttonhistory/suttonwar2/" }
+    ]
+  }
+];
+
+const manchesterRecords = [
+  {
+    id: "manchester-cathedral-1940",
+    title: "Manchester Cathedral",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "22 December 1940",
+    sortYear: 1940,
+    confidence: "Confirmed site (fixed, well-known landmark)",
+    lat: 53.48505,
+    lng: -2.24475,
+    bombType: "parachute-mine",
+    casualtiesNote: "No casualties are recorded at the cathedral. The figure of around 684 killed is the city-wide total for the whole Christmas Blitz.",
+    summary: "A parachuted land mine detonated at the cathedral's north-east corner, destroying the Ely Chapel — never rebuilt — and the Lady Chapel, and wrecking both organs, the choir stalls, the high altar and every window.",
+    note: "The blast lifted the lead roof clear and dropped it back into place. Because no fire took hold, the building survived where Coventry Cathedral had not. Restoration ran for two decades after the war.",
+    sources: [
+      { label: "Manchester Cathedral: Manchester Cathedral and WWII", url: "https://manchestercathedral.org/news-events/news/manchester-cathedral-and-wwii-the-city-is-hit" },
+      { label: "IWM: The Manchester Blitz", url: "https://www.iwm.org.uk/history/the-manchester-blitz" }
+    ]
+  },
+  {
+    id: "free-trade-hall-1940",
+    title: "Free Trade Hall, Peter Street",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "22-23 December 1940",
+    sortYear: 1940,
+    confidence: "Confirmed site (fixed, well-known landmark)",
+    lat: 53.4779,
+    lng: -2.2481,
+    bombType: "unspecified",
+    casualtiesNote: "No casualty figure is recorded for this building. The 684 dead is a city-wide Christmas Blitz total.",
+    summary: "Manchester's principal concert hall, built on the site of the Peterloo massacre at St Peter's Fields, was gutted during the Christmas Blitz and stood as an empty shell for years afterwards.",
+    note: "A new auditorium was built behind the two surviving façade walls to a design by city architect L. C. Howitt, reopening in 1951.",
+    sources: [
+      { label: "BBC News: Manchester's devastating Christmas Blitz", url: "https://feeds.bbci.co.uk/news/uk-england-manchester-35094565" }
+    ]
+  },
+  {
+    id: "parker-street-1940",
+    title: "Parker Street warehouses, Piccadilly",
+    status: "historic",
+    statusLabel: "Historic bombing area",
+    date: "22-24 December 1940",
+    sortYear: 1940,
+    confidence: "Rough area",
+    lat: 53.4805,
+    lng: -2.237,
+    bombType: "incendiary",
+    casualtiesNote: "No site-specific figure. Around 684 people were killed across Manchester during the Christmas Blitz.",
+    summary: "The warehouse buildings along Parker Street, on the south side of Piccadilly Gardens, were destroyed during the Christmas Blitz, in a commercial district that suffered some of the raid's worst fire damage. Around 2,000 incendiaries started roughly 600 fires across the two nights.",
+    note: "The gardens themselves survived. The cleared bombsite was eventually redeveloped as Piccadilly Plaza between 1959 and 1965.",
+    sources: [
+      { label: "IWM: The Manchester Blitz", url: "https://www.iwm.org.uk/history/the-manchester-blitz" }
+    ]
+  }
+];
+
+const traffordRecords = [
+  {
+    id: "metrovickers-1940",
+    title: "Metropolitan-Vickers works, Trafford Park",
+    status: "reported",
+    statusLabel: "Reported target area",
+    date: "23 December 1940",
+    sortYear: 1940,
+    confidence: "Strategic target area",
+    lat: 53.468,
+    lng: -2.313,
+    bombType: "HE",
+    casualtiesNote: "No site-specific figure available.",
+    summary: "The Metropolitan-Vickers works on Mosley Road, one of the largest engineering plants in the Trafford Park industrial estate, was badly damaged during the Christmas Blitz.",
+    note: "Trafford Park was the Luftwaffe's principal industrial objective in Manchester, also housing Ford's aero-engine plant and A. V. Roe production. 272 tons of high explosive fell on the city on the night of 22/23 December and a further 195 tons the next night — city-wide figures.",
+    sources: [
+      { label: "IWM: The Manchester Blitz", url: "https://www.iwm.org.uk/history/the-manchester-blitz" }
+    ]
+  },
+  {
+    id: "old-trafford-1941",
+    title: "Old Trafford stadium",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "11 March 1941",
+    sortYear: 1941,
+    confidence: "Confirmed site (fixed, well-known landmark)",
+    lat: 53.4631,
+    lng: -2.2913,
+    bombType: "HE",
+    summary: "A bomb aimed at the Trafford Park industrial area struck Manchester United's Main Stand, wrecking it almost completely and scorching the pitch.",
+    note: "Wartime censorship meant the Manchester Guardian could report only 'slight outbreaks of fire at a football ground'. Manchester City offered United the use of Maine Road, where they played from April 1941 until 1949.",
+    sources: [
+      { label: "Gary James Football Archive: the bombing of Old Trafford", url: "https://gjfootballarchive.com/2021/03/11/80-years-ago-today-the-bombing-of-old-trafford/" }
+    ]
+  },
+  {
+    id: "oakfield-road-altrincham-1940",
+    title: "Oakfield Road & Moss Lane, Altrincham",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "23 December 1940",
+    sortYear: 1940,
+    confidence: "Confirmed event, street-derived point",
+    lat: 53.3855,
+    lng: -2.3495,
+    bombType: "HE",
+    casualties: 14,
+    summary: "High-explosive bombs falling wide of the Trafford Park target area struck houses and a sweet shop at the Oakfield Road and Moss Lane junction, killing fourteen civilians. A memorial plaque now marks the site.",
+    note: "Stretford, Old Trafford, Sale, Timperley and Urmston were all hit by bombs intended for the industrial estate — the ordinary consequence of night bombing aimed at a factory.",
+    sources: [
+      { label: "Exploring Trafford's Heritage: Remembering the Manchester Blitz", url: "https://exploringtraffordsheritage.omeka.net/exhibits/show/remembering-the-manchester-bli" }
+    ]
+  }
+];
+
+const salfordRecords = [
+  {
+    id: "salford-royal-1941",
+    title: "Salford Royal Hospital, Chapel Street",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "2 June 1941",
+    sortYear: 1941,
+    confidence: "Confirmed site, building-level",
+    lat: 53.4849,
+    lng: -2.2606,
+    bombType: "unspecified",
+    casualties: 14,
+    casualtiesNote: "Fourteen nurses, named on the memorial tablet. The memorial records nurses only and does not rule out other casualties.",
+    summary: "Fourteen nurses were killed at Salford Royal Hospital during a raid on the night of 2 June 1941. A marble memorial tablet naming them was unveiled by the Duchess of Kent in February 1944, and fourteen hospital beds were endowed in their memory.",
+    note: "The building closed as a hospital in 1993 and is now apartments; the memorial remains in place.",
+    sources: [
+      { label: "IWM War Memorials Register: nurses of Salford Royal Hospital", url: "https://memorials.iwm.org.uk/memorial/63775" }
+    ]
+  },
+  {
+    id: "swinton-moss-lane-2021",
+    title: "Moss Lane, Swinton",
+    status: "found",
+    statusLabel: "Found UXO",
+    date: "3 November 2021",
+    sortYear: 2021,
+    confidence: "Confirmed incident, street-derived point",
+    lat: 53.514,
+    lng: -2.339,
+    bombType: "unspecified",
+    disposal: "Assessed by an Explosive Ordnance Disposal team and declared safe.",
+    evacuationNote: "Neighbouring homes evacuated behind a cordon.",
+    casualties: 0,
+    summary: "A suspected WWII bomb was found in a garden on Moss Lane shortly before half past eleven in the morning. Emergency services stood down and residents returned home by about four in the afternoon.",
+    note: "Recorded as a documented response rather than a confirmed munition — not every cordon ends in a detonation.",
+    sources: [
+      { label: "BBC News: Salford WW2-era bomb find in garden prompts evacuation", url: "https://feeds.bbci.co.uk/news/uk-england-manchester-59112417" }
+    ]
+  }
+];
+
+const oldhamRecords = [
+  {
+    id: "abbey-hills-road-1944",
+    title: "Abbey Hills Road, Oldham",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "24 December 1944",
+    sortYear: 1944,
+    confidence: "Confirmed event, street-derived point",
+    lat: 53.5305,
+    lng: -2.109,
+    bombType: "V1",
+    casualties: 27,
+    casualtiesNote: "27 killed and 49 seriously injured. The youngest was eighteen months old.",
+    summary: "A V-1 flying bomb, one of around 45 air-launched at the Manchester area on Christmas Eve 1944, struck a row of terraced houses on Abbey Hills Road. It was the worst of that night's impacts in the region.",
+    note: "Air-launched from Heinkel bombers over the North Sea rather than fired from the French coast — by this stage the launch sites in northern France had been overrun. Post-war housing occupies the site and a plaque marks the spot.",
+    sources: [
+      { label: "BBC News: 'Doodlebug' bomb attack remembered 80 years on", url: "https://feeds.bbci.co.uk/news/articles/c07g5yzk045o" },
+      { label: "Oldham Chronicle: events mark the V1 bombing of 1944", url: "https://www.oldham-chronicle.co.uk/news-features/8/news-headlines/89474/events-will-mark-the-v1-bombing-of-1944-that-killed-27" }
+    ]
+  }
+];
+
+const coventryRecords = [
+  {
+    id: "coventry-cathedral-1940",
+    title: "Coventry Cathedral (St Michael's)",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "14 November 1940",
+    sortYear: 1940,
+    confidence: "Confirmed site (fixed, well-known landmark)",
+    lat: 52.4081,
+    lng: -1.5083,
+    bombType: "incendiary",
+    casualtiesNote: "No casualty figure exists for the cathedral itself, and the famous 568 must not be read as one — that is the toll for the whole city across the whole night.",
+    summary: "The fourteenth-century cathedral church of St Michael was gutted by fire during Operation Moonlight Sonata, the only English cathedral destroyed in the Second World War. The tower, spire and outer walls survived.",
+    note: "The ruins were kept as a memorial beside Basil Spence's new cathedral rather than cleared — a deliberate decision to leave the damage legible.",
+    sources: [
+      { label: "Coventry City Council: 20 facts about the Coventry Blitz", url: "https://www.coventry.gov.uk/coventry-blitz/20-facts-might-not-know-coventry-blitz" },
+      { label: "IWM: The Blitz around Britain", url: "https://www.iwm.org.uk/history/the-blitz-around-britain" }
+    ]
+  },
+  {
+    id: "coventry-raid-1940",
+    title: "Coventry city centre — the raid of 14-15 November 1940",
+    status: "historic",
+    statusLabel: "Historic bombing area",
+    date: "14-15 November 1940",
+    sortYear: 1940,
+    confidence: "Rough area",
+    lat: 52.4083,
+    lng: -1.5122,
+    bombType: "HE",
+    casualtiesNote: "Sources differ: Historic Coventry and the Imperial War Museum give 568 confirmed killed, while Coventry City Council states the official death toll was 554. Both are CITY-WIDE totals for the whole ten-hour raid. Historic Coventry adds 863 seriously wounded and 393 injured.",
+    summary: "449 of the 522 bombers despatched reached Coventry in a concentrated ten-hour attack, dropping some 503 tons of high explosive and oil bombs and around 30,000 incendiaries. 2,306 houses were destroyed, 41,500 damaged, and 111 of the city's 180 factories hit.",
+    note: "This marker exists to hold the raid-wide totals so they are not misread as belonging to the cathedral or any other single site. Around 50 parachute mines of 1,000kg each are recorded as falling that night.",
+    sources: [
+      { label: "Historic Coventry: Blitz statistics", url: "https://www.historiccoventry.co.uk/blitz/blitz.php?pg=stats" },
+      { label: "Coventry City Council: 20 facts about the Coventry Blitz", url: "https://www.coventry.gov.uk/coventry-blitz/20-facts-might-not-know-coventry-blitz" }
+    ]
+  },
+  {
+    id: "daimler-radford-1940",
+    title: "Daimler works, Radford",
+    status: "reported",
+    statusLabel: "Reported target area",
+    date: "14 November 1940",
+    sortYear: 1940,
+    confidence: "Strategic target area",
+    lat: 52.4225,
+    lng: -1.5175,
+    bombType: "HE",
+    summary: "Up to 150 high-explosive bombs and 3,000 incendiaries turned fifteen acres of the Daimler works into what the city council describes as one of the largest fires in Britain during the war. The plant was a major producer of military vehicles and aero components.",
+    note: "No casualty figure is published for the works.",
+    sources: [
+      { label: "Coventry City Council: 20 facts about the Coventry Blitz", url: "https://www.coventry.gov.uk/coventry-blitz/20-facts-might-not-know-coventry-blitz" }
+    ]
+  },
+  {
+    id: "alvis-holyhead-road-1940",
+    title: "Alvis works, Holyhead Road",
+    status: "reported",
+    statusLabel: "Reported target area",
+    date: "14 November 1940",
+    sortYear: 1940,
+    confidence: "Confirmed event, approximate point",
+    lat: 52.4123,
+    lng: -1.5333,
+    bombType: "unspecified",
+    summary: "The Alvis factory on Holyhead Road was severely damaged in the raid, ending car manufacture there for the rest of the war. Alvis's military work — aero engines and the management of shadow factories — continued afterwards.",
+    sources: [
+      { label: "CoventryLive: the history of Alvis", url: "https://www.coventrytelegraph.net/news/coventry-news/alvis-history-coventry-15431654" }
+    ]
+  },
+  {
+    id: "fords-hospital-1940",
+    title: "Ford's Hospital almshouses, Greyfriars Lane",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "14 October 1940",
+    sortYear: 1940,
+    confidence: "Confirmed site, building-level",
+    lat: 52.4065,
+    lng: -1.5111,
+    bombType: "HE",
+    casualties: 9,
+    casualtiesNote: "The warden, a nurse and six residents.",
+    summary: "A single bomb struck the 1509 timber-framed almshouse a month before the great raid, killing the warden, a nurse and six of the elderly residents. The building was severely damaged and restored in 1953 using salvaged original material.",
+    sources: [
+      { label: "Historic Coventry: Ford's Hospital, Greyfriars Lane", url: "https://www.historiccoventry.co.uk/tour/content.php?pg=fords" }
+    ]
+  },
+  {
+    id: "coventry-warwickshire-hospital-1941",
+    title: "Coventry & Warwickshire Hospital, Stoney Stanton Road",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "8 April 1941",
+    sortYear: 1941,
+    confidence: "Confirmed site, building-level",
+    lat: 52.416,
+    lng: -1.5,
+    bombType: "HE",
+    casualties: 33,
+    casualtiesNote: "21 patients, seven nurses, two doctors and three St John Ambulance stretcher-bearers. This is a site-specific figure. Separately, 281 were killed across Coventry on 8 April and 170 on 10 April — raid-wide totals.",
+    summary: "The hospital escaped with only minor damage on 14 November 1940 but took ten direct hits during the Easter raid of 8 April 1941. The worst loss came the next morning, when an unexploded bomb outside the entrance detonated and buried patients who had been moved to the basement for safety.",
+    sources: [
+      { label: "University of Warwick: Coventry's Heritage — the Coventry Blitz", url: "https://warwick.ac.uk/fac/arts/history/chmst/outreach/cwhp/events/onelastlook/sites/blitz/" },
+      { label: "Historic Coventry: Blitz statistics", url: "https://www.historiccoventry.co.uk/blitz/blitz.php?pg=stats" }
+    ]
+  },
+  {
+    id: "coventry-market-hall-1940",
+    title: "Market Hall & Central Library, Coventry",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "14 November 1940",
+    sortYear: 1940,
+    confidence: "Confirmed event, approximate point (the pre-war street pattern was erased in reconstruction)",
+    lat: 52.4079,
+    lng: -1.5112,
+    bombType: "incendiary",
+    casualtiesNote: "Not separately recorded. Do not read the city-wide 568 as applying here.",
+    summary: "The raid destroyed the central library, the Market Hall, hundreds of shops and public buildings, and the sixteenth-century Palace Yard. The Market Hall's clock tower was left standing amid the ruins and survives.",
+    sources: [
+      { label: "Coventry City Council: 20 facts about the Coventry Blitz", url: "https://www.coventry.gov.uk/coventry-blitz/20-facts-might-not-know-coventry-blitz" }
+    ]
+  },
+  {
+    id: "rex-cinema-coventry-1940",
+    title: "Rex Cinema, Corporation Street",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "2 November 1940",
+    sortYear: 1940,
+    confidence: "Confirmed event, landmark point",
+    lat: 52.4093,
+    lng: -1.5128,
+    bombType: "HE",
+    summary: "The 2,562-seat Art Deco Rex, opened in February 1937, was Coventry's newest cinema and the first in the city to be bombed.",
+    note: "The date is contested. Cinema Treasures gives damage on 25 August 1940 and total destruction on 2 November 1940; Historic Coventry gives only 'in 1940'. The often-repeated claim that it was destroyed on 14 November could not be verified, so it is not asserted here.",
+    sources: [
+      { label: "Cinema Treasures: Rex Cinema, Coventry", url: "https://cinematreasures.org/theaters/34029" },
+      { label: "Historic Coventry: Coventry's theatres and cinemas", url: "https://www.historiccoventry.co.uk/articles/content.php?pg=bill-birch-theatres" }
+    ]
+  },
+  {
+    id: "sandy-lane-coventry-2026",
+    title: "Sandy Lane Business Park, Radford",
+    status: "found",
+    statusLabel: "Found UXO",
+    date: "3 June 2026",
+    sortYear: 2026,
+    confidence: "Confirmed incident, approximate point",
+    lat: 52.4202,
+    lng: -1.5223,
+    bombType: "HE",
+    cordonRadiusM: 100,
+    disposal: "Fuze detonated in a controlled explosion by 8th Engineer Brigade behind 340 tonnes of sand, and the bomb removed.",
+    evacuationNote: "Nearly 100 homes evacuated within a 100m cordon.",
+    casualties: 0,
+    summary: "A wartime bomb was uncovered at a construction site on Sandy Lane Business Park at 2.55pm. Sand was brought in to absorb the blast before the device was made safe the following day.",
+    sources: [
+      { label: "ITV News Central: WW2 bomb found in Coventry construction site safely detonated", url: "https://www.itv.com/news/central/2026-06-03/ww2-bomb-found-in-construction-site-safely-detonated" }
+    ]
+  }
+];
+
+const birminghamRecords = [
+  {
+    id: "bsa-small-heath-1940",
+    title: "BSA works, Armoury Road, Small Heath",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "19 November 1940",
+    sortYear: 1940,
+    confidence: "Confirmed site, building-level",
+    lat: 52.4684,
+    lng: -1.8531,
+    bombType: "HE",
+    casualties: 53,
+    casualtiesNote: "53 killed and 89 injured, 30 of them seriously — a site-specific figure corroborated by the Imperial War Museum and Historic England. Not to be confused with the 450 killed across Birmingham that same night.",
+    summary: "Around 7.15pm two bombs struck the New Building of the Birmingham Small Arms works during the night shift, and it collapsed. The dead were aged 18 to 68, ten of them women.",
+    note: "Rifle production stopped for three months and sixteen gallantry awards were made to rescuers.",
+    sources: [
+      { label: "IWM: The Blitz around Britain", url: "https://www.iwm.org.uk/history/the-blitz-around-britain" },
+      { label: "Historic England: Birmingham — industrial city", url: "https://historicengland.org.uk/whats-new/features/blitz-stories/birmingham-industrial-city/" }
+    ]
+  },
+  {
+    id: "birmingham-market-hall-1940",
+    title: "Market Hall, the Bull Ring",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "25 August 1940",
+    sortYear: 1940,
+    confidence: "Confirmed event, landmark point",
+    lat: 52.4778,
+    lng: -1.8939,
+    bombType: "incendiary",
+    casualtiesNote: "25 killed is the total for the whole city-centre raid that night, not for the Market Hall itself. No building-specific figure was found.",
+    summary: "The roof and interior of the 1835 Market Hall were destroyed by fire started by incendiaries during Birmingham's first heavy city-centre raid. The shell stood until the Bull Ring was redeveloped in the 1960s.",
+    sources: [
+      { label: "Wikipedia: Birmingham Blitz", url: "https://en.wikipedia.org/wiki/Birmingham_Blitz" }
+    ]
+  },
+  {
+    id: "carlton-cinema-sparkbrook-1940",
+    title: "Carlton Cinema, Taunton Road, Sparkbrook",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "25 October 1940",
+    sortYear: 1940,
+    confidence: "Confirmed site, building-level",
+    lat: 52.4606,
+    lng: -1.876,
+    bombType: "HE",
+    casualties: 19,
+    casualtiesNote: "Nineteen in the audience, the heaviest losses among those seated nearest the screen.",
+    summary: "A high-explosive bomb tore through the roof and burst in the auditorium a few yards in front of the screen during a showing of the Dorothy Lamour film Typhoon. The entrance hall was turned into an emergency first-aid post.",
+    sources: [
+      { label: "Wonderland Birmingham: The Carlton", url: "https://www.wonderlandbirmingham.co.uk/cinemas/the-carlton/" }
+    ]
+  },
+  {
+    id: "erdington-1940",
+    title: "Erdington — Birmingham's first air-raid death",
+    status: "historic",
+    statusLabel: "Historic bombing area",
+    date: "9 August 1940",
+    sortYear: 1940,
+    confidence: "Rough area",
+    lat: 52.5125,
+    lng: -1.832,
+    bombType: "HE",
+    casualties: 1,
+    casualtiesNote: "One killed and six injured across the whole stick of eight bombs. Jimmy Fry of Montague Road was the city's first air-raid fatality.",
+    summary: "Erdington was the first Birmingham suburb bombed in the war, when a single German aircraft dropped eight bombs on 9 August 1940.",
+    note: "An area marker rather than an impact point: the council names the victim's address, which is not necessarily where the bomb fell, and the eight bombs were spread across the area.",
+    sources: [
+      { label: "Birmingham City Council: Erdington local history", url: "https://www.birmingham.gov.uk/info/50170/local_history/1647/erdington_local_history/4" }
+    ]
+  },
+  {
+    id: "st-thomas-bath-row-1940",
+    title: "St Thomas' Church, Bath Row",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "11 December 1940",
+    sortYear: 1940,
+    confidence: "Confirmed site (fixed, well-known landmark)",
+    lat: 52.4727,
+    lng: -1.9074,
+    bombType: "incendiary",
+    casualtiesNote: "No figure for the church itself. For context only, 263 were killed and 243 badly injured across Birmingham in this thirteen-hour raid, the longest of the city's Blitz — a city-wide total.",
+    summary: "All of St Thomas' Church was destroyed except its tower and classical west portico. Around 25,000 incendiaries fell on the city that night.",
+    note: "The church was never rebuilt; the surviving fragments and grounds were laid out in 1995 as St Thomas' Peace Garden.",
+    sources: [
+      { label: "The Peace Gardens: St Thomas' Church", url: "https://hallofmemory.co.uk/st-thomas-church.php" },
+      { label: "Wikipedia: Birmingham Blitz", url: "https://en.wikipedia.org/wiki/Birmingham_Blitz" }
+    ]
+  },
+  {
+    id: "priory-road-aston-2017",
+    title: "Priory Road, Aston",
+    status: "found",
+    statusLabel: "Found UXO",
+    date: "15 May 2017",
+    sortYear: 2017,
+    confidence: "Confirmed incident, street-derived point",
+    lat: 52.5063,
+    lng: -1.888,
+    bombType: "HE",
+    weightKg: 250,
+    cordonRadiusM: 500,
+    disposal: "Banked with roughly 250 tonnes of sand and destroyed in a controlled detonation the following afternoon.",
+    evacuationNote: "Around 100 homes and businesses evacuated, about 80 people spending the night in rest centres; the A38(M) Aston Expressway and stretches of the M6 were closed.",
+    casualties: 0,
+    summary: "A 250kg German SC250 bomb, containing 139kg of high explosive, was found on a construction site off Priory Road at about 9.45 on a Monday morning.",
+    sources: [
+      { label: "BBC News: WW2 bomb detonated safely near M6 in Birmingham", url: "https://feeds.bbci.co.uk/news/uk-england-birmingham-39939925" }
+    ]
+  },
+  {
+    id: "islington-row-2018",
+    title: "Islington Row Middleway, city centre",
+    status: "found",
+    statusLabel: "Found UXO",
+    date: "30 May 2018",
+    sortYear: 2018,
+    confidence: "Confirmed incident, approximate point",
+    lat: 52.4732,
+    lng: -1.913,
+    bombType: "unspecified",
+    disposal: "Removed safely by an Army bomb disposal team.",
+    casualties: 0,
+    summary: "An unexploded wartime device was found on a construction site between Islington Row Middleway and Bath Row on the afternoon of 30 May 2018. Roads were closed and the site evacuated.",
+    sources: [
+      { label: "Express & Star: Unexploded WW2 bomb found in Birmingham", url: "https://www.expressandstar.com/news/birmingham/unexploded-ww2-bomb-found-in-birmingham-6214903" }
+    ]
+  }
+];
+
+const sheffieldRecords = [
+  {
+    id: "marples-hotel-1940",
+    title: "Marples Hotel, Fitzalan Square",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "12 December 1940",
+    sortYear: 1940,
+    confidence: "Confirmed site, building-level",
+    lat: 53.38278,
+    lng: -1.46139,
+    bombType: "HE",
+    casualtiesNote: "Sources give 70 or 78. Local research and the BBC's 2024 blue-plaque report give 70 of the 77 people present; Wikipedia's Sheffield Blitz article gives 78. Only 64 bodies were recovered intact, plus partial remains of six or seven more, which is the root of the disagreement.",
+    summary: "A high-explosive bomb struck the seven-storey Marples Hotel at 11.44pm, collapsing every floor into the cellars where people had taken shelter. Seven people were rescued alive.",
+    note: "Consistently described as the worst single loss of life in Sheffield during the war and one of the worst single-incident tolls of the British Blitz. A blue plaque was unveiled on the site in 2024.",
+    sources: [
+      { label: "Chris Hobbs: Death at Marples", url: "https://www.chrishobbs.com/marples1940.htm" },
+      { label: "BBC News: Blue plaque honours 70 killed in Sheffield Blitz", url: "https://feeds.bbci.co.uk/news/uk-england-south-yorkshire-68735727" }
+    ]
+  },
+  {
+    id: "sheffield-cathedral-1940",
+    title: "Sheffield Cathedral, Campo Lane",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "12 December 1940",
+    sortYear: 1940,
+    confidence: "Confirmed site (fixed, well-known landmark)",
+    lat: 53.3831,
+    lng: -1.4694,
+    bombType: "HE",
+    casualtiesNote: "None reliably stated for this site.",
+    summary: "Bombs falling on Campo Lane and Vicar Lane demolished the west end of Sheffield Cathedral early in the first night of the Blitz, at around half past nine.",
+    note: "Sheffield's war total was over 660 killed, more than 1,500 injured and 40,000 made homeless — city-wide figures across the whole campaign, not for this building.",
+    sources: [
+      { label: "Wikipedia: Sheffield Blitz", url: "https://en.wikipedia.org/wiki/Sheffield_Blitz" },
+      { label: "Sheffield Libraries: The Sheffield Blitz of 1940", url: "http://shefflibraries.blogspot.com/2020/04/the-sheffield-blitz-of-1940.html" }
+    ]
+  },
+  {
+    id: "hadfields-tinsley-1940",
+    title: "Hadfields East Hecla Works, Tinsley",
+    status: "reported",
+    statusLabel: "Reported target area",
+    date: "15-16 December 1940",
+    sortYear: 1940,
+    confidence: "Strategic target area",
+    lat: 53.41194,
+    lng: -1.40738,
+    bombType: "HE",
+    casualtiesNote: "No site-specific figure exists. Sheffield's 660-plus dead is a city-wide total.",
+    summary: "The second night of the Sheffield Blitz was directed at the east-end steel and armaments plants. Hadfields, Brown Bayleys and Steel, Peech and Tozer all took hits, but sources agree the damage was not serious enough to interrupt production.",
+    note: "Hadfields' ninety-acre East Hecla Works on Vulcan Road is now largely covered by the Meadowhall shopping centre.",
+    sources: [
+      { label: "Wikipedia: Sheffield Blitz", url: "https://en.wikipedia.org/wiki/Sheffield_Blitz" },
+      { label: "Sheffield Libraries: The Sheffield Blitz of 1940", url: "http://shefflibraries.blogspot.com/2020/04/the-sheffield-blitz-of-1940.html" }
+    ]
+  },
+  {
+    id: "sheaf-street-1940",
+    title: "Sheaf Street, near Midland Station",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "29 August 1940",
+    sortYear: 1940,
+    confidence: "Confirmed event, street-derived point",
+    lat: 53.38029,
+    lng: -1.462,
+    bombType: "unspecified",
+    casualties: 4,
+    summary: "A bomb exploded on Sheaf Street close to Sheffield Midland railway station, killing four people — the first air-raid deaths in the city, months before the December Blitz.",
+    note: "Sheffield was under air-raid conditions across 264 days of the war.",
+    sources: [
+      { label: "Wikipedia: Sheffield Blitz", url: "https://en.wikipedia.org/wiki/Sheffield_Blitz" }
+    ]
+  }
+];
+
+const hullRecords = [
+  {
+    id: "prudential-hull-1941",
+    title: "Prudential Assurance building, Queen Victoria Square",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "8 May 1941",
+    sortYear: 1941,
+    confidence: "Confirmed site, building-level",
+    lat: 53.7437,
+    lng: -0.33922,
+    bombType: "HE",
+    casualties: 16,
+    summary: "A direct hit destroyed the boiler room in the basement, fracturing a gas main and turning the basement — in use as an air-raid shelter — into an inferno within fifteen minutes. Heat prevented rescue attempts for 48 hours.",
+    note: "The image of the building's tower left leaning alone among the ruins became the defining photograph of the Hull Blitz. It was demolished the next day.",
+    sources: [
+      { label: "Hull History Centre: Prudential Assurance — a Hull wartime tragedy", url: "https://hullhistorycentre.blogspot.com/2016/09/prudential-assurance-company-limited.html" }
+    ]
+  },
+  {
+    id: "national-picture-theatre-1941",
+    title: "National Picture Theatre, Beverley Road",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "18 March 1941",
+    sortYear: 1941,
+    confidence: "Confirmed site, building-level",
+    lat: 53.75467,
+    lng: -0.34781,
+    bombType: "HE",
+    casualties: 0,
+    casualtiesNote: "About 150 people were sheltering in the foyer and all escaped.",
+    summary: "The cinema was wrecked during a raid while around 150 people sheltered in its foyer. None were killed.",
+    note: "The surviving facade and fragments of foyer and vestibule were Grade II listed in 2007 as the last substantial civilian bomb ruin still standing in Britain. Restoration began in 2024.",
+    sources: [
+      { label: "Historic England: National Picture Theatre list entry", url: "https://historicengland.org.uk/listing/the-list/list-entry/1391850" },
+      { label: "Wikipedia: National Picture Theatre", url: "https://en.wikipedia.org/wiki/National_Picture_Theatre,_Kingston_upon_Hull" }
+    ]
+  },
+  {
+    id: "bean-street-shelter-1941",
+    title: "Bean Street public shelter, off Hessle Road",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "14-15 March 1941",
+    sortYear: 1941,
+    confidence: "Confirmed event, street-derived point",
+    lat: 53.74207,
+    lng: -0.36079,
+    bombType: "parachute-mine",
+    casualtiesNote: "Deliberately left blank. Sources record that the shelter was hit and that there were multiple deaths, but give no figure, and none is invented here.",
+    summary: "During the March 1941 raids on the Hessle Road and St Andrew's Dock district, a parachute mine struck a public air-raid shelter in Bean Street.",
+    sources: [
+      { label: "Wikipedia: Hull Blitz", url: "https://en.wikipedia.org/wiki/Hull_Blitz" }
+    ]
+  },
+  {
+    id: "hull-may-blitz-1941",
+    title: "Hedon Road & the eastern docks — the May Blitz",
+    status: "historic",
+    statusLabel: "Historic bombing area",
+    date: "7-9 May 1941",
+    sortYear: 1941,
+    confidence: "Rough area",
+    lat: 53.74698,
+    lng: -0.2808,
+    bombType: "incendiary",
+    casualtiesNote: "Just under 400 killed — a city-wide total for the two nights, not a figure for the docks. Across the whole campaign Hull lost around 1,200 people with 3,000 injured.",
+    summary: "The nights of 7-8 and 8-9 May 1941 were Hull's heaviest, concentrated on the docks and city centre, with major fires among the timber storage along Hedon Road.",
+    note: "Wartime censorship never named the city, reporting the raids only on 'a north-east coast town'. Hull was, by proportion, the most severely damaged British city after London — 95 per cent of its houses damaged, and only about 6,000 of 91,000 left untouched by the end of the war — yet its suffering stayed largely invisible nationally.",
+    sources: [
+      { label: "Wikipedia: Hull Blitz", url: "https://en.wikipedia.org/wiki/Hull_Blitz" },
+      { label: "BBC News: Hull marks 75th anniversary of its heaviest raids", url: "https://feeds.bbci.co.uk/news/uk-england-humber-36212234" }
+    ]
+  }
+];
+
+const northShieldsRecords = [
+  {
+    id: "wilkinsons-north-shields-1941",
+    title: "Wilkinson's lemonade factory shelter, North Shields",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "3 May 1941",
+    sortYear: 1941,
+    confidence: "Confirmed event, street-derived point (the site has been redeveloped)",
+    lat: 55.011,
+    lng: -1.4415,
+    bombType: "HE",
+    casualtiesNote: "Sources give 105 or 107. The Tyne and Wear Historic Environment Record gives 105 killed, 41 of them children; the North Shields 173 project gives 107 of the 192 people present, the figure used for the 2016 memorial.",
+    summary: "A single bomb scored a direct hit on W. A. Wilkinson's lemonade factory at the corner of King Street and George Street at 11.12pm, collapsing the unreinforced ceiling of the basement shelter and bringing bottling machinery and the upper floors down onto the people below.",
+    note: "The shelter had been fitted with bunk beds for up to 210. ARP warden Ellen Lee, herself badly burned, pulled 32 people from the wreckage. The Tyne and Wear HER describes it as the worst bombing incident in this part of the country during the war.",
+    sources: [
+      { label: "North Shields 173: The air raid disaster", url: "https://northshields173.org/story/" },
+      { label: "Tyne and Wear HER 7675", url: "https://www.twsitelines.info/SMR/7675" }
+    ]
+  }
+];
+
+const southShieldsRecords = [
+  {
+    id: "south-shields-market-place-1941",
+    title: "Market Place shelters, South Shields",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "2-3 October 1941",
+    sortYear: 1941,
+    confidence: "Confirmed event, approximate point (the shelters' exact position is unknown)",
+    lat: 54.99745,
+    lng: -1.43818,
+    bombType: "HE",
+    casualties: 12,
+    casualtiesNote: "Twelve killed in the shelters and five rescued — the site-specific figure. The widely quoted 68 killed is a TOWN-WIDE total for the whole raid, and is routinely misattributed to the shelter itself. A third source gives 50 across the 2-3 October raids.",
+    summary: "Two bombs struck entrances to the shelters beneath South Shields Market Place; one fell near East Street, rupturing a gas main and setting a trolleybus alight, and another hit the shelter in the north-east quarter.",
+    note: "The toll was lower than it might have been because the usual route from Union Alley had been blocked in an earlier raid, sending many cinema-goers to the North Street shelter instead. Around 240 shops, houses and offices in the Market Place were destroyed or later demolished. The dead were commemorated with a Union flag laid in cobblestones.",
+    sources: [
+      { label: "Tyne and Wear HER 16444: Market Place air raid shelters", url: "https://twsitelines.info/SMR/16444" },
+      { label: "NE Diary 1939-45: incidents October 1941", url: "https://ne-diary.genuki.uk/Inc/ISeq_24.html" }
+    ]
+  }
+];
+
+const newcastleRecords = [
+  {
+    id: "new-bridge-street-1941",
+    title: "New Bridge Street Goods Station, Shieldfield",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "1 September 1941",
+    sortYear: 1941,
+    confidence: "Confirmed event, landmark point",
+    lat: 54.97528,
+    lng: -1.60394,
+    bombType: "incendiary",
+    casualtiesNote: "50 killed, 71 seriously injured, 140 slightly injured and over 1,000 made homeless — figures for the RAID AS A WHOLE, described as Newcastle's most severe, not for the goods station alone.",
+    summary: "Newcastle's heaviest raid set fire to the New Bridge Street goods station beside Manors, said to be the largest covered goods station in the country. Packed with sugar, linseed and cattle feed, it burned for weeks.",
+    note: "Around 400 people were killed in Newcastle between July 1940 and December 1941. The site was cleared in the 1980s.",
+    sources: [
+      { label: "Wikipedia: Newcastle Blitz", url: "https://en.wikipedia.org/wiki/Newcastle_Blitz" },
+      { label: "Newcastle Sitelines: New Bridge Street Goods Station", url: "https://sitelines.newcastle.gov.uk/index.php/node/49996" }
+    ]
+  }
+];
+
+const sunderlandRecords = [
+  {
+    id: "roker-park-1943",
+    title: "Roker Park & Sunderland Central Station",
+    status: "historic",
+    statusLabel: "Historic bombing area",
+    date: "15-16 May 1943",
+    sortYear: 1943,
+    confidence: "Confirmed event, approximate point (Roker Park was demolished in 1997)",
+    lat: 54.92122,
+    lng: -1.3732,
+    bombType: "HE",
+    casualtiesNote: "75 killed, 82 seriously injured and 143 slightly hurt — a TOWN-WIDE total for the raid, initially reported as 71 and later revised up. Only one death is tied to Roker Park itself: a police officer patrolling the ground.",
+    summary: "In Sunderland's worst night of the war a bomb cratered the Roker Park pitch near the players' tunnel and another struck the North Stand. The north end of Sunderland Central Station was severely damaged and St Thomas's Church destroyed.",
+    note: "127 high-explosive bombs and 1,300 incendiaries fell, and a parachute mine destroyed the Empress Hotel. Two hundred houses were demolished and 10,000 damaged. Sources differ on the date — one local account gives 15-16 May, Wikipedia dates the two worst raids to 14 and 24 May 1943.",
+    sources: [
+      { label: "Sunderland Echo: the air raid which killed 75 Sunderland people", url: "https://www.sunderlandecho.com/retro/air-raid-1943-roker-park-sunderland-greenwell-station-8544615" },
+      { label: "Wikipedia: Sunderland Blitz", url: "https://en.wikipedia.org/wiki/Sunderland_Blitz" }
+    ]
+  },
+  {
+    id: "suffolk-street-hendon-2002",
+    title: "Suffolk Street, Hendon, Sunderland",
+    status: "found",
+    statusLabel: "Found UXO",
+    date: "14 October 2002",
+    sortYear: 2002,
+    confidence: "Confirmed incident, street-derived point",
+    lat: 54.89913,
+    lng: -1.37147,
+    bombType: "HE",
+    weightKg: 454,
+    disposal: "Judged impossible to disarm safely, moved to Hendon Beach at Salterfen Rocks and detonated by remote control in the early hours of 17 October.",
+    evacuationNote: "Around 2,000 residents evacuated, with an estimated 1,000 more choosing to stay. Authorities warned the device could crater 25 feet and damage buildings up to 650 feet away.",
+    casualties: 0,
+    summary: "A 1,000lb German bomb was uncovered behind the Deerness Park Medical Centre on Suffolk Street. It had been shed by a Heinkel He 111 during a crash landing on 5 September 1940 in which five people died, including four of the German crew.",
+    note: "The only recorded damage was three original stained-glass windows at the Hendon Grange pub. Sunderland's war total was 273 civilians killed and 838 injured.",
+    sources: [
+      { label: "Sunderland Echo: the WW2 bomb that caused chaos in the 21st century", url: "https://www.sunderlandecho.com/heritage-and-retro/retro/the-ww2-bomb-that-caused-chaos-in-sunderland-in-the-21st-century-3294997" }
+    ]
+  }
+];
+
 const regionData = {
+  liverpool: {
+    label: "Liverpool, Merseyside",
+    short: "Liverpool",
+    county: "Merseyside",
+    accent: "var(--amber)",
+    records: liverpoolRecords,
+    center: [53.4084, -2.9916],
+    zoom: 13,
+    raidNights: null,
+    hasPotential: false
+  },
+  bootle: {
+    label: "Bootle, Merseyside",
+    short: "Bootle",
+    county: "Merseyside",
+    accent: "var(--amber)",
+    records: bootleRecords,
+    center: [53.4457, -2.9891],
+    zoom: 13,
+    raidNights: null,
+    hasPotential: false
+  },
+  wirral: {
+    label: "Birkenhead & Wallasey, Merseyside",
+    short: "Wirral",
+    county: "Merseyside",
+    accent: "var(--amber)",
+    records: wirralRecords,
+    center: [53.4088, -3.037],
+    zoom: 13,
+    raidNights: null,
+    hasPotential: false
+  },
+  stHelens: {
+    label: "St Helens, Merseyside",
+    short: "St Helens",
+    county: "Merseyside",
+    accent: "var(--amber)",
+    records: stHelensRecords,
+    center: [53.4295, -2.716],
+    zoom: 13,
+    raidNights: null,
+    hasPotential: false
+  },
+  manchester: {
+    label: "Manchester",
+    short: "Manchester",
+    county: "Greater Manchester",
+    accent: "var(--amber)",
+    records: manchesterRecords,
+    center: [53.4808, -2.2426],
+    zoom: 14,
+    raidNights: null,
+    hasPotential: false
+  },
+  trafford: {
+    label: "Trafford & Altrincham, Greater Manchester",
+    short: "Trafford",
+    county: "Greater Manchester",
+    accent: "var(--amber)",
+    records: traffordRecords,
+    center: [53.44, -2.31],
+    zoom: 12,
+    raidNights: null,
+    hasPotential: false
+  },
+  salford: {
+    label: "Salford, Greater Manchester",
+    short: "Salford",
+    county: "Greater Manchester",
+    accent: "var(--amber)",
+    records: salfordRecords,
+    center: [53.4994, -2.3],
+    zoom: 12,
+    raidNights: null,
+    hasPotential: false
+  },
+  oldham: {
+    label: "Oldham, Greater Manchester",
+    short: "Oldham",
+    county: "Greater Manchester",
+    accent: "var(--amber)",
+    records: oldhamRecords,
+    center: [53.5305, -2.109],
+    zoom: 14,
+    raidNights: null,
+    hasPotential: false
+  },
+  coventry: {
+    label: "Coventry, West Midlands",
+    short: "Coventry",
+    county: "West Midlands",
+    accent: "var(--amber)",
+    records: coventryRecords,
+    center: [52.4082, -1.5106],
+    zoom: 13,
+    raidNights: null,
+    hasPotential: false
+  },
+  birmingham: {
+    label: "Birmingham, West Midlands",
+    short: "Birmingham",
+    county: "West Midlands",
+    accent: "var(--amber)",
+    records: birminghamRecords,
+    center: [52.4797, -1.9026],
+    zoom: 12,
+    raidNights: null,
+    hasPotential: false
+  },
+  sheffield: {
+    label: "Sheffield, South Yorkshire",
+    short: "Sheffield",
+    county: "South Yorkshire",
+    accent: "var(--amber)",
+    records: sheffieldRecords,
+    center: [53.3838, -1.4659],
+    zoom: 13,
+    raidNights: null,
+    hasPotential: false
+  },
+  hull: {
+    label: "Kingston upon Hull, East Riding of Yorkshire",
+    short: "Hull",
+    county: "East Riding of Yorkshire",
+    accent: "var(--amber)",
+    records: hullRecords,
+    center: [53.7446, -0.3325],
+    zoom: 13,
+    raidNights: null,
+    hasPotential: false
+  },
+  northShields: {
+    label: "North Shields, Tyne and Wear",
+    short: "North Shields",
+    county: "Tyne and Wear",
+    accent: "var(--amber)",
+    records: northShieldsRecords,
+    center: [55.011, -1.4415],
+    zoom: 15,
+    raidNights: null,
+    hasPotential: false
+  },
+  southShields: {
+    label: "South Shields, Tyne and Wear",
+    short: "South Shields",
+    county: "Tyne and Wear",
+    accent: "var(--amber)",
+    records: southShieldsRecords,
+    center: [54.99745, -1.43818],
+    zoom: 15,
+    raidNights: null,
+    hasPotential: false
+  },
+  newcastle: {
+    label: "Newcastle upon Tyne, Tyne and Wear",
+    short: "Newcastle",
+    county: "Tyne and Wear",
+    accent: "var(--amber)",
+    records: newcastleRecords,
+    center: [54.9753, -1.6039],
+    zoom: 14,
+    raidNights: null,
+    hasPotential: false
+  },
+  sunderland: {
+    label: "Sunderland, Tyne and Wear",
+    short: "Sunderland",
+    county: "Tyne and Wear",
+    accent: "var(--amber)",
+    records: sunderlandRecords,
+    center: [54.91, -1.3723],
+    zoom: 12,
+    raidNights: null,
+    hasPotential: false
+  },
   london: {
     label: "London",
     short: "London",
