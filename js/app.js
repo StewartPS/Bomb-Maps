@@ -5540,7 +5540,7 @@ let activeCounty = COUNTY_ALL;
    the same cache-busting reason — these files are fetched by script and
    would otherwise be served stale from cache long after a data update.
    ============================================================ */
-const DATA_VERSION = "1.13.2";
+const DATA_VERSION = "1.13.3";
 
 // Prebuilt county bounding boxes from data/county-index.js. Tiny, always
 // loaded, and enough to frame a county before its outline arrives.

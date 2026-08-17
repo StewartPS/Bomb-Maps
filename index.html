@@ -150,13 +150,13 @@
          old files until the cache expires. Changing the query string makes
          the URL new, so the browser has no choice but to fetch it.
 
-         To release: find and replace ?v=1.13.2 with the next number in BOTH
+         To release: find and replace ?v=1.13.3 with the next number in BOTH
          index.html and news.html, and set DATA_VERSION in js/app.js to the
          same number — the data files it fetches on demand (county slices,
          the potential-sites layer, the V-weapon impacts) get their ?v= from
          there, not from this file.
          ============================================================ -->
-    <link rel="stylesheet" href="css/style.css?v=1.13.2">
+    <link rel="stylesheet" href="css/style.css?v=1.13.3">
   </head>
   <body>
     <!-- ============================================================
@@ -444,6 +444,31 @@
                   document rather than a gap here.
                 </p>
                 <p>
+                  <strong>Does the total look right?</strong> The Home Office
+                  bombing statistics record 2,820 weapons on Plymouth &mdash;
+                  2,584 high explosive, 190 phosphorus, 27 parachute mines,
+                  18 fire pots and one oil bomb &mdash; across 9,525 acres.
+                  This layer plots 3,043 points across a footprint of about
+                  9,240 acres. Two independent measures, count and area, both
+                  land within single figures of the official record, which is
+                  reassuring for a layer built by georeferencing a scanned map.
+                  The small excess is most likely near&#8209;duplicates between
+                  the two sources that survived the 40m merge.
+                </p>
+                <p>
+                  <strong>It is not everything that fell.</strong> Incendiaries
+                  were dropped in their thousands &mdash; Plymouth City Council
+                  puts the March&ndash;April 1941 raids alone at
+                  &ldquo;over 6,000 general purpose bombs and 205,000 incendiary
+                  bombs&rdquo; &mdash; and were never plotted individually by
+                  anyone, because nobody could. What you are looking at is
+                  roughly where the <em>high explosive</em> fell, not the
+                  full weight of the raids. Note too that the council&rsquo;s
+                  6,000 for seven nights and the Home Office&rsquo;s 2,584 for
+                  the whole war cannot both be counting the same thing; both
+                  are recorded here rather than one being chosen.
+                </p>
+                <p>
                   No point carries an individual date, so each is assigned a
                   modelled year (1940&ndash;44) weighted by documented raid
                   intensity. That drives the timeline; it is not a claim about
@@ -452,6 +477,15 @@
                 <p>
                   Wider archive context and the Town Clerk&rsquo;s wartime bomb book
                   are held by <a href="https://www.theboxplymouth.com/collections/archives-and-local-studies" target="_blank" rel="noopener">The Box, Plymouth</a>.
+                  The bomb book covers 59 raids from 6 July 1940 to 30 April 1944
+                  but excludes Devonport Dockyard, Plympton and Plymstock, which
+                  is a second reason this layer thins out over the Dockyard.
+                  Official totals above from the Home Office bombing statistics
+                  as published in
+                  <a href="https://www.1stlinedefence.co.uk/resources/uxo-city-guides/plymouth/" target="_blank" rel="noopener">1st Line Defence&rsquo;s Plymouth UXO guide</a>;
+                  raid figures from
+                  <a href="https://www.plymouth.gov.uk/deathdestruction" target="_blank" rel="noopener">Plymouth City Council</a>
+                  and <a href="https://www.theboxplymouth.com/blog/history/blitz-80-the-bomb-book" target="_blank" rel="noopener">The Box</a>.
                 </p>
               </details>
               <div class="year-breakdown" id="yearBreakdown" aria-label="Estimated potential-site count by year" hidden></div>
@@ -913,7 +947,7 @@
          the input tools/build-county-slices.js slices. Do not add it
          back as a script tag.
          ============================================================ -->
-    <script src="data/county-index.js?v=1.13.2"></script>
-    <script src="js/app.js?v=1.13.2"></script>
+    <script src="data/county-index.js?v=1.13.3"></script>
+    <script src="js/app.js?v=1.13.3"></script>
   </body>
 </html>
