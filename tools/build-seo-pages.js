@@ -32,6 +32,7 @@
 const fs = require("fs");
 const path = require("path");
 const vm = require("vm");
+const crypto = require("crypto");
 
 const ROOT = path.resolve(__dirname, "..");
 const APP = path.join(ROOT, "js/app.js");
@@ -304,18 +305,17 @@ function build() {
 
       const dir = path.join(ROOT, "records", record.id);
       fs.mkdirSync(dir, { recursive: true });
-      fs.writeFileSync(
-        path.join(dir, "index.html"),
-        page({
-          title,
-          description,
-          canonical: url,
-          jsonLd: recordJsonLd(record, region, url, countySlug),
-          body: recordBody(record, region, countySlug)
-        })
-      );
+      // Held so the sitemap can hash it — see the lastmod block below.
+      const html = page({
+        title,
+        description,
+        canonical: url,
+        jsonLd: recordJsonLd(record, region, url, countySlug),
+        body: recordBody(record, region, countySlug)
+      });
+      fs.writeFileSync(path.join(dir, "index.html"), html);
 
-      urls.push({ loc: url, priority: "0.7" });
+      urls.push({ loc: url, priority: "0.7", html });
       byCounty.get(region.county).push({ record, region });
       recordCount++;
     });
@@ -346,9 +346,7 @@ ${list}
 
     const dir = path.join(ROOT, "counties", countySlug);
     fs.mkdirSync(dir, { recursive: true });
-    fs.writeFileSync(
-      path.join(dir, "index.html"),
-      page({
+    const countyHtml = page({
         title: `WWII bombs in ${county} — map and records | Bomb Maps`,
         description: metaDescription(
           `${entries.length} researched Second World War bombing and unexploded-ordnance records across ${county}, including ${towns.slice(0, 4).join(", ")}. Dates, casualties and sources for each.`
@@ -373,22 +371,71 @@ ${list}
           }
         },
         body
-      })
-    );
-    urls.push({ loc: url, priority: "0.8" });
+    });
+    fs.writeFileSync(path.join(dir, "index.html"), countyHtml);
+    urls.push({ loc: url, priority: "0.8", html: countyHtml });
   });
 
-  // Sitemap. Static pages first, then counties, then records.
+  /* ---------- Sitemap ----------
+     WHY THE lastmod DANCE
+
+     This used to stamp every URL with today's date on every build, which
+     is worse than useless. Google's own guidance is that it ignores
+     lastmod when a site's values are demonstrably unreliable — and a
+     sitemap claiming all 258 pages changed the moment you fixed a typo on
+     one of them is the textbook example. lastmod is one of the few
+     sitemap signals Google says it does still use, for crawl scheduling,
+     so throwing it away by lying about it is a real cost.
+
+     So each page's rendered HTML is hashed, and the hash is stored
+     alongside the date that page's content last genuinely changed, in
+     .sitemap-lastmod.json. Rebuild with nothing changed and no date
+     moves. Change one record and only that record's page, its county
+     page and the homepage move.
+
+     COMMIT .sitemap-lastmod.json. Delete it and every page silently
+     resets to today, which is the exact problem this exists to fix.
+
+     Deliberately NOT adding <changefreq>: Google has said outright that
+     it ignores it. <priority> is ignored too, but it is valid and costs
+     nothing, so it stays.
+  ------------------------------------------------------------------ */
   const today = new Date().toISOString().slice(0, 10);
+  const LASTMOD_FILE = path.join(ROOT, ".sitemap-lastmod.json");
+
+  let previous = {};
+  try {
+    previous = JSON.parse(fs.readFileSync(LASTMOD_FILE, "utf8"));
+  } catch (e) {
+    console.log("  note: no .sitemap-lastmod.json found — every page will be dated today");
+  }
+
+  const hashOf = (text) => crypto.createHash("sha1").update(text, "utf8").digest("hex").slice(0, 16);
+
   const entries = [
-    { loc: `${SITE}/`, priority: "1.0" },
-    { loc: `${SITE}/news.html`, priority: "0.6" },
+    { loc: `${SITE}/`, priority: "1.0", html: fs.readFileSync(path.join(ROOT, "index.html"), "utf8") },
+    { loc: `${SITE}/news.html`, priority: "0.6", html: fs.readFileSync(path.join(ROOT, "news.html"), "utf8") },
     ...urls
   ];
+
+  const lastmodIndex = {};
+  let changed = 0;
+  entries.forEach((e) => {
+    const hash = hashOf(e.html || e.loc);
+    const before = previous[e.loc];
+    const unchanged = before && before.hash === hash;
+    e.lastmod = unchanged ? before.lastmod : today;
+    if (!unchanged) changed++;
+    lastmodIndex[e.loc] = { hash, lastmod: e.lastmod };
+    delete e.html; // don't hold 258 pages of HTML past this point
+  });
+
+  fs.writeFileSync(LASTMOD_FILE, `${JSON.stringify(lastmodIndex, null, 0)}\n`);
+
   const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${entries
-  .map((e) => `  <url>\n    <loc>${e.loc}</loc>\n    <lastmod>${today}</lastmod>\n    <priority>${e.priority}</priority>\n  </url>`)
+  .map((e) => `  <url>\n    <loc>${e.loc}</loc>\n    <lastmod>${e.lastmod}</lastmod>\n    <priority>${e.priority}</priority>\n  </url>`)
   .join("\n")}
 </urlset>
 `;
@@ -401,7 +448,7 @@ ${entries
 
   console.log(`\n  ${recordCount} record pages`);
   console.log(`  ${byCounty.size} county pages`);
-  console.log(`  sitemap.xml: ${entries.length} URLs`);
+  console.log(`  sitemap.xml: ${entries.length} URLs, ${changed} with a new lastmod`);
   console.log(`  robots.txt written\n`);
 }
 
