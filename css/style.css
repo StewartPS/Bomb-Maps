@@ -177,7 +177,11 @@ a {
    ============================================================ */
 .site-header {
   position: sticky;
-  top: 0;
+  /* Offset by the persistent use-of-data warning strip above it, whose real
+     height is measured and published by syncTopStackHeights() in js/app.js —
+     it wraps to two lines on narrow screens, so a fixed number would either
+     leave a gap or let the header slide underneath it. */
+  top: var(--use-warning-h, 0px);
   /* Must outrank every floating map overlay (.map-stats 450,
      .location-select 460, .detail-panel 480, .cordon-card 500). The header
      is sticky, so as soon as the page scrolls those overlays slide underneath
@@ -1184,71 +1188,79 @@ h3 {
   box-shadow: var(--shadow);
 }
 
-/* ---------- Analytics consent banner ----------
-   Injected by the GA block in the page head, so it exists on both pages
-   without duplicating markup. Sits above the map furniture but is asked
-   once and then never again. Accept and Decline are styled identically:
-   weighting one over the other would be a dark pattern. */
-.consent-banner {
-  position: fixed;
-  left: 16px;
-  bottom: 16px;
-  z-index: 1200;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  width: min(340px, calc(100vw - 32px));
-  padding: 14px 16px;
-  border: 1px solid rgba(255, 253, 247, 0.18);
-  border-radius: 10px;
-  background: rgba(11, 15, 23, 0.94);
+/* ---------- Persistent use-of-data warning ----------
+   Sticky above the header, never dismissible. Amber rather than red: red
+   is reserved on this site for live-incident state, and a permanently red
+   bar would both cry wolf and desensitise anyone to the real one.
+
+   Sits at z-index 901 — one above .site-header (900), which is offset
+   downwards by --use-warning-h so the two stack rather than overlap. */
+.use-warning {
+  /* Static by default. Only the map page pins it, and only there is there a
+     sticky header underneath that has to be offset out of its way — see
+     syncTopStackHeights() in js/app.js. On the news page and the generated
+     record pages it simply sits at the top of the document and scrolls with
+     it; pinning it there would leave it floating over a page of prose for no
+     benefit, and (since it outranks the header) covering the nav. */
+  position: static;
+  border-bottom: 1px solid rgba(255, 159, 67, 0.34);
+  background: rgba(38, 28, 14, 0.94);
+  -webkit-backdrop-filter: blur(14px);
   backdrop-filter: blur(14px);
-  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.45);
+  /* Same reason as .site-header: force a compositor layer so the blur is
+     painted on first frame rather than after the first scroll. */
+  transform: translateZ(0);
 }
 
-.consent-text {
+.use-warning-inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 7px 16px;
+}
+
+.use-warning > .use-warning-inner > svg {
+  flex: none;
+  color: var(--amber, #ff9f43);
+}
+
+.use-warning-text {
   margin: 0;
   color: rgba(247, 244, 236, 0.82);
-  font-size: 0.78rem;
-  line-height: 1.5;
+  font-size: 0.76rem;
+  line-height: 1.45;
+  letter-spacing: 0.01em;
+  text-align: center;
 }
 
-.consent-actions {
-  display: flex;
-  gap: 8px;
-}
-
-.consent-btn {
-  flex: 1;
-  padding: 8px 12px;
-  border: 1px solid rgba(255, 253, 247, 0.28);
-  border-radius: 7px;
-  background: rgba(255, 253, 247, 0.08);
-  color: rgba(247, 244, 236, 0.95);
-  font: inherit;
-  font-size: 0.78rem;
+.use-warning-text strong {
+  color: var(--amber, #ff9f43);
   font-weight: 700;
-  cursor: pointer;
-  transition: background 0.15s ease, border-color 0.15s ease;
-}
-
-.consent-btn:hover {
-  background: rgba(0, 242, 254, 0.16);
-  border-color: rgba(0, 242, 254, 0.5);
-}
-
-.consent-btn:focus-visible {
-  outline: 2px solid var(--cyan);
-  outline-offset: 2px;
 }
 
 @media (max-width: 600px) {
-  .consent-banner {
-    left: 8px;
-    right: 8px;
-    bottom: 8px;
-    width: auto;
+  .use-warning-inner {
+    align-items: flex-start;
+    padding: 6px 12px;
   }
+
+  .use-warning > .use-warning-inner > svg {
+    margin-top: 2px;
+  }
+
+  .use-warning-text {
+    font-size: 0.7rem;
+    text-align: left;
+  }
+}
+
+.use-warning.is-sticky {
+  position: sticky;
+  top: 0;
+  z-index: 901;
 }
 
 /* Potential-sites layer, withheld at low zoom. The legend and the count are
@@ -3672,4 +3684,547 @@ h3 {
 .county-index-list a:hover {
   border-color: var(--amber);
   color: var(--amber);
+}
+
+/* ============================================================
+   REPORT A CORRECTION
+   ------------------------------------------------------------
+   Entry point lives in the record detail panel; the form itself is a
+   centred modal rather than another sheet, because on a phone the detail
+   panel is already a bottom sheet and stacking a second one on top of it
+   leaves nowhere to go back to.
+   ============================================================ */
+.detail-correct {
+  border-top: 1px solid rgba(255, 253, 247, 0.1);
+  padding-top: 14px;
+}
+
+.detail-correct-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 13px;
+  border: 1px solid rgba(0, 242, 254, 0.4);
+  border-radius: 8px;
+  background: rgba(0, 242, 254, 0.08);
+  color: var(--cyan, #00f2fe);
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.detail-correct-btn:hover {
+  background: rgba(0, 242, 254, 0.16);
+  border-color: rgba(0, 242, 254, 0.7);
+}
+
+.detail-correct-btn:focus-visible {
+  outline: 2px solid var(--cyan, #00f2fe);
+  outline-offset: 2px;
+}
+
+.detail-correct-note {
+  margin: 8px 0 0;
+  color: rgba(247, 244, 236, 0.55);
+  font-size: 0.72rem;
+  line-height: 1.5;
+}
+
+.correction-modal[hidden] { display: none; }
+
+.correction-modal {
+  position: fixed;
+  inset: 0;
+  /* Above the cordon card (500) and the header (900): while this is open it
+     is the only thing the visitor should be able to interact with. */
+  z-index: 1300;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.correction-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(6, 9, 14, 0.72);
+  -webkit-backdrop-filter: blur(3px);
+  backdrop-filter: blur(3px);
+}
+
+.correction-dialog {
+  position: relative;
+  width: min(520px, 100%);
+  max-height: min(88svh, 760px);
+  overflow-y: auto;
+  padding: 22px 24px 24px;
+  border: 1px solid rgba(255, 253, 247, 0.16);
+  border-radius: 14px;
+  background: rgba(17, 23, 35, 0.97);
+  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.55);
+}
+
+.correction-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 30px;
+  height: 30px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: rgba(247, 244, 236, 0.6);
+  font-size: 1.3rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.correction-close:hover { color: rgba(247, 244, 236, 0.95); }
+
+.correction-dialog h3 {
+  margin: 0 34px 4px 0;
+  color: rgba(247, 244, 236, 0.96);
+  font-size: 1.05rem;
+}
+
+.correction-record {
+  margin: 0 0 10px;
+  color: var(--cyan, #00f2fe);
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.correction-intro {
+  margin: 0 0 16px;
+  color: rgba(247, 244, 236, 0.7);
+  font-size: 0.8rem;
+  line-height: 1.55;
+}
+
+.correction-field {
+  display: block;
+  margin-bottom: 14px;
+}
+
+.correction-field > span {
+  display: block;
+  margin-bottom: 5px;
+  color: rgba(247, 244, 236, 0.85);
+  font-size: 0.76rem;
+  font-weight: 700;
+}
+
+.correction-field small {
+  display: block;
+  margin-top: 5px;
+  color: rgba(247, 244, 236, 0.5);
+  font-size: 0.7rem;
+  line-height: 1.45;
+}
+
+.correction-field input,
+.correction-field select,
+.correction-field textarea {
+  width: 100%;
+  padding: 9px 11px;
+  border: 1px solid rgba(255, 253, 247, 0.2);
+  border-radius: 8px;
+  background: rgba(11, 15, 23, 0.75);
+  color: rgba(247, 244, 236, 0.95);
+  font: inherit;
+  font-size: 0.82rem;
+  /* 16px on iOS or Safari zooms the page the moment the field is focused. */
+  line-height: 1.5;
+  resize: vertical;
+}
+
+.correction-field textarea { min-height: 62px; }
+
+.correction-field input:focus-visible,
+.correction-field select:focus-visible,
+.correction-field textarea:focus-visible {
+  outline: 2px solid var(--cyan, #00f2fe);
+  outline-offset: 1px;
+}
+
+.correction-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.correction-btn {
+  flex: 1 1 auto;
+  min-width: 130px;
+  padding: 10px 14px;
+  border: 1px solid rgba(255, 253, 247, 0.26);
+  border-radius: 8px;
+  background: rgba(255, 253, 247, 0.06);
+  color: rgba(247, 244, 236, 0.94);
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.correction-btn:hover:not(:disabled) {
+  background: rgba(255, 253, 247, 0.12);
+  border-color: rgba(255, 253, 247, 0.42);
+}
+
+.correction-btn.primary {
+  border-color: rgba(0, 242, 254, 0.55);
+  background: rgba(0, 242, 254, 0.14);
+  color: var(--cyan, #00f2fe);
+}
+
+.correction-btn.primary:hover:not(:disabled) { background: rgba(0, 242, 254, 0.22); }
+
+.correction-btn:disabled { opacity: 0.5; cursor: default; }
+
+.correction-btn:focus-visible {
+  outline: 2px solid var(--cyan, #00f2fe);
+  outline-offset: 2px;
+}
+
+.correction-status {
+  margin: 12px 0 0;
+  min-height: 1em;
+  font-size: 0.76rem;
+  line-height: 1.5;
+  color: rgba(247, 244, 236, 0.7);
+}
+
+.correction-status[data-kind="ok"] { color: #6ee7b7; }
+.correction-status[data-kind="error"] { color: var(--red, #ff5252); }
+
+.correction-fallback {
+  width: 100%;
+  margin-top: 10px;
+  padding: 10px;
+  border: 1px solid rgba(255, 253, 247, 0.2);
+  border-radius: 8px;
+  background: rgba(11, 15, 23, 0.8);
+  color: rgba(247, 244, 236, 0.9);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.72rem;
+  min-height: 150px;
+}
+
+body.correction-open { overflow: hidden; }
+
+@media (max-width: 600px) {
+  .correction-modal { padding: 12px; align-items: flex-end; }
+  .correction-dialog { padding: 18px 16px 20px; max-height: 90svh; }
+  .correction-btn { flex: 1 1 100%; }
+}
+
+/* ============================================================
+   GUIDED TOURS
+   ------------------------------------------------------------
+   Launcher sits under the location selector, top-left of the map, where
+   it reads as a way IN to the data rather than another filter. The player
+   is a bottom card on desktop and a full-width bottom sheet on a phone.
+   ============================================================ */
+.tour-launch {
+  position: relative;
+  margin-bottom: 12px;
+}
+
+.tour-launch-btn[hidden] { display: none; }
+
+.tour-launch-btn {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 13px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+  background: rgba(22, 30, 46, 0.82);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  color: rgba(247, 244, 236, 0.9);
+  font: inherit;
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition: background 0.2s ease-in-out, border-color 0.2s ease-in-out;
+}
+
+.tour-launch-btn .tour-launch-caret { margin-left: auto; opacity: 0.6; }
+
+.tour-launch-btn:hover {
+  background: rgba(0, 242, 254, 0.16);
+  border-color: rgba(0, 242, 254, 0.45);
+  color: #fff;
+}
+
+.tour-launch-btn:focus-visible {
+  outline: 2px solid var(--cyan, #00f2fe);
+  outline-offset: 2px;
+}
+
+.tour-launch-btn svg { color: var(--cyan, #00f2fe); }
+
+.tour-menu[hidden] { display: none; }
+
+.tour-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  /* Wider than the control panel it hangs off: each option carries a line of
+     explanation, and at panel width that wraps to four lines apiece. */
+  width: max(100%, min(330px, calc(100vw - 32px)));
+  z-index: 470;
+  max-height: min(60svh, 460px);
+  overflow-y: auto;
+  padding: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  background: rgba(17, 23, 35, 0.97);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  box-shadow: 0 24px 56px rgba(0, 0, 0, 0.5);
+}
+
+.tour-option {
+  display: block;
+  width: 100%;
+  padding: 11px 12px;
+  border: 0;
+  border-radius: 9px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.15s ease-in-out;
+}
+
+.tour-option:hover { background: rgba(0, 242, 254, 0.1); }
+
+.tour-option:focus-visible {
+  outline: 2px solid var(--cyan, #00f2fe);
+  outline-offset: -2px;
+}
+
+.tour-option-title {
+  display: block;
+  color: rgba(247, 244, 236, 0.96);
+  font-size: 0.86rem;
+  font-weight: 700;
+}
+
+.tour-option-sub {
+  display: block;
+  margin-top: 2px;
+  color: var(--cyan, #00f2fe);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.tour-option-blurb {
+  display: block;
+  margin-top: 5px;
+  color: rgba(247, 244, 236, 0.6);
+  font-size: 0.73rem;
+  line-height: 1.5;
+}
+
+.tour-player[hidden] { display: none; }
+
+.tour-player {
+  /* Fixed, not absolute. A tour lasts a minute or more and the page below the
+     map is long; anchored to the hero, the controls scroll away mid-tour and
+     leave the map moving under a visitor with no way to pause or exit it. */
+  position: fixed;
+  left: 50%;
+  bottom: 22px;
+  transform: translateX(-50%);
+  width: min(600px, calc(100% - 32px));
+  /* Above the detail panel (480) — starting a tour closes that panel, so
+     they are never both up, but if anything ever puts one back the tour
+     must stay usable enough to exit. */
+  z-index: 490;
+  padding: 14px 16px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 14px;
+  background: rgba(17, 23, 35, 0.93);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+  box-shadow: 0 22px 54px rgba(0, 0, 0, 0.5);
+}
+
+/* The accuracy notice lives in the same bottom-centre strip as the tour
+   player and would sit on top of it. During a tour it is redundant anyway:
+   the permanent warning strip at the top of the page says the same thing,
+   and it comes straight back when the tour ends. */
+body.tour-active .map-disclaimer { display: none; }
+
+.tour-player-head {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 7px;
+}
+
+.tour-player-title {
+  flex: 1;
+  min-width: 0;
+  color: var(--cyan, #00f2fe);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tour-step {
+  flex: none;
+  color: rgba(247, 244, 236, 0.5);
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+
+.tour-exit {
+  flex: none;
+  width: 24px;
+  height: 24px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: rgba(247, 244, 236, 0.55);
+  font-size: 1.15rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.tour-exit:hover { color: rgba(247, 244, 236, 0.95); }
+
+.tour-caption {
+  margin: 0 0 11px;
+  color: rgba(247, 244, 236, 0.82);
+  font-size: 0.83rem;
+  line-height: 1.55;
+}
+
+.tour-caption strong {
+  display: block;
+  color: rgba(247, 244, 236, 0.98);
+  font-size: 0.92rem;
+}
+
+.tour-caption .tour-date {
+  display: block;
+  margin-bottom: 5px;
+  color: rgba(247, 244, 236, 0.5);
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.tour-caption .tour-line { display: block; }
+
+.tour-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tour-ctrl {
+  flex: none;
+  width: 32px;
+  height: 32px;
+  border: 1px solid rgba(255, 253, 247, 0.22);
+  border-radius: 8px;
+  background: rgba(255, 253, 247, 0.06);
+  color: rgba(247, 244, 236, 0.92);
+  font: inherit;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: background 0.15s ease-in-out;
+}
+
+.tour-ctrl:hover { background: rgba(255, 253, 247, 0.14); }
+
+.tour-ctrl:focus-visible {
+  outline: 2px solid var(--cyan, #00f2fe);
+  outline-offset: 2px;
+}
+
+.tour-playpause {
+  border-color: rgba(0, 242, 254, 0.5);
+  background: rgba(0, 242, 254, 0.14);
+  color: var(--cyan, #00f2fe);
+}
+
+.tour-progress {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.tour-dot {
+  flex: 1 1 auto;
+  min-width: 4px;
+  max-width: 26px;
+  height: 4px;
+  padding: 0;
+  border: 0;
+  border-radius: 2px;
+  background: rgba(255, 253, 247, 0.18);
+  cursor: pointer;
+  transition: background 0.2s ease-in-out;
+}
+
+.tour-dot.done { background: rgba(0, 242, 254, 0.4); }
+.tour-dot.current { background: var(--cyan, #00f2fe); }
+
+.tour-record-link {
+  flex: none;
+  padding: 7px 12px;
+  border: 1px solid rgba(0, 242, 254, 0.4);
+  border-radius: 8px;
+  background: rgba(0, 242, 254, 0.08);
+  color: var(--cyan, #00f2fe);
+  font: inherit;
+  font-size: 0.74rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.tour-record-link:hover { background: rgba(0, 242, 254, 0.18); }
+
+.tour-record-link:focus-visible {
+  outline: 2px solid var(--cyan, #00f2fe);
+  outline-offset: 2px;
+}
+
+@media (max-width: 900px) {
+  .tour-player {
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: auto;
+    transform: none;
+    border-radius: 14px 14px 0 0;
+    border-bottom: 0;
+    padding-bottom: max(12px, env(safe-area-inset-bottom));
+  }
+
+  .tour-controls { flex-wrap: wrap; }
+  .tour-progress { order: 3; flex-basis: 100%; margin-top: 4px; }
+  .tour-record-link { margin-left: auto; }
 }

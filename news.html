@@ -33,41 +33,23 @@
     </script>
 
     <!-- Google Analytics (GA4). Keep GA_ID identical to index.html —
-         see the fuller explanation in that file's head. Inert until set. -->
+         see the fuller explanation in that file's head. Inert until set.
+         Consent granted by default, no banner; advertising storage
+         always denied. -->
     <script>
       window.GA_ID = "G-909MJHFEHN";
       (function () {
         if (!window.GA_ID || window.GA_ID.indexOf("G-X") === 0) return;
 
-        var CONSENT_KEY = "pbm-analytics-consent";
         window.dataLayer = window.dataLayer || [];
         window.gtag = function () { dataLayer.push(arguments); };
 
-        // Denied until the visitor says otherwise. Analytics cookies are
-        // non-essential under UK PECR, so this has to be the starting state
-        // — but note what it costs: while denied, GA sends cookieless pings
-        // that only feed modelled data, and a low-traffic property never
-        // meets the threshold for that to appear. No banner, no numbers.
         gtag("consent", "default", {
           ad_storage: "denied",
           ad_user_data: "denied",
           ad_personalization: "denied",
-          analytics_storage: "denied"
+          analytics_storage: "granted"
         });
-
-        var stored = null;
-        try { stored = localStorage.getItem(CONSENT_KEY); } catch (e) { /* private mode */ }
-        if (stored === "granted") gtag("consent", "update", { analytics_storage: "granted" });
-
-        function remember(value) {
-          try { localStorage.setItem(CONSENT_KEY, value); } catch (e) { /* session only */ }
-        }
-
-        window.grantAnalyticsConsent = function () {
-          remember("granted");
-          gtag("consent", "update", { analytics_storage: "granted" });
-        };
-        window.denyAnalyticsConsent = function () { remember("denied"); };
 
         gtag("js", new Date());
         gtag("config", window.GA_ID, { anonymize_ip: true });
@@ -75,44 +57,6 @@
         s.async = true;
         s.src = "https://www.googletagmanager.com/gtag/js?id=" + window.GA_ID;
         document.head.appendChild(s);
-
-        /* ---------- Consent banner ----------
-           Built here rather than in the page markup so the whole analytics
-           concern stays in one copy-paste block across both pages.
-
-           Accept and Decline are given equal visual weight. Nudging people
-           towards Accept with a greyed-out Decline is a dark pattern, and on
-           a site about civilian casualties it would be a poor trade for a
-           few percent more traffic data. Asked once, then never again. */
-        if (stored === "granted" || stored === "denied") return;
-
-        function buildBanner() {
-          var wrap = document.createElement("div");
-          wrap.className = "consent-banner";
-          wrap.setAttribute("role", "dialog");
-          wrap.setAttribute("aria-label", "Analytics cookies");
-          wrap.innerHTML =
-            '<p class="consent-text">This site can use Google Analytics to count visits. ' +
-            'It sets a cookie and is entirely optional &mdash; the map works the same either way.</p>' +
-            '<div class="consent-actions">' +
-            '<button type="button" class="consent-btn" data-consent="denied">Decline</button>' +
-            '<button type="button" class="consent-btn" data-consent="granted">Accept</button>' +
-            "</div>";
-
-          wrap.addEventListener("click", function (e) {
-            var btn = e.target.closest("[data-consent]");
-            if (!btn) return;
-            if (btn.dataset.consent === "granted") window.grantAnalyticsConsent();
-            else window.denyAnalyticsConsent();
-            wrap.remove();
-          });
-
-          document.body.appendChild(wrap);
-        }
-
-        if (document.readyState === "loading") {
-          document.addEventListener("DOMContentLoaded", buildBanner);
-        } else buildBanner();
       })();
     </script>
 
@@ -124,12 +68,28 @@
          old files until the cache expires. Changing the query string makes
          the URL new, so the browser has no choice but to fetch it.
 
-         To release: find and replace ?v=1.12.0 with the next number in BOTH
+         To release: find and replace ?v=1.13.0 with the next number in BOTH
          index.html and news.html. Nothing else needs touching.
          ============================================================ -->
-    <link rel="stylesheet" href="css/style.css?v=1.12.0">
+    <link rel="stylesheet" href="css/style.css?v=1.13.0">
   </head>
   <body>
+    <!-- Same persistent use-of-data warning as the map page. Static here:
+         there is no sticky map chrome under it to stay clear of. -->
+    <div class="use-warning" role="note" aria-label="Data use warning">
+      <div class="use-warning-inner">
+        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor"
+             stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+          <path d="M12 9v4M12 17h.01"/>
+        </svg>
+        <p class="use-warning-text">
+          <strong>For archival and historical use only.</strong>
+          Do not use for land development or construction risk assessment.
+        </p>
+      </div>
+    </div>
+
     <header class="site-header">
       <nav class="nav" aria-label="Primary">
         <a class="brand" href="index.html#top" aria-label="Bomb Maps home">
@@ -176,6 +136,6 @@
       </a>
     </footer>
 
-    <script src="js/news.js?v=1.12.0"></script>
+    <script src="js/news.js?v=1.13.0"></script>
   </body>
 </html>

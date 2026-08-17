@@ -4174,7 +4174,452 @@ const sunderlandRecords = [
   }
 ];
 
+/* ============================================================
+   YORK — the Baedeker raid of 29 April 1942, and the raids around it
+   ------------------------------------------------------------
+   Positions here are unusually good, and it is worth saying why.
+   The University of York's "Raids Over York" project georeferenced
+   the city's wartime ARP bomb census and its casualty registers,
+   and publishes both as open map layers. So these are not points
+   geocoded from a street name in a newspaper: they are the plotted
+   positions the wardens recorded on the night, and the casualty
+   figures are counts of NAMED INDIVIDUALS recorded at that address.
+
+   That is also why almost every record below carries a specific
+   casualty number where most of this site's blitz records do not.
+   The rule is unchanged — a number only goes on a pin when a source
+   states deaths AT THAT PLACE. Here, uniquely, it usually does.
+
+   The city-wide total is deliberately NOT attached to any single
+   pin. Published figures give 92 or 94 dead for the night of
+   29 April 1942; both are cited on the area-level record below and
+   nowhere else.
+
+   Source: Raids Over York (University of York), raidsoveryork.co.uk,
+   with the incident narratives on History of York and, for the
+   railway deaths, LNER's own account.
+   ============================================================ */
+const yorkRecords = [
+  {
+    id: "york-baedeker-raid-1942",
+    title: "York city centre — the Baedeker raid of 29 April 1942",
+    status: "historic",
+    statusLabel: "Historic bombing area",
+    date: "29 April 1942",
+    sortYear: 1942,
+    confidence: "Confirmed event, area-level point only (exact site not verified)",
+    lat: 53.95995,
+    lng: -1.08205,
+    bombType: "mixed",
+    summary: "Between about 02:36 and 04:40 on 29 April 1942, roughly 70 aircraft attacked York with high explosive and incendiaries. It was a Baedeker raid — a reprisal attack aimed at a historic city chosen for its cultural value rather than its industry — and it fell hardest not on the medieval centre but on the terraced streets of Clifton, Holgate and Leeman Road.",
+    note: "York Minster was not hit. The Guildhall, St Martin-le-Grand and the railway station were. Published counts of the high-explosive bombs dropped that night range from 69 to 95, and the Raids Over York project itself declines to settle on one; 14 bombs failed to explode.",
+    casualtiesNote: "Published totals for the raid are 92 (History of York) or 94 (BBC, Raids Over York). The 94 figure matches the number of individually named dead in the project's casualty register dated 29 April 1942. This is a CITY-WIDE total for the night and belongs to no single location — the per-site figures on the other York records are counts of named individuals recorded at those addresses.",
+    sources: [
+      { label: "Raids Over York: Raid 8, 29 April 1942", url: "https://raidsoveryork.co.uk/raid8-29-apr-1942/" },
+      { label: "History of York: York Bombed", url: "https://www.historyofyork.org.uk/themes/20th-century/york-bombed" }
+    ]
+  },
+  {
+    id: "york-bar-convent-1942",
+    title: "The Bar Convent, Blossom Street",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "29 April 1942",
+    sortYear: 1942,
+    confidence: "Confirmed site, building-level",
+    lat: 53.95528,
+    lng: -1.09088,
+    bombType: "HE",
+    casualties: 5,
+    summary: "A high-explosive bomb struck the Bar Convent, the oldest surviving convent in England, and brought down the corner of the building onto the sleeping quarters below. Five women died: two nuns, Mother Mary Agnes and Mother Mary Vincent, and three of the convent's firewatchers, Mary Ann O'Connor, Margaret Murphy and Jane McClorry.",
+    note: "The five were buried in the convent's own cemetery. The chapel, hidden behind a domestic frontage since 1769 because Catholic worship had been illegal when it was built, survived.",
+    casualtiesNote: "Five named individuals recorded at this address in the Raids Over York casualty register, matching History of York's account.",
+    sources: [
+      { label: "Raids Over York: Raid 8, 29 April 1942", url: "https://raidsoveryork.co.uk/raid8-29-apr-1942/" },
+      { label: "History of York: York Bombed", url: "https://www.historyofyork.org.uk/themes/20th-century/york-bombed" }
+    ]
+  },
+  {
+    id: "york-railway-station-1942",
+    title: "York railway station",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "29 April 1942",
+    sortYear: 1942,
+    confidence: "Confirmed site, building-level",
+    lat: 53.95727,
+    lng: -1.09313,
+    bombType: "HE",
+    casualties: 2,
+    summary: "High explosive and incendiaries hit the station and its approaches, wrecking platforms 1 to 3, destroying the parcels office by fire and gutting the booking office. The 22:15 King's Cross to Edinburgh express was standing at the platform when it was hit and set alight; seven service personnel aboard were wounded.",
+    note: "Station foreman William Milner, 42, went back into a burning building to fetch medical supplies for the injured and was killed. He was posthumously awarded the King's Commendation for Brave Conduct, and there is a memorial to him at the station. LNER railway policeman Robert William Smith, 64, died at the police office.",
+    casualtiesNote: "Two named railway staff recorded at the station in the Raids Over York casualty register. The seven wounded service passengers on the Edinburgh express are recorded as injured, not killed.",
+    sources: [
+      { label: "Raids Over York: Raid 8, 29 April 1942", url: "https://raidsoveryork.co.uk/raid8-29-apr-1942/" },
+      { label: "LNER: tributes to two railway workers, 80 years on", url: "https://www.lner.co.uk/news/tributes-paid-to-two-railway-workers-on-the-80th-anniversary-of-the-wwii-bombing-of-york-railway-station/" }
+    ]
+  },
+  {
+    id: "york-guildhall-1942",
+    title: "York Guildhall, St Martin's Courtyard",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "29 April 1942",
+    sortYear: 1942,
+    confidence: "Confirmed site (fixed, well-known landmark)",
+    lat: 53.95963,
+    lng: -1.08563,
+    bombType: "incendiary",
+    summary: "The fifteenth-century Guildhall was gutted by fire after incendiaries fell on the civic buildings beside the Ouse. The roof and the medieval stained glass were lost; the shell of the hall survived and was rebuilt to the original design, reopening in 1960.",
+    note: "The point here is the Guildhall building itself rather than a plotted bomb position — the bomb census records this quarter of the city by ward, so no single georeferenced strike exists for the hall.",
+    sources: [
+      { label: "Raids Over York: Raid 8, 29 April 1942", url: "https://raidsoveryork.co.uk/raid8-29-apr-1942/" },
+      { label: "History of York: York Bombed", url: "https://www.historyofyork.org.uk/themes/20th-century/york-bombed" }
+    ]
+  },
+  {
+    id: "york-st-martin-le-grand-1942",
+    title: "St Martin-le-Grand, Coney Street",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "29 April 1942",
+    sortYear: 1942,
+    confidence: "Confirmed site, building-level",
+    lat: 53.95930,
+    lng: -1.08459,
+    bombType: "incendiary",
+    summary: "The medieval church on Coney Street burnt out during the raid, losing its nave, north aisle and east end. It was reconstructed between 1961 and 1968 by the architect George Pace, who deliberately left part of the ruin standing as a memorial rather than rebuilding the whole footprint.",
+    note: "Its great fifteenth-century west window had been removed and stored for safekeeping in 1940. It survived the fire and was reinstalled in the rebuilt south wall, where it now faces the street.",
+    sources: [
+      { label: "Historic England: Church of St Martin le Grand", url: "https://historicengland.org.uk/listing/the-list/list-entry/1257963" },
+      { label: "Raids Over York: Raid 8, 29 April 1942", url: "https://raidsoveryork.co.uk/raid8-29-apr-1942/" }
+    ]
+  },
+  {
+    id: "york-amberley-street-1942",
+    title: "Amberley Street, Holgate",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "29 April 1942",
+    sortYear: 1942,
+    confidence: "Confirmed event, street-derived point",
+    lat: 53.96133,
+    lng: -1.11546,
+    bombType: "HE",
+    casualties: 14,
+    summary: "A high-explosive bomb fell on the pavement between numbers 37 and 39 of this short terraced street in Holgate. Fourteen people died here — the heaviest loss at any single location in the raid, and more than at any of the landmarks the raid is usually remembered for.",
+    note: "Nine of the dead were in number 35 alone: five members of the Button family, including 22-month-old Gillian, twelve-year-old Audrey and fifteen-year-old Kenneth; two of the Jackson family; and two of the Nutters, one of them two years old.",
+    casualtiesNote: "Fourteen named individuals recorded at numbers 35, 37 and 39 Amberley Street in the Raids Over York casualty register.",
+    sources: [
+      { label: "Raids Over York: Raid 8, 29 April 1942", url: "https://raidsoveryork.co.uk/raid8-29-apr-1942/" }
+    ]
+  },
+  {
+    id: "york-spalding-avenue-1942",
+    title: "Spalding Avenue, Clifton Without",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "29 April 1942",
+    sortYear: 1942,
+    confidence: "Confirmed event, street-derived point",
+    lat: 53.97523,
+    lng: -1.09271,
+    bombType: "HE",
+    casualties: 10,
+    summary: "Ten people were killed in this suburban street on the northern edge of the city, eight of them at number 110 — members of the Helstrip, Duncan and Hyde families, four of whom were children aged between ten months and six years.",
+    note: "Spalding Avenue rarely appears in popular accounts of the raid, which tend to follow the Guildhall, the station and the Bar Convent. It was one of the worst domestic losses of the night.",
+    casualtiesNote: "Ten named individuals recorded in Spalding Avenue in the Raids Over York casualty register.",
+    sources: [
+      { label: "Raids Over York: Raid 8, 29 April 1942", url: "https://raidsoveryork.co.uk/raid8-29-apr-1942/" }
+    ]
+  },
+  {
+    id: "york-bootham-crescent-1942",
+    title: "Bootham Crescent, Clifton",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "29 April 1942",
+    sortYear: 1942,
+    confidence: "Confirmed event, street-derived point (a run of houses, not one address)",
+    lat: 53.96654,
+    lng: -1.08948,
+    bombType: "HE",
+    casualties: 10,
+    summary: "High explosive struck the crescent in at least two places, including a direct hit on number 16. Ten people were killed along it, among them eleven-year-old Christine Blenkin and her fourteen-year-old sister Pauline.",
+    note: "Four of the ten were civil-defence personnel who had turned out for the raid: firewatchers Ernest Atkin and Halbert Ord, Deputy Head Warden George Colman, and Arthur Broadhead of the National Fire Service.",
+    casualtiesNote: "Ten named individuals recorded in Bootham Crescent in the Raids Over York casualty register.",
+    sources: [
+      { label: "Raids Over York: Raid 8, 29 April 1942", url: "https://raidsoveryork.co.uk/raid8-29-apr-1942/" }
+    ]
+  },
+  {
+    id: "york-chatsworth-terrace-1942",
+    title: "Chatsworth Terrace, Holgate",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "29 April 1942",
+    sortYear: 1942,
+    confidence: "Confirmed event, street-derived point",
+    lat: 53.96024,
+    lng: -1.11530,
+    bombType: "HE",
+    casualties: 9,
+    summary: "A bomb burst in the roadway outside numbers 53 to 55. Nine people died, including three of the Ezard family — nine-year-old Muriel, her mother Ellen and her father James.",
+    note: "Two of the dead were Air Raid Wardens killed on duty in the street they were patrolling: Albert Emmerson, 29, and John Herbert Fowler, 34.",
+    casualtiesNote: "Nine named individuals recorded in Chatsworth Terrace in the Raids Over York casualty register.",
+    sources: [
+      { label: "Raids Over York: Raid 8, 29 April 1942", url: "https://raidsoveryork.co.uk/raid8-29-apr-1942/" }
+    ]
+  },
+  {
+    id: "york-burton-stone-lane-1942",
+    title: "Burton Stone Lane, Clifton",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "29 April 1942",
+    sortYear: 1942,
+    confidence: "Confirmed event, street-derived point",
+    lat: 53.96764,
+    lng: -1.09204,
+    bombType: "HE",
+    casualties: 5,
+    summary: "A high-explosive bomb fell in the back garden of number 16. Five people were killed, four of them women and one a two-year-old child, Janet Campbell.",
+    casualtiesNote: "Five named individuals recorded at 16 Burton Stone Lane in the Raids Over York casualty register.",
+    sources: [
+      { label: "Raids Over York: Raid 8, 29 April 1942", url: "https://raidsoveryork.co.uk/raid8-29-apr-1942/" }
+    ]
+  },
+  {
+    id: "york-nunthorpe-road-1942",
+    title: "Nunthorpe Road, Scarcroft",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "29 April 1942",
+    sortYear: 1942,
+    confidence: "Confirmed event, street-derived point",
+    lat: 53.95224,
+    lng: -1.08854,
+    bombType: "HE",
+    casualties: 4,
+    summary: "Bombs fell on Nunthorpe Road south of the city walls, killing four people across numbers 45, 46 and 49 — among them nine-year-old Noel Boyes and his mother Ethel, and twelve-year-old Betty Akers.",
+    casualtiesNote: "Four named individuals recorded in Nunthorpe Road in the Raids Over York casualty register.",
+    sources: [
+      { label: "Raids Over York: Raid 8, 29 April 1942", url: "https://raidsoveryork.co.uk/raid8-29-apr-1942/" }
+    ]
+  },
+  {
+    id: "york-pickering-terrace-1942",
+    title: "Pickering Terrace, Newborough Street, Clifton",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "29 April 1942",
+    sortYear: 1942,
+    confidence: "Confirmed event, street-derived point (the site has been redeveloped)",
+    lat: 53.96973,
+    lng: -1.08710,
+    bombType: "HE",
+    casualties: 3,
+    summary: "A high-explosive bomb landed in the roadway outside number 6 and destroyed eight houses outright. Three people died at number 6: seven-year-old June Leeming, her mother Doris, and Katherine Cooper.",
+    casualtiesNote: "Three named individuals recorded at 6 Pickering Terrace in the Raids Over York casualty register.",
+    sources: [
+      { label: "Raids Over York: Raid 8, 29 April 1942", url: "https://raidsoveryork.co.uk/raid8-29-apr-1942/" }
+    ]
+  },
+  {
+    id: "york-westminster-road-1942",
+    title: "Westminster Road, Clifton",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "29 April 1942",
+    sortYear: 1942,
+    confidence: "Confirmed event, street-derived point (two separate streets)",
+    lat: 53.96802,
+    lng: -1.09992,
+    bombType: "HE",
+    casualties: 3,
+    summary: "Bombs fell on Westminster Road at numbers 16 to 18 and again, as a direct hit, on number 47. Three people were killed: William Trotter, 60, at number 16, and the sisters Emily and Frances Cherry, 77 and 79, at number 18.",
+    casualtiesNote: "Three named individuals recorded in Westminster Road in the Raids Over York casualty register.",
+    sources: [
+      { label: "Raids Over York: Raid 8, 29 April 1942", url: "https://raidsoveryork.co.uk/raid8-29-apr-1942/" }
+    ]
+  },
+  {
+    id: "york-phoenix-cottages-1942",
+    title: "Phoenix Cottages, Leeman Road",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "29 April 1942",
+    sortYear: 1942,
+    confidence: "Confirmed event, street-derived point (the site has been redeveloped)",
+    lat: 53.96168,
+    lng: -1.10375,
+    bombType: "HE",
+    casualties: 2,
+    summary: "High explosive hit the row of railway cottages on Leeman Road. Six-year-old Arthur Davies and 35-year-old Stella Skelton, of number 1, were killed.",
+    note: "The LNER stables further along Leeman Road were hit in the same raid; nineteen horses were got out alive.",
+    casualtiesNote: "Two named individuals recorded at Phoenix Cottages in the Raids Over York casualty register.",
+    sources: [
+      { label: "Raids Over York: Raid 8, 29 April 1942", url: "https://raidsoveryork.co.uk/raid8-29-apr-1942/" }
+    ]
+  },
+  {
+    id: "york-queen-annes-school-1942",
+    title: "Queen Anne's School shelter, Clifton",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "29 April 1942",
+    sortYear: 1942,
+    confidence: "Confirmed event, landmark point",
+    lat: 53.96395,
+    lng: -1.09337,
+    bombType: "HE",
+    casualties: 1,
+    summary: "A high-explosive bomb fell on the lawn about a hundred feet behind the school's main building. Betty Pope, aged six, was killed in the school's air-raid shelter.",
+    note: "The housing on Queen Anne's Road immediately alongside was hit separately and much harder — four died at number 20, two at number 18, and two more in the Welwyn House flats.",
+    casualtiesNote: "One named individual recorded at the Queen Anne's School shelter in the Raids Over York casualty register. The nearby Queen Anne's Road deaths are recorded at those addresses, not here.",
+    sources: [
+      { label: "Raids Over York: Raid 8, 29 April 1942", url: "https://raidsoveryork.co.uk/raid8-29-apr-1942/" }
+    ]
+  },
+  {
+    id: "york-lner-carriage-works-1942",
+    title: "LNER Carriage Works, Poppleton Road",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "29 April 1942",
+    sortYear: 1942,
+    confidence: "Confirmed site, building-level",
+    lat: 53.95940,
+    lng: -1.11159,
+    bombType: "UXB",
+    casualties: 0,
+    summary: "Three high-explosive bombs fell on the carriage works site — by the aircraft detail shop and the sawmill log stack as well as here — and none of them exploded. Fourteen bombs failed to detonate across York that night.",
+    note: "Unexploded bombs shut ground down for as long as it took to clear them, which on a railway works in 1942 meant halting war production as surely as a hit would have. No deaths are recorded at these three points.",
+    sources: [
+      { label: "Raids Over York: Raid 8, 29 April 1942", url: "https://raidsoveryork.co.uk/raid8-29-apr-1942/" }
+    ]
+  },
+  {
+    id: "york-acomb-waterworks-1942",
+    title: "Acomb waterworks",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "29 April 1942",
+    sortYear: 1942,
+    confidence: "Confirmed site, building-level",
+    lat: 53.96622,
+    lng: -1.11450,
+    bombType: "HE",
+    summary: "A direct hit on the waterworks damaged the plant and the mains it fed. Between this and broken mains elsewhere in the city, water pressure failed across York while the fires from the incendiary attack were still spreading.",
+    note: "No casualty figure is recorded for this site.",
+    sources: [
+      { label: "Raids Over York: Raid 8, 29 April 1942", url: "https://raidsoveryork.co.uk/raid8-29-apr-1942/" }
+    ]
+  },
+  {
+    id: "york-fulford-barracks-1942",
+    title: "Fulford Barracks",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "29 April 1942",
+    sortYear: 1942,
+    confidence: "Confirmed event, approximate point",
+    lat: 53.94627,
+    lng: -1.07136,
+    bombType: "HE",
+    summary: "A stick of four high-explosive bombs fell across the cavalry and infantry barracks at Fulford, one on the barrack square and one behind the sports pavilion.",
+    casualtiesNote: "Raids Over York states that six soldiers were killed here. That figure is single-sourced: the project's casualty register covers civilian deaths and holds no individual records for Fulford, so it could not be corroborated name by name as the other York figures on this site have been.",
+    sources: [
+      { label: "Raids Over York: Raid 8, 29 April 1942", url: "https://raidsoveryork.co.uk/raid8-29-apr-1942/" }
+    ]
+  },
+  {
+    id: "york-skeldergate-1942",
+    title: "Skeldergate slipway & King's Staith",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "2 August 1942",
+    sortYear: 1942,
+    confidence: "Confirmed event, street-derived point",
+    lat: 53.95618,
+    lng: -1.08380,
+    bombType: "HE",
+    casualties: 1,
+    summary: "A single Dornier Do-217 came in over York in daylight and dropped four 500kg bombs across the city at about 16:36. One burst by the slipway on Skeldergate, beside the Ouse. Sidney Thompson, a 33-year-old National Fire Service man, was killed on a river patrol boat at King's Staith; 43 people were hurt.",
+    note: "Two of the four bombs from this raid — at Buckingham Works on Bishophill and in the Castle grounds by Clifford's Tower — failed to explode.",
+    casualtiesNote: "One named fireman recorded in the Raids Over York casualty register. Raids Over York's narrative gives his first name as either Sidney or Stanley; the casualty record says Sidney.",
+    sources: [
+      { label: "Raids Over York: Raid 9, 2 August 1942", url: "https://raidsoveryork.co.uk/raid9-2-aug-1942/" }
+    ]
+  },
+  {
+    id: "york-cliffords-tower-1942",
+    title: "Clifford's Tower & the Castle grounds",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "2 August 1942",
+    sortYear: 1942,
+    confidence: "Confirmed site (fixed, well-known landmark)",
+    lat: 53.95576,
+    lng: -1.07984,
+    bombType: "UXB",
+    casualties: 0,
+    summary: "One of the four 500kg bombs from the daylight raid of 2 August 1942 fell in the Castle grounds beside Clifford's Tower and did not go off.",
+    note: "Clifford's Tower is the surviving keep of York Castle and the site of the massacre of the city's Jewish community in 1190. It came through both raids of 1942 undamaged.",
+    sources: [
+      { label: "Raids Over York: Raid 9, 2 August 1942", url: "https://raidsoveryork.co.uk/raid9-2-aug-1942/" }
+    ]
+  },
+  {
+    id: "york-belle-vue-terrace-1942",
+    title: "Belle Vue Terrace, off Lawrence Street",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "24 September 1942",
+    sortYear: 1942,
+    confidence: "Confirmed event, street-derived point",
+    lat: 53.95127,
+    lng: -1.06775,
+    bombType: "incendiary",
+    summary: "Incendiaries fell across the east of the city — Regent Street, Tang Hall, the Foss Islands goods station and Lawrence Street — with a direct hit on number 12 Belle Vue Terrace.",
+    casualtiesNote: "Three people died in this raid across the city: Civil Defence Warden Joseph Kirby, 57; Percy Beckwith, 61, at St Aelred's rest centre; and Thomas Marsh, 84, of Aldwark. None of the three is recorded at this address, so no figure is placed on this pin.",
+    sources: [
+      { label: "Raids Over York", url: "https://raidsoveryork.co.uk/" }
+    ]
+  },
+  {
+    id: "york-nunthorpe-grove-1945",
+    title: "Nunthorpe Grove, Scarcroft",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "5 March 1945",
+    sortYear: 1945,
+    confidence: "Confirmed event, street-derived point",
+    lat: 53.94793,
+    lng: -1.08856,
+    bombType: "HE",
+    casualties: 2,
+    summary: "Two women died at Nunthorpe Grove on the night of 5 March 1945 — Laura Thompson, 74, and Lydia Helstrip, 80. It was almost certainly Operation Gisela, the Luftwaffe's last large intruder operation over Britain, in which night fighters followed returning RAF bombers home and attacked their airfields and the country beneath them.",
+    note: "This falls outside the eleven raids York is usually said to have suffered, nearly three years after the Baedeker attack and two months before the war in Europe ended.",
+    casualtiesNote: "Two named individuals recorded at this address in the Raids Over York casualty register, dated 5 March 1945.",
+    sources: [
+      { label: "Raids Over York", url: "https://raidsoveryork.co.uk/" }
+    ]
+  }
+];
+
 const regionData = {
+  york: {
+    label: "York, North Yorkshire",
+    short: "York",
+    county: "North Yorkshire",
+    accent: "var(--amber)",
+    records: yorkRecords,
+    center: [53.9600, -1.0873],
+    zoom: 13,
+    raidNights: null,
+    hasPotential: false
+  },
   liverpool: {
     label: "Liverpool, Merseyside",
     short: "Liverpool",
@@ -4954,14 +5399,97 @@ function buildCounties() {
 const COUNTIES = buildCounties();
 let activeCounty = COUNTY_ALL;
 
+/* ============================================================
+   PROGRESSIVE DATA LOADING
+   ------------------------------------------------------------
+   The site started by shipping every dataset in a <script> tag in the
+   page head: county outlines, the Plymouth potential-sites layer, the
+   V-weapon impacts. That is fine for one city. It does not survive
+   national coverage — the outlines alone were already 426 kB for 15
+   counties, and every visitor paid for all of them to see one.
+
+   Three things changed:
+
+     1. County outlines are sliced one file per county and fetched when
+        that county is selected. See loadCountyBoundary().
+     2. The heavy point layers below are fetched the first time the map
+        looks at the ground they cover, or the first time their control
+        is switched on — whichever happens first.
+     3. Markers are created only for records inside the padded viewport,
+        so render cost tracks what is on screen rather than how much
+        history has been researched. See renderMarkers().
+
+   WHY NOT VECTOR TILES
+   Real vector tiles need a tile server, or a build step producing tens
+   of thousands of small files, plus a client library. This site is
+   static files on GitHub Pages and the whole dataset is a few hundred
+   kilobytes. Slicing by county — a unit the site already navigates by,
+   and one a visitor picks explicitly — gets the same "only pay for what
+   you are looking at" result with no server and no new dependency. If
+   the record set ever reaches the tens of thousands, the next step is
+   to slice the records themselves the same way (a per-county index of
+   id/lat/lng/status, with full detail fetched on click); the loader
+   below is deliberately written so that is an addition, not a rewrite.
+
+   Bump DATA_VERSION with the ?v= in index.html on every release, for
+   the same cache-busting reason — these files are fetched by script and
+   would otherwise be served stale from cache long after a data update.
+   ============================================================ */
+const DATA_VERSION = "1.13.0";
+
+// Prebuilt county bounding boxes from data/county-index.js. Tiny, always
+// loaded, and enough to frame a county before its outline arrives.
+const COUNTY_BOX = typeof COUNTY_BOUNDS !== "undefined" && COUNTY_BOUNDS ? COUNTY_BOUNDS : {};
+
+const dataScriptPromises = new Map();
+
+/* <script> injection rather than fetch(), for the same reason the data
+   files were script tags to begin with: fetch() of a local file is blocked
+   when index.html is opened as file://, and a preview that silently loses
+   half its data is a bad way to find that out. */
+function loadDataScript(src) {
+  if (dataScriptPromises.has(src)) return dataScriptPromises.get(src);
+  const promise = new Promise((resolve, reject) => {
+    const el = document.createElement("script");
+    el.src = `${src}?v=${DATA_VERSION}`;
+    el.async = true;
+    el.onload = () => resolve();
+    el.onerror = () => reject(new Error(`could not load ${src}`));
+    document.head.appendChild(el);
+  });
+  dataScriptPromises.set(src, promise);
+  promise.catch(() => dataScriptPromises.delete(src));
+  return promise;
+}
+
+/* Does the current view come anywhere near this dataset's ground? Padded
+   generously — loading a little early is invisible, loading late shows up
+   as points fading in after the pan has stopped. */
+function viewNear(box, padDeg = 0.35) {
+  if (!box) return false;
+  const b = map.getBounds();
+  return (
+    b.getNorth() + padDeg >= box[0] &&
+    b.getSouth() - padDeg <= box[2] &&
+    b.getEast() + padDeg >= box[1] &&
+    b.getWest() - padDeg <= box[3]
+  );
+}
+
 /* The potential-sites layer is Plymouth-only *data*, but it is part of the
    same single combined layer as everything else — it stays on the map
    whichever town is selected, rather than vanishing the moment you pick
    Exeter. Availability is therefore a question about the dataset, not about
    the current selection. The data script loads before this one (see the
    <script> order in index.html), so this is safe to read at parse time. */
-const HAS_POTENTIAL_DATA =
-  typeof POTENTIAL_BOMB_SITES !== "undefined" && POTENTIAL_BOMB_SITES.length > 0;
+/* "The dataset exists", not "the dataset is in memory" — those are now two
+   different questions, and every consumer below already asks the second one
+   separately via potentialSitesData.length. Set false only if the data file
+   is genuinely removed from the repo. */
+const HAS_POTENTIAL_DATA = true;
+const POTENTIAL_DATA_SRC = "data/potential-bomb-sites.js";
+// Plymouth and its immediate surroundings — the only ground this layer covers.
+const POTENTIAL_DATA_BOX = [50.32, -4.25, 50.47, -4.02];
 
 // The potential-sites layer is digitised from Plymouth mapping only, so the
 // whole layer belongs to one county for scoping purposes.
@@ -4980,46 +5508,35 @@ const POTENTIAL_SITES_COUNTY = "Devon";
    boundaries the map draws, and falls back to the region's county only when
    no polygon claims the point (a missing boundary file, or a record just
    offshore). Results are cached — the answer can't change during a session. */
-const COUNTY_GEOMETRIES =
-  typeof COUNTY_BOUNDARIES !== "undefined" && COUNTY_BOUNDARIES ? COUNTY_BOUNDARIES : {};
+/* ---------- Which county is a record actually in? ----------
+   Records are grouped into regions for editorial reasons, and a region's
+   county is not always the county the record sits in. The Saltash records
+   are the clear case: they are filed under Plymouth, because that is the
+   raid they belong to, but Saltash is in Cornwall. Taking the county from
+   the region put them in Devon and dropped them out of scope whenever
+   Cornwall was selected — visibly wrong, since they are plotted well the
+   Cornish side of the Tamar.
 
-function pointInRing(lat, lng, ring) {
-  let inside = false;
-  for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
-    const [xi, yi] = ring[i];
-    const [xj, yj] = ring[j];
-    const straddles = yi > lat !== yj > lat;
-    if (straddles && lng < ((xj - xi) * (lat - yi)) / (yj - yi) + xi) inside = !inside;
-  }
-  return inside;
-}
+   This used to be answered at runtime, by testing every record against
+   every county polygon. That worked, but it was the reason the browser had
+   to download all 426 kB of county geometry before the map could decide
+   what to draw — to answer a question whose answer cannot change between
+   page loads, since both the coordinates and the boundaries are fixed.
 
-function pointInGeometry(lat, lng, geometry) {
-  if (!geometry) return false;
-  const polygons = geometry.type === "Polygon" ? [geometry.coordinates] : geometry.coordinates;
-  for (const rings of polygons) {
-    if (!pointInRing(lat, lng, rings[0])) continue;
-    // Ring 0 is the outline; any further ring is a hole punched out of it.
-    let inHole = false;
-    for (let i = 1; i < rings.length; i++) {
-      if (pointInRing(lat, lng, rings[i])) { inHole = true; break; }
-    }
-    if (!inHole) return true;
-  }
-  return false;
-}
+   So it is now answered at BUILD time by tools/build-county-slices.js, and
+   only the DISAGREEMENTS ship: RECORD_COUNTY in data/county-index.js is a
+   short id -> county map (five entries at the time of writing, all of them
+   Saltash and Torpoint). Everything absent from it takes its region's
+   county, which is right by construction.
 
-const recordCountyCache = new Map();
+   Re-run tools/build-county-slices.js after adding or moving records, or a
+   new record straddling a county line will quietly take its region's county.
+------------------------------------------------------------------- */
+const RECORD_COUNTY_OVERRIDES =
+  typeof RECORD_COUNTY !== "undefined" && RECORD_COUNTY ? RECORD_COUNTY : {};
 
 function recordCounty(record) {
-  if (recordCountyCache.has(record.id)) return recordCountyCache.get(record.id);
-  let county = "";
-  for (const [name, geometry] of Object.entries(COUNTY_GEOMETRIES)) {
-    if (pointInGeometry(record.lat, record.lng, geometry)) { county = name; break; }
-  }
-  if (!county) county = record.regionCounty || "";
-  recordCountyCache.set(record.id, county);
-  return county;
+  return RECORD_COUNTY_OVERRIDES[record.id] || record.regionCounty || "";
 }
 
 function isOutsideSelection(county) {
@@ -5332,8 +5849,11 @@ const potentialPane = L.canvas({ padding: 0.5 });
 
    Only ~120 points at present, so unlike the 3,000-point Plymouth layer this
    one needs no zoom gate — it stays legible at county zoom. */
-const V_WEAPON_DATA = typeof V_WEAPON_IMPACTS !== "undefined" && V_WEAPON_IMPACTS ? V_WEAPON_IMPACTS : [];
-const HAS_V_WEAPON_DATA = V_WEAPON_DATA.length > 0;
+let V_WEAPON_DATA = [];
+const HAS_V_WEAPON_DATA = true;
+const V_WEAPON_DATA_SRC = "data/v-weapon-impacts.js";
+// Greater London and the near approaches — the extent of the impact data.
+const V_WEAPON_DATA_BOX = [51.25, -0.55, 51.72, 0.35];
 
 const vWeaponPane = L.canvas({ padding: 0.5 });
 const vWeaponColors = { V1: "#ff9f43", V2: "#ff5252" };
@@ -5350,7 +5870,7 @@ function clearVWeaponLayer() {
 
 function renderVWeaponLayer() {
   clearVWeaponLayer();
-  if (!HAS_V_WEAPON_DATA) return;
+  if (!V_WEAPON_DATA.length) return;
   // Out of scope when a county other than London is selected.
   if (isOutsideSelection(V_WEAPON_COUNTY)) return;
   if (heatmapMode) return;
@@ -5381,6 +5901,20 @@ function renderVWeaponLayer() {
    which is where it belongs anyway and where CC-BY needs it to stay. */
 function initVWeaponLayer() {
   renderVWeaponLayer();
+}
+
+/* Fetched when the map first looks at London, or when London is selected —
+   there is no reason for someone reading about Plymouth to carry 118 V-weapon
+   impacts they will never see. */
+function ensureVWeaponData() {
+  if (V_WEAPON_DATA.length) return;
+  loadDataScript(V_WEAPON_DATA_SRC)
+    .then(() => {
+      if (typeof V_WEAPON_IMPACTS === "undefined" || !V_WEAPON_IMPACTS) return;
+      V_WEAPON_DATA = V_WEAPON_IMPACTS;
+      renderVWeaponLayer();
+    })
+    .catch(() => { /* layer simply stays absent; nothing else depends on it */ });
 }
 let potentialLayer = null;
 let potentialSitesData = [];
@@ -5574,24 +6108,60 @@ function updatePotentialCounts() {
     .length.toLocaleString("en-GB");
 }
 
-if (potentialToggle) {
-  // Loaded from data/potential-bomb-sites.js as a plain global (see the
-  // <script> tag in index.html) rather than via fetch(), because fetching a
-  // local JSON file is blocked by browsers when index.html is opened
-  // directly (file://) rather than served over http:// — a script tag works
-  // either way. This dataset is Plymouth-only.
-  if (typeof POTENTIAL_BOMB_SITES !== "undefined" && POTENTIAL_BOMB_SITES.length) {
-    potentialSitesData = POTENTIAL_BOMB_SITES;
-    assignEstimatedYears(potentialSitesData);
-    updatePotentialCounts();
-    renderPotentialLayer();
-    renderYearBreakdown();
-  } else {
-    potentialCount.textContent = "unavailable";
-    potentialToggle.disabled = true;
-  }
+/* ---------- Potential-sites layer: fetched on demand ----------
+   210 kB of digitised Plymouth points that most visitors never see: the
+   layer is Plymouth-only, gated behind zoom 11, and behind a checkbox. It
+   used to be downloaded and parsed by everyone before the map drew its
+   first tile.
 
+   Now it arrives when it is about to matter — the map looking at Plymouth,
+   or the checkbox being ticked. Once loaded it behaves exactly as before;
+   everything downstream already guarded on potentialSitesData.length, which
+   is the "is it in memory yet" question rather than the "does it exist"
+   one.
+
+   The timeline's year domain includes this layer's modelled 1940–44 years,
+   so it is rebuilt after the load. resetTimelineBounds() would fight a
+   visitor who has already scrubbed the slider, so the domain is recomputed
+   and the slider's position preserved. */
+let potentialDataFailed = false;
+
+function ensurePotentialData() {
+  if (potentialSitesData.length || potentialDataFailed) return;
+  loadDataScript(POTENTIAL_DATA_SRC)
+    .then(() => {
+      if (typeof POTENTIAL_BOMB_SITES === "undefined" || !POTENTIAL_BOMB_SITES.length) {
+        throw new Error("potential-bomb-sites.js loaded but defined nothing");
+      }
+      potentialSitesData = POTENTIAL_BOMB_SITES;
+      assignEstimatedYears(potentialSitesData);
+
+      const atEnd = yearIndex >= sortedYears.length;
+      const previousYear = atEnd ? null : sortedYears[yearIndex];
+      sortedYears = computeSortedYears();
+      const restored = previousYear === null ? sortedYears.length : sortedYears.indexOf(previousYear);
+      yearIndex = restored === -1 ? sortedYears.length : restored;
+      if (timelineSlider) {
+        timelineSlider.max = String(sortedYears.length);
+        timelineSlider.value = String(yearIndex);
+        updateTimelineLabel();
+      }
+
+      updatePotentialCounts();
+      renderPotentialLayer();
+      renderYearBreakdown();
+      refreshHeatLayer();
+    })
+    .catch(() => {
+      potentialDataFailed = true;
+      if (potentialCount) potentialCount.textContent = "unavailable";
+      if (potentialToggle) potentialToggle.disabled = true;
+    });
+}
+
+if (potentialToggle) {
   potentialToggle.addEventListener("change", () => {
+    if (potentialToggle.checked) ensurePotentialData();
     renderPotentialLayer();
     refreshHeatLayer();
     saveUiState();
@@ -5826,6 +6396,13 @@ function detailContent(record) {
       <div class="detail-photo-placeholder">Street View / archival photo comparison — planned for a future update. Any archival images used here will need clear copyright/licensing from their holder (e.g. The Box, Plymouth) before publishing.</div>
     </div>
     ${sourceLinks ? `<div class="detail-section"><span class="detail-section-label">Sources</span><div class="detail-sources">${sourceLinks}</div></div>` : ""}
+    <div class="detail-section detail-correct">
+      <button type="button" class="detail-correct-btn" data-correct-record="${record.id}">
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>
+        Report a correction
+      </button>
+      <p class="detail-correct-note">Know this street, this night, or this family? Local knowledge is how these records get better.</p>
+    </div>
   `;
 }
 
@@ -6034,8 +6611,10 @@ function selectRecord(id, pan = true) {
   const record = active.find((item) => item.id === id) || visibleRecords()[0] || active[0];
   activeId = record.id;
 
-  const marker = markers.get(record.id);
-  if (marker && pan) {
+  // Deliberately not gated on markers.get(id): with viewport culling a record
+  // that is off-screen has no marker instance yet, and "fly to it" is exactly
+  // what a deep link or a search result needs to do in that case.
+  if (pan) {
     if (!viewBeforeDetail) {
       viewBeforeDetail = { center: map.getCenter(), zoom: map.getZoom() };
     }
@@ -6056,7 +6635,9 @@ const statRaidNights = document.getElementById("statRaidNights");
 const statRaidNightsLabel = document.getElementById("statRaidNightsLabel");
 
 function updateStatsPills() {
-  if (statTotalBombs) statTotalBombs.textContent = String(markers.size);
+  // The scope set, not the rendered set: this pill answers "how many records
+  // are there in what I have selected", which must not change as you pan.
+  if (statTotalBombs) statTotalBombs.textContent = String(inScopeIds.size);
   if (!statRaidNights) return;
 
   // Raid-night counts exist per town, from each town's own sources. Summing
@@ -6102,43 +6683,110 @@ function accuracyRadiusM(record) {
   return 200; // unlabelled confidence — assume the worse case, not the better
 }
 
+/* ---------- Marker rendering, culled to the viewport ----------
+   This used to tear down every marker and rebuild the whole set on every
+   filter, timeline or county change. At a couple of hundred records that is
+   free. It is quadratic-feeling misery at national scale, and it is the
+   half of "the current loading strategy will fail" that has nothing to do
+   with bytes on the wire — a browser asked to hold twenty thousand DOM
+   markers will stutter however small the download was.
+
+   So two sets are tracked separately, and the distinction matters:
+
+     inScopeIds    every record passing the county, status, weight and
+                   timeline filters. This is the honest answer to "how many
+                   bombs are plotted here", so it is what the stats pill
+                   counts, and it does not change when you pan.
+
+     renderedIds   the subset actually instantiated on the map: those
+                   inside the viewport plus a screen's worth of padding, so
+                   a drag reveals markers that are already there rather than
+                   markers appearing after it stops.
+
+   Markers are created once and reused. Panning back to somewhere you have
+   already been costs nothing.
+------------------------------------------------------------------- */
+// Padding, as a fraction of the viewport, kept live around the edges.
+const MARKER_CULL_PAD = 0.6;
+
+let inScopeIds = new Set();
+const renderedIds = new Set();
+
+function markerCullBounds() {
+  return map.getBounds().pad(MARKER_CULL_PAD);
+}
+
+function addRecordToMap(record) {
+  let marker = markers.get(record.id);
+  if (!marker) {
+    marker = L.marker([record.lat, record.lng], { icon: markerIcon(record) });
+    marker.on("click", () => selectRecord(record.id, true));
+    markers.set(record.id, marker);
+  }
+  if (!map.hasLayer(marker)) marker.addTo(map);
+
+  let circle = accuracyCircles.get(record.id);
+  if (!circle) {
+    circle = L.circle([record.lat, record.lng], {
+      radius: accuracyRadiusM(record),
+      interactive: false,
+      color: ACCURACY_COLOR,
+      weight: 1,
+      opacity: 0.28,
+      // Dashed, so the ring reads as "roughly here" at a glance and can't
+      // be mistaken for the solid cordon circle drawn around a selection.
+      dashArray: "3 4",
+      fillColor: ACCURACY_COLOR,
+      fillOpacity: 0.07
+    });
+    accuracyCircles.set(record.id, circle);
+  }
+  if (!map.hasLayer(circle)) circle.addTo(map);
+}
+
+function removeRecordFromMap(id) {
+  const marker = markers.get(id);
+  if (marker && map.hasLayer(marker)) marker.remove();
+  const circle = accuracyCircles.get(id);
+  if (circle && map.hasLayer(circle)) circle.remove();
+}
+
+/* Adds and removes only what crossed the edge of the padded viewport since
+   last time. Called on every pan and zoom, so it must not do work
+   proportional to anything but the difference. */
+function syncRenderedMarkers() {
+  // In heatmap mode the density surface replaces individual markers, so
+  // nothing is instantiated at all — the scope set still drives the stats.
+  const wanted = new Set();
+  if (!heatmapMode) {
+    const box = markerCullBounds();
+    ALL_RECORDS.forEach((record) => {
+      if (!inScopeIds.has(record.id)) return;
+      if (!box.contains([record.lat, record.lng])) return;
+      wanted.add(record.id);
+      if (!renderedIds.has(record.id)) addRecordToMap(record);
+    });
+  }
+
+  renderedIds.forEach((id) => {
+    if (!wanted.has(id)) removeRecordFromMap(id);
+  });
+  renderedIds.clear();
+  wanted.forEach((id) => renderedIds.add(id));
+}
+
 function renderMarkers() {
   const wasOpen = !detailPanel.hidden;
   const previousActiveId = activeId;
-  markers.forEach((marker) => marker.remove());
-  markers.clear();
-  accuracyCircles.forEach((circle) => circle.remove());
-  accuracyCircles.clear();
 
-  visibleRecords().forEach((record) => {
-    if (!heatmapMode) {
-      const circle = L.circle([record.lat, record.lng], {
-        radius: accuracyRadiusM(record),
-        interactive: false,
-        color: ACCURACY_COLOR,
-        weight: 1,
-        opacity: 0.28,
-        // Dashed, so the ring reads as "roughly here" at a glance and can't
-        // be mistaken for the solid cordon circle drawn around a selection.
-        dashArray: "3 4",
-        fillColor: ACCURACY_COLOR,
-        fillOpacity: 0.07
-      }).addTo(map);
-      accuracyCircles.set(record.id, circle);
-    }
-
-    const marker = L.marker([record.lat, record.lng], { icon: markerIcon(record) });
-    marker.on("click", () => selectRecord(record.id, true));
-    // In heatmap mode, individual markers give way to the density layer —
-    // still tracked in the `markers` map (for stats + detail lookups) but
-    // not added to the map itself.
-    if (!heatmapMode) marker.addTo(map);
-    markers.set(record.id, marker);
-  });
+  inScopeIds = new Set(visibleRecords().map((r) => r.id));
+  syncRenderedMarkers();
 
   // If a filter/timeline change removes the record currently shown in the
   // detail panel, close the panel rather than leaving stale info on screen.
-  if (wasOpen && !markers.has(previousActiveId)) closeDetailPanel();
+  // Tested against the scope set, NOT what is currently rendered — panning
+  // a selected pin off the edge of the screen must not close its panel.
+  if (wasOpen && !inScopeIds.has(previousActiveId)) closeDetailPanel();
 
   updateStatsPills();
   refreshHeatLayer();
@@ -7142,11 +7790,49 @@ const COUNTY_OUTLINE_STYLE = {
 let countyOutline = null;
 const countyBoundaryCache = new Map();
 
-// Populated by the <script> tag in index.html when the generated file exists.
-if (typeof COUNTY_BOUNDARIES !== "undefined" && COUNTY_BOUNDARIES) {
-  Object.entries(COUNTY_BOUNDARIES).forEach(([name, geometry]) => {
-    countyBoundaryCache.set(name, geometry);
+/* ---------- Per-county outline loading ----------
+   One file per county under data/counties/, generated by
+   tools/build-county-slices.js, fetched the first time that county is
+   selected and cached for the session. Only ever one county is drawn, so
+   only ever one needs to be in memory.
+
+   <script> injection rather than fetch() so the site still works opened
+   straight off disk as file:// — fetch would fail the CORS check there,
+   and a local preview that silently loses its boundaries is a bad way to
+   find out. Each slice calls registerCountyBoundary() itself, so the
+   loader never has to guess a global variable name.
+
+   A failed load is not fatal: drawCountyOutline falls back to the live
+   Nominatim lookup below, and failing that simply draws no outline. The
+   selection, the marker scope and the stats all still work. */
+const countyBoundaryPending = new Map();
+
+window.registerCountyBoundary = function (name, geometry) {
+  countyBoundaryCache.set(name, geometry);
+};
+
+const countySlug = (s) => String(s).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+
+function loadCountyBoundary(name) {
+  if (countyBoundaryCache.has(name)) return Promise.resolve(countyBoundaryCache.get(name));
+  if (countyBoundaryPending.has(name)) return countyBoundaryPending.get(name);
+
+  const promise = new Promise((resolve, reject) => {
+    const el = document.createElement("script");
+    el.src = `data/counties/${countySlug(name)}.js?v=${DATA_VERSION}`;
+    el.async = true;
+    el.onload = () => {
+      const geometry = countyBoundaryCache.get(name);
+      geometry ? resolve(geometry) : reject(new Error(`${name} slice loaded but registered nothing`));
+    };
+    el.onerror = () => reject(new Error(`could not load boundary slice for ${name}`));
+    document.head.appendChild(el);
   });
+
+  countyBoundaryPending.set(name, promise);
+  // Let a failure be retried on a later selection rather than cached forever.
+  promise.catch(() => countyBoundaryPending.delete(name));
+  return promise;
 }
 
 function clearCountyOutline() {
@@ -7222,10 +7908,16 @@ async function drawCountyOutline(name) {
   let geometry = countyBoundaryCache.get(name);
   if (!geometry) {
     try {
-      geometry = await fetchCountyBoundary(name);
-      countyBoundaryCache.set(name, geometry);
+      geometry = await loadCountyBoundary(name);
     } catch (e) {
-      return; // no outline available; the rest of the selection still works
+      // No generated slice for this county — fall back to asking Nominatim
+      // live, which is how counties were outlined before the slices existed.
+      try {
+        geometry = await fetchCountyBoundary(name);
+        countyBoundaryCache.set(name, geometry);
+      } catch (e2) {
+        return; // no outline available; the rest of the selection still works
+      }
     }
   }
 
@@ -7322,21 +8014,13 @@ function countyViewBounds(name) {
   if (name === COUNTY_ALL) return UK_BOUNDS;
   if (countyBoundsCache.has(name)) return countyBoundsCache.get(name);
 
-  const geometry = COUNTY_GEOMETRIES[name];
-  let bounds = null;
-
-  if (geometry) {
-    const rings =
-      geometry.type === "Polygon"
-        ? geometry.coordinates
-        : geometry.coordinates.flat();
-    rings.forEach((ring) => {
-      ring.forEach(([lng, lat]) => {
-        const point = L.latLng(lat, lng);
-        bounds = bounds ? bounds.extend(point) : L.latLngBounds(point, point);
-      });
-    });
-  }
+  /* Read from the prebuilt bounding boxes in data/county-index.js rather
+     than measured off the geometry, which may not have arrived yet — the
+     county has to be framed the moment it is picked, not once a 60 kB
+     outline has come down the wire. The boxes are computed from exactly
+     the same polygons, so the framing is identical either way. */
+  const box = COUNTY_BOX && COUNTY_BOX[name];
+  let bounds = box ? L.latLngBounds([box[0], box[1]], [box[2], box[3]]) : null;
 
   if (!bounds || !bounds.isValid()) {
     const entry = COUNTIES.get(name);
@@ -7397,6 +8081,7 @@ function switchCounty(county, opts) {
   updateHeroCopy();
   updateStatsPills();
   drawCountyOutline(target);
+  if (typeof prefetchForCounty === "function") prefetchForCounty(target);
   // Records are not swapped out, but which of them are in scope has changed,
   // so both layers are redrawn to pick up the out-of-county dimming. Cheap:
   // a few dozen markers, and the potential layer is rebuilt on every filter
@@ -7435,6 +8120,33 @@ switchCounty(COUNTY_ALL, { fly: false }); // paint the trigger, hero and pills
 map.on("zoomend", handlePotentialZoomChange);
 handlePotentialZoomChange(); // set the initial state to match the opening zoom
 
+/* ---------- Viewport-driven loading ----------
+   One handler for both halves of the progressive strategy: pull down a
+   dataset when the map first looks at ground it covers, and instantiate
+   markers only for the padded viewport. Bound to moveend/zoomend rather
+   than move/zoom, so nothing runs mid-drag.
+------------------------------------------------------------------- */
+function updateViewportData() {
+  syncRenderedMarkers();
+
+  if (potentialToggle && potentialToggle.checked && potentialZoomAllowed() && viewNear(POTENTIAL_DATA_BOX)) {
+    ensurePotentialData();
+  }
+  if (viewNear(V_WEAPON_DATA_BOX)) ensureVWeaponData();
+}
+
+map.on("moveend zoomend", updateViewportData);
+
+/* Selecting a county flies somewhere new; fetch what that county needs
+   without waiting for the flight to land, so the layers are ready when it
+   does rather than fading in a second late. */
+function prefetchForCounty(county) {
+  if (county === V_WEAPON_COUNTY) ensureVWeaponData();
+  if (county === POTENTIAL_SITES_COUNTY && potentialToggle && potentialToggle.checked) {
+    ensurePotentialData();
+  }
+}
+
 /* ---------- Header height ----------
    Several sticky offsets keyed off a hard-coded 66px header, which is only
    true on desktop: the nav wraps to two or three rows on a phone, so the
@@ -7442,13 +8154,23 @@ handlePotentialZoomChange(); // set the initial state to match the opening zoom
    Measuring it once and publishing it as --header-h keeps CSS honest at any
    width, including after an orientation change.
 ------------------------------------------------------------------- */
-(function trackHeaderHeight() {
+(function syncTopStackHeights() {
   const header = document.querySelector(".site-header");
+  const warning = document.querySelector(".use-warning");
   if (!header) return;
 
   function apply() {
-    const h = Math.round(header.getBoundingClientRect().height);
-    if (h > 0) document.documentElement.style.setProperty("--header-h", `${h}px`);
+    const warningH = warning ? Math.round(warning.getBoundingClientRect().height) : 0;
+    const headerH = Math.round(header.getBoundingClientRect().height);
+    const root = document.documentElement.style;
+    // The header is sticky at top: var(--use-warning-h), so this is what
+    // stops it sliding underneath the strip when the strip wraps to two
+    // lines on a narrow screen.
+    root.setProperty("--use-warning-h", `${warningH}px`);
+    // --header-h means "everything sticky above the map", which is what its
+    // consumers actually want: the hero's 100svh minus this, and the live
+    // incident banner's own sticky offset.
+    if (headerH > 0) root.setProperty("--header-h", `${warningH + headerH}px`);
   }
 
   apply();
@@ -7456,7 +8178,11 @@ handlePotentialZoomChange(); // set the initial state to match the opening zoom
   window.addEventListener("orientationchange", apply);
   // Web fonts land after first paint and can change the nav's height.
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(apply);
-  if (typeof ResizeObserver === "function") new ResizeObserver(apply).observe(header);
+  if (typeof ResizeObserver === "function") {
+    const ro = new ResizeObserver(apply);
+    ro.observe(header);
+    if (warning) ro.observe(warning);
+  }
 })();
 
 /* ---------- Keep Leaflet in step with its container ----------
@@ -7690,6 +8416,552 @@ if (mapDisclaimer) {
       try { localStorage.setItem(DISCLAIMER_KEY, "1"); } catch (e) { /* storage blocked */ }
     });
   }
+}
+
+/* ============================================================
+   GUIDED TOURS
+   ------------------------------------------------------------
+   A map of two hundred pins is a reference work. It answers a
+   question you already had, and it does nothing at all for someone
+   who arrives without one — which is most people. A tour turns the
+   same data into a route: press play, and the map takes you through
+   one night, or one campaign, in the order it happened.
+
+   Every stop is an existing record, referenced by id. Nothing here
+   restates a fact that lives on a record — if a caption and a record
+   ever disagree, the record is right and the caption is the bug. The
+   captions are connective tissue: why this place, next.
+
+   Deliberately NOT opening the detail panel at each stop. The panel
+   is a right-hand column on desktop and a bottom sheet on a phone,
+   and the tour card is already a bottom sheet; stacking them leaves
+   a visitor on a phone with two overlapping panels and no obvious
+   way back. Each stop instead offers one link into the full record,
+   which ends the tour cleanly.
+
+   County scope is set to "all" for the duration, or a tour crossing
+   county lines would mask out half its own stops. Whatever was
+   selected before is restored on exit.
+   ============================================================ */
+const GUIDED_TOURS = [
+  {
+    id: "plymouth-1941",
+    title: "The seven nights",
+    subtitle: "Plymouth, March–April 1941",
+    blurb:
+      "Two pairs of nights in March and April 1941 destroyed most of central Plymouth. The city centre was not rebuilt so much as replaced.",
+    stops: [
+      { record: "swilly-road-1940", caption: "Plymouth's first bomb, 6 July 1940 — eight months before the raids the city is remembered for." },
+      { record: "turnchapel-oil-depot-1940", caption: "November 1940: the oil depot across the Cattewater burns. The dockyard, not the city centre, is what the Luftwaffe is aiming at." },
+      { record: "charles-church-1941", caption: "20–21 March 1941. Charles Church burns out and is never rebuilt — it stands today as the city's memorial to its civilian dead." },
+      { record: "st-andrews-church-1941", caption: "The same nights. St Andrew's is gutted; someone nails a board reading 'Resurgam' over the door." },
+      { record: "city-centre-1941", caption: "Between them, March and April 1941 flattened the shopping centre — Bedford Street, George Street, Old Town Street." },
+      { record: "portland-square-1941", caption: "22 April 1941: a public shelter takes a direct hit at Portland Square. The site is now part of the university." },
+      { record: "kingstreet-devonport-1941", caption: "The same night in Devonport, where the raids fell heaviest and longest." },
+      { record: "saltash-fore-street-1941", caption: "28 April: the bombing crosses the Tamar into Cornwall, at Saltash." },
+      { record: "hms-raleigh-1941", caption: "And to Torpoint, where a shelter at HMS Raleigh is hit." },
+      { record: "keyham-2024", caption: "February 2024, Keyham: a 500kg bomb comes out of a back garden and 3,250 people leave their homes. The raids are not finished with the city yet." }
+    ]
+  },
+  {
+    id: "baedeker-1942",
+    title: "The cities in the guidebook",
+    subtitle: "The Baedeker raids, April–June 1942",
+    blurb:
+      "Reprisal raids on historic cities picked, it was said, out of a Baedeker tourist guide — for their cultural value rather than any military one.",
+    stops: [
+      { record: "exeter-pennsylvania-1942", caption: "Exeter, 25 April 1942. The first of the Baedeker cities to be hit hard." },
+      { record: "bath-royal-crescent-1942", caption: "Bath, 25–27 April. The Royal Crescent is hit; the damaged houses are later rebuilt behind the surviving Georgian front." },
+      { record: "bath-roseberry-road-shelter-1942", caption: "The same weekend, in the terraced streets rather than the crescents — where the casualties actually were." },
+      { record: "york-bar-convent-1942", caption: "York, 29 April, about half past two in the morning. Five women die at the Bar Convent." },
+      { record: "york-railway-station-1942", caption: "The station burns. Foreman William Milner goes back inside for medical supplies and does not come out." },
+      { record: "york-amberley-street-1942", caption: "And in Holgate, on a street almost nobody writes about, fourteen people die at three addresses. This is the raid's true shape." },
+      { record: "york-baedeker-raid-1942", caption: "Ninety-odd dead across the city in a couple of hours. The Minster was never touched." },
+      { record: "exeter-bedford-circus-1942", caption: "Exeter again, 3–4 May, and this time the centre goes: Bedford Circus is lost outright." },
+      { record: "exeter-cathedral-1942", caption: "The cathedral loses St James' Chapel to a direct hit." },
+      { record: "canterbury-baedeker-1942", caption: "Canterbury, 1 June. The last of them — and the cathedral, like York Minster, survives." }
+    ]
+  },
+  {
+    id: "v-weapons",
+    title: "Vengeance weapons",
+    subtitle: "London, June 1944 – March 1945",
+    blurb:
+      "The V-1 and V-2 brought the bombing back to London long after the Blitz had ended, and there was no warning to give.",
+    stops: [
+      { record: "grove-road-v1-1944", caption: "13 June 1944, Bow: the first V-1 to reach London. Six dead at a railway bridge." },
+      { record: "guards-chapel-1944", caption: "18 June, during Sunday morning service at Wellington Barracks. The worst single V-1 incident of the war." },
+      { record: "aldwych-v1-1944", caption: "30 June, lunchtime in the Aldwych, with the streets full." },
+      { record: "sloane-court-1944", caption: "3 July, Chelsea — a direct hit on billeted American servicewomen and men." },
+      { record: "staveley-road-v2-1944", caption: "8 September 1944, Chiswick: the first V-2 on Britain. Supersonic, so the explosion arrived before the sound of it." },
+      { record: "new-cross-woolworths-1944", caption: "25 November, a Saturday lunchtime at a busy Woolworths in Deptford." },
+      { record: "smithfield-market-1945", caption: "8 March 1945, Smithfield, with a queue outside for rabbit." },
+      { record: "hughes-mansions-1945", caption: "27 March 1945, Stepney: the last V-2 to hit London." },
+      { record: "kynaston-road-1945", caption: "The same morning at Orpington — the last person killed by a V-2 in Britain, six weeks before the war in Europe ended." }
+    ]
+  },
+  {
+    id: "blitz-1940",
+    title: "The first winter",
+    subtitle: "Britain, 1940",
+    blurb:
+      "Before Plymouth, before the Baedeker raids: the autumn and winter that taught British cities what bombing was.",
+    stops: [
+      { record: "croydon-airport-1940", caption: "15 August 1940, Croydon: the first heavy raid on the London area, still nominally aimed at an airfield." },
+      { record: "supermarine-woolston-1940", caption: "26 September, Southampton — the Spitfire factory, and the shelter beside it." },
+      { record: "south-hallsville-1940", caption: "10 September, Canning Town. Families waiting for evacuation buses that never came." },
+      { record: "coventry-cathedral-1940", caption: "14 November, Coventry. Eleven hours; the cathedral is left a shell and kept that way." },
+      { record: "durning-road-1940", caption: "29 November, Edge Hill, Liverpool — a school basement shelter, and one of the war's worst single incidents." },
+      { record: "sheaf-street-1940", caption: "Sheffield in August, and again in December." },
+      { record: "marples-hotel-1940", caption: "12 December, Fitzalan Square. Very few of those sheltering in the Marples cellars came out." },
+      { record: "manchester-cathedral-1940", caption: "22 December: the Christmas Blitz on Manchester." },
+      { record: "st-thomas-bath-row-1940", caption: "And Birmingham, whose raids ran on into 1943 with far less attention than they deserved." }
+    ]
+  },
+  {
+    id: "still-here",
+    title: "Still in the ground",
+    subtitle: "Unexploded ordnance, 2010 to now",
+    blurb:
+      "Roughly one bomb in ten failed to go off. They are still being found — in gardens, on building sites, and on beaches.",
+    stops: [
+      { record: "notte-street-2010", caption: "Plymouth, 2010: a building site on Notte Street, and two hotels evacuated." },
+      { record: "exeter-glenthorne-road-2021", caption: "Exeter, 2021 — 2,600 people out of their homes for a 1,000kg bomb near the university." },
+      { record: "keyham-2024", caption: "Keyham, 2024: the largest peacetime evacuation in Britain since the Second World War." },
+      { record: "brean-beach-2024", caption: "Brean, on the Somerset coast — the tide uncovers them." },
+      { record: "arundel-river-arun-2025", caption: "And the rivers: the Arun in 2025." },
+      { record: "millbay-2026", caption: "Plymouth again, January 2026. There is no reason to expect this list to stop." }
+    ]
+  }
+];
+
+/* Stops naming a record that has since been renamed or removed would fail
+   silently mid-tour, which reads as the tour being broken rather than the
+   data having moved. Drop them at startup instead, and say so in the
+   console for whoever is editing. */
+const guidedTours = GUIDED_TOURS.map((tour) => {
+  const stops = tour.stops.filter((stop) => {
+    const found = ALL_RECORDS.some((r) => r.id === stop.record);
+    if (!found) console.warn(`[tours] "${tour.id}" references unknown record "${stop.record}" — stop skipped`);
+    return found;
+  });
+  return { ...tour, stops };
+}).filter((tour) => tour.stops.length > 1);
+
+const tourLauncher = document.getElementById("tourLauncher");
+const tourMenu = document.getElementById("tourMenu");
+const tourPlayer = document.getElementById("tourPlayer");
+const tourTitle = document.getElementById("tourTitle");
+const tourStepLabel = document.getElementById("tourStepLabel");
+const tourCaption = document.getElementById("tourCaption");
+const tourRecordLink = document.getElementById("tourRecordLink");
+const tourProgress = document.getElementById("tourProgress");
+const tourPlayPause = document.getElementById("tourPlayPause");
+const tourPrev = document.getElementById("tourPrev");
+const tourNext = document.getElementById("tourNext");
+const tourExit = document.getElementById("tourExit");
+
+const TOUR_STOP_MS = 7000;
+const TOUR_STOP_ZOOM = 15;
+
+let activeTour = null;
+let tourStopIndex = 0;
+let tourTimer = null;
+let tourPaused = false;
+let tourPreviousCounty = null;
+let tourMenuOpen = false;
+
+function tourRecord(stop) {
+  return ALL_RECORDS.find((r) => r.id === stop.record) || null;
+}
+
+function clearTourTimer() {
+  if (tourTimer) { clearTimeout(tourTimer); tourTimer = null; }
+}
+
+function scheduleTourAdvance() {
+  clearTourTimer();
+  if (tourPaused || !activeTour) return;
+  tourTimer = setTimeout(() => {
+    if (tourStopIndex >= activeTour.stops.length - 1) {
+      // Hold on the last stop rather than looping. A tour that silently
+      // starts again is disorienting — you look up and you are somewhere
+      // you have already been, with no way to tell that you finished.
+      setTourPaused(true);
+      if (tourStepLabel) tourStepLabel.textContent = "End of tour";
+      return;
+    }
+    goToTourStop(tourStopIndex + 1);
+  }, TOUR_STOP_MS);
+}
+
+function renderTourProgress() {
+  if (!tourProgress || !activeTour) return;
+  tourProgress.innerHTML = "";
+  activeTour.stops.forEach((stop, i) => {
+    const dot = document.createElement("button");
+    dot.type = "button";
+    dot.className = `tour-dot${i === tourStopIndex ? " current" : ""}${i < tourStopIndex ? " done" : ""}`;
+    const record = tourRecord(stop);
+    dot.setAttribute("aria-label", `Stop ${i + 1}${record ? `: ${record.title}` : ""}`);
+    dot.addEventListener("click", () => goToTourStop(i));
+    tourProgress.appendChild(dot);
+  });
+}
+
+function goToTourStop(index) {
+  if (!activeTour) return;
+  tourStopIndex = Math.max(0, Math.min(index, activeTour.stops.length - 1));
+  const stop = activeTour.stops[tourStopIndex];
+  const record = tourRecord(stop);
+  if (!record) return;
+
+  if (tourStepLabel) tourStepLabel.textContent = `${tourStopIndex + 1} of ${activeTour.stops.length}`;
+  if (tourCaption) {
+    tourCaption.innerHTML =
+      `<strong>${record.title}</strong>` +
+      `<span class="tour-date">${record.date || ""}</span>` +
+      `<span class="tour-line">${stop.caption}</span>`;
+  }
+  if (tourRecordLink) {
+    tourRecordLink.onclick = () => {
+      const id = record.id;
+      endTour();
+      selectRecord(id, true);
+    };
+  }
+  renderTourProgress();
+
+  const target = centreForChrome([record.lat, record.lng], TOUR_STOP_ZOOM);
+  if (prefersReducedMotion) map.setView(target, TOUR_STOP_ZOOM, { animate: false });
+  else map.flyTo(target, TOUR_STOP_ZOOM, { duration: 1.5 });
+
+  // Give the flight time to land before the clock on this stop starts, so
+  // the caption is readable for its full run rather than half-spent
+  // travelling.
+  clearTourTimer();
+  if (!tourPaused) {
+    tourTimer = setTimeout(scheduleTourAdvance, prefersReducedMotion ? 0 : 1500);
+  }
+}
+
+function setTourPaused(paused) {
+  tourPaused = paused;
+  if (tourPlayPause) {
+    tourPlayPause.textContent = paused ? "▶" : "❚❚";
+    tourPlayPause.setAttribute("aria-label", paused ? "Resume tour" : "Pause tour");
+  }
+  if (paused) clearTourTimer();
+  else scheduleTourAdvance();
+}
+
+function startTour(id) {
+  const tour = guidedTours.find((t) => t.id === id);
+  if (!tour) return;
+  closeTourMenu();
+
+  activeTour = tour;
+  tourStopIndex = 0;
+  tourPreviousCounty = activeCounty;
+
+  // Several tours cross county lines; leaving a county selected would mask
+  // out their own stops.
+  if (activeCounty !== COUNTY_ALL) switchCounty(COUNTY_ALL, { fly: false });
+
+  // The detail panel and the tour card are the same real estate on a phone.
+  closeDetailPanel();
+
+  if (tourTitle) tourTitle.textContent = `${tour.title} — ${tour.subtitle}`;
+  if (tourPlayer) tourPlayer.hidden = false;
+  document.body.classList.add("tour-active");
+  setTourPaused(false);
+  goToTourStop(0);
+}
+
+function endTour() {
+  clearTourTimer();
+  activeTour = null;
+  tourPaused = false;
+  if (tourPlayer) tourPlayer.hidden = true;
+  document.body.classList.remove("tour-active");
+  if (tourPreviousCounty && tourPreviousCounty !== activeCounty) {
+    switchCounty(tourPreviousCounty, { fly: true });
+  }
+  tourPreviousCounty = null;
+}
+
+function buildTourMenu() {
+  if (!tourMenu) return;
+  tourMenu.innerHTML = "";
+  guidedTours.forEach((tour) => {
+    const item = document.createElement("button");
+    item.type = "button";
+    item.className = "tour-option";
+    item.setAttribute("role", "option");
+    item.innerHTML =
+      `<span class="tour-option-title">${tour.title}</span>` +
+      `<span class="tour-option-sub">${tour.subtitle} · ${tour.stops.length} stops</span>` +
+      `<span class="tour-option-blurb">${tour.blurb}</span>`;
+    item.addEventListener("click", () => startTour(tour.id));
+    tourMenu.appendChild(item);
+  });
+}
+
+function openTourMenu() {
+  if (!tourMenu || tourMenuOpen) return;
+  buildTourMenu();
+  tourMenu.hidden = false;
+  tourMenuOpen = true;
+  if (tourLauncher) tourLauncher.setAttribute("aria-expanded", "true");
+}
+
+function closeTourMenu() {
+  if (!tourMenu || !tourMenuOpen) return;
+  tourMenu.hidden = true;
+  tourMenuOpen = false;
+  if (tourLauncher) tourLauncher.setAttribute("aria-expanded", "false");
+}
+
+if (tourLauncher && guidedTours.length) {
+  tourLauncher.hidden = false;
+  tourLauncher.addEventListener("click", () => (tourMenuOpen ? closeTourMenu() : openTourMenu()));
+  document.addEventListener("click", (e) => {
+    if (!tourMenuOpen) return;
+    if (e.target.closest("#tourMenu") || e.target.closest("#tourLauncher")) return;
+    closeTourMenu();
+  });
+  if (tourPlayPause) tourPlayPause.addEventListener("click", () => setTourPaused(!tourPaused));
+  if (tourPrev) tourPrev.addEventListener("click", () => { setTourPaused(true); goToTourStop(tourStopIndex - 1); });
+  if (tourNext) tourNext.addEventListener("click", () => { setTourPaused(true); goToTourStop(tourStopIndex + 1); });
+  if (tourExit) tourExit.addEventListener("click", endTour);
+  document.addEventListener("keydown", (e) => {
+    if (!activeTour) return;
+    if (e.key === "Escape") endTour();
+    else if (e.key === "ArrowRight") { setTourPaused(true); goToTourStop(tourStopIndex + 1); }
+    else if (e.key === "ArrowLeft") { setTourPaused(true); goToTourStop(tourStopIndex - 1); }
+  });
+}
+
+/* ============================================================
+   REPORT A CORRECTION
+   ------------------------------------------------------------
+   CONFIGURE ME. Three routes, tried in this order. Any one of them
+   is enough; having more than one only widens who can use it.
+
+   CORRECTIONS_ENDPOINT
+       A form-handler URL that accepts a JSON POST — Formspree,
+       Netlify Forms, Basin, a Google Apps Script web app. This is
+       the only route that works for someone with no GitHub account
+       and no mail client, so it is worth setting up.
+
+   CORRECTIONS_REPO
+       "owner/repo" on GitHub. Opens a prefilled issue against it.
+       Costs nothing, keeps every correction and its discussion in
+       one place next to the data, and needs no third party — but it
+       does require the visitor to have a GitHub account.
+
+   CORRECTIONS_EMAIL
+       A prefilled mailto:. Left empty by default deliberately: a
+       plain address in page markup is scraped for spam within days.
+       Use an alias you can throw away if you set it.
+
+   With none of them set the form still works — it formats the report
+   and offers to copy it to the clipboard, which is better than a dead
+   button, but it does put the last step on the visitor.
+   ============================================================ */
+const CORRECTIONS_ENDPOINT = "";
+const CORRECTIONS_REPO = "StewartPS/Bomb-Maps";
+const CORRECTIONS_EMAIL = "";
+
+const correctionModal = document.getElementById("correctionModal");
+const correctionForm = document.getElementById("correctionForm");
+const correctionKind = document.getElementById("correctionKind");
+const correctionDetail = document.getElementById("correctionDetail");
+const correctionSource = document.getElementById("correctionSource");
+const correctionFrom = document.getElementById("correctionFrom");
+const correctionRecordEl = document.getElementById("correctionRecord");
+const correctionActions = document.getElementById("correctionActions");
+const correctionStatus = document.getElementById("correctionStatus");
+const correctionClose = document.getElementById("correctionClose");
+const correctionBackdrop = document.getElementById("correctionBackdrop");
+
+let correctionRecord = null;
+let correctionLastFocus = null;
+
+/* The report is assembled once and reused by every route, so a correction
+   sent by email, by GitHub issue or through a form endpoint arrives in the
+   same shape — including the coordinates and the record id, without which
+   "the date is wrong" is not actionable. */
+function correctionReport() {
+  if (!correctionRecord) return { title: "", body: "" };
+  const r = correctionRecord;
+  const lines = [
+    `Record: ${r.title}`,
+    `Record ID: ${r.id}`,
+    `Location: ${r.regionLabel || r.regionShort || ""}${recordCounty(r) ? `, ${recordCounty(r)}` : ""}`,
+    `Currently plotted at: ${r.lat}, ${r.lng}`,
+    `Currently dated: ${r.date || "—"}`,
+    `Map link: ${location.origin}${location.pathname}?record=${encodeURIComponent(r.id)}`,
+    "",
+    `What needs correcting: ${correctionKind.value}`,
+    "",
+    "Details:",
+    (correctionDetail.value || "").trim(),
+    "",
+    "Source given:",
+    (correctionSource.value || "").trim() || "(none given)",
+    "",
+    `From: ${(correctionFrom.value || "").trim() || "(anonymous)"}`
+  ];
+  return {
+    title: `Correction: ${r.title} (${correctionKind.value})`,
+    body: lines.join("\n"),
+    recordId: r.id
+  };
+}
+
+function setCorrectionStatus(text, kind) {
+  if (!correctionStatus) return;
+  correctionStatus.textContent = text || "";
+  correctionStatus.dataset.kind = kind || "";
+}
+
+function correctionValid() {
+  if (!(correctionDetail.value || "").trim()) {
+    setCorrectionStatus("Please describe what needs correcting.", "error");
+    correctionDetail.focus();
+    return false;
+  }
+  return true;
+}
+
+function buildCorrectionActions() {
+  if (!correctionActions) return;
+  correctionActions.innerHTML = "";
+
+  const button = (label, primary, onClick) => {
+    const el = document.createElement("button");
+    el.type = "button";
+    el.className = `correction-btn${primary ? " primary" : ""}`;
+    el.textContent = label;
+    el.addEventListener("click", onClick);
+    correctionActions.appendChild(el);
+    return el;
+  };
+
+  if (CORRECTIONS_ENDPOINT) {
+    button("Send correction", true, async (e) => {
+      if (!correctionValid()) return;
+      const report = correctionReport();
+      e.target.disabled = true;
+      setCorrectionStatus("Sending…", "");
+      try {
+        const res = await fetch(CORRECTIONS_ENDPOINT, {
+          method: "POST",
+          headers: { "Content-Type": "application/json", Accept: "application/json" },
+          body: JSON.stringify({
+            subject: report.title,
+            recordId: report.recordId,
+            kind: correctionKind.value,
+            detail: correctionDetail.value,
+            source: correctionSource.value,
+            from: correctionFrom.value,
+            message: report.body
+          })
+        });
+        if (!res.ok) throw new Error(`endpoint responded ${res.status}`);
+        setCorrectionStatus("Thank you — that has been sent. Every correction is checked against its source before the record changes.", "ok");
+        correctionForm.reset();
+      } catch (err) {
+        // Never lose what someone has typed to a network failure: fall back
+        // to the routes that do not need the network to have worked.
+        setCorrectionStatus("That did not send. Use “Copy report” below and email or post it instead — nothing you typed has been lost.", "error");
+        e.target.disabled = false;
+      }
+    });
+  }
+
+  if (CORRECTIONS_REPO) {
+    button("Open a GitHub issue", !CORRECTIONS_ENDPOINT, () => {
+      if (!correctionValid()) return;
+      const report = correctionReport();
+      const url =
+        `https://github.com/${CORRECTIONS_REPO}/issues/new` +
+        `?title=${encodeURIComponent(report.title)}` +
+        `&body=${encodeURIComponent(report.body)}` +
+        `&labels=${encodeURIComponent("correction")}`;
+      window.open(url, "_blank", "noopener");
+      setCorrectionStatus("A prefilled issue has opened in a new tab — press “Submit new issue” there to send it.", "ok");
+    });
+  }
+
+  if (CORRECTIONS_EMAIL) {
+    button("Email it", !CORRECTIONS_ENDPOINT && !CORRECTIONS_REPO, () => {
+      if (!correctionValid()) return;
+      const report = correctionReport();
+      window.location.href =
+        `mailto:${CORRECTIONS_EMAIL}?subject=${encodeURIComponent(report.title)}&body=${encodeURIComponent(report.body)}`;
+    });
+  }
+
+  button("Copy report", !CORRECTIONS_ENDPOINT && !CORRECTIONS_REPO && !CORRECTIONS_EMAIL, async () => {
+    if (!correctionValid()) return;
+    const report = correctionReport();
+    const text = `${report.title}\n\n${report.body}`;
+    try {
+      await navigator.clipboard.writeText(text);
+      setCorrectionStatus("Copied. Paste it wherever suits — email, a message, or a GitHub issue.", "ok");
+    } catch (e) {
+      // Clipboard access is refused outright in some browsers and contexts.
+      setCorrectionStatus("Copying was blocked by the browser. Select the text below and copy it manually.", "error");
+      const pre = document.createElement("textarea");
+      pre.className = "correction-fallback";
+      pre.readOnly = true;
+      pre.value = text;
+      correctionActions.parentNode.appendChild(pre);
+      pre.select();
+    }
+  });
+}
+
+function openCorrectionModal(record) {
+  if (!correctionModal || !record) return;
+  correctionRecord = record;
+  correctionLastFocus = document.activeElement;
+  if (correctionRecordEl) {
+    correctionRecordEl.textContent = `${record.title} — ${record.date || "date not recorded"}`;
+  }
+  setCorrectionStatus("");
+  correctionModal.querySelectorAll(".correction-fallback").forEach((el) => el.remove());
+  buildCorrectionActions();
+  correctionModal.hidden = false;
+  document.body.classList.add("correction-open");
+  correctionDetail.focus();
+}
+
+function closeCorrectionModal() {
+  if (!correctionModal || correctionModal.hidden) return;
+  correctionModal.hidden = true;
+  document.body.classList.remove("correction-open");
+  if (correctionLastFocus && correctionLastFocus.focus) correctionLastFocus.focus();
+  correctionLastFocus = null;
+}
+
+if (correctionModal) {
+  // Delegated, because the detail panel's HTML is rebuilt on every selection.
+  document.addEventListener("click", (e) => {
+    const trigger = e.target.closest("[data-correct-record]");
+    if (!trigger) return;
+    const record = ALL_RECORDS.find((r) => r.id === trigger.dataset.correctRecord);
+    if (record) openCorrectionModal(record);
+  });
+
+  correctionForm.addEventListener("submit", (e) => e.preventDefault());
+  if (correctionClose) correctionClose.addEventListener("click", closeCorrectionModal);
+  if (correctionBackdrop) correctionBackdrop.addEventListener("click", closeCorrectionModal);
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && !correctionModal.hidden) closeCorrectionModal();
+  });
 }
 
 /* ---------- Support link ----------

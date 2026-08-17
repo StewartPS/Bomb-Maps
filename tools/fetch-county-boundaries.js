@@ -125,6 +125,23 @@ const CEREMONIAL = {
   "Tyne and Wear": [
     "Gateshead", "Newcastle upon Tyne", "North Tyneside", "South Tyneside",
     "Sunderland"
+  ],
+
+  /* Ceremonial North Yorkshire, which is NOT the county council area: York
+     itself is a unitary authority, as are Middlesbrough and Redcar and
+     Cleveland, and all three are ceremonially North Yorkshire. Same trap as
+     Plymouth and Torbay in Devon — leave York out and every record here
+     falls outside the boundary of the county it belongs to.
+
+     Stockton-on-Tees is deliberately omitted. It is split down the river:
+     the south bank is ceremonially North Yorkshire, the north bank County
+     Durham. A district union can only take the whole borough or none of it,
+     and taking the whole borough would draw the boundary across the Tees
+     into Durham. No records lie there, so the honest choice is to leave it
+     out and say why. */
+  "North Yorkshire": [
+    "Craven", "Hambleton", "Harrogate", "Richmondshire", "Ryedale",
+    "Scarborough", "Selby", "York", "Middlesbrough", "Redcar and Cleveland"
   ]
 };
 

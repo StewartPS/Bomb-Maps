@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Bomb Maps — where WWII bombs fell on southern England | Interactive map</title>
-    <meta name="description" content="An interactive map of 203 researched Second World War bombing and unexploded-ordnance records across 15 English counties — Devon to Tyne and Wear — with dates, casualties and sources for each.">
+    <meta name="description" content="An interactive map of 225 researched Second World War bombing and unexploded-ordnance records across 16 English counties — Devon to Tyne and Wear — with dates, casualties and sources for each.">
     <link rel="canonical" href="https://bombmaps.co.uk/">
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
 
@@ -12,7 +12,7 @@
     <meta property="og:site_name" content="Bomb Maps">
     <meta property="og:url" content="https://bombmaps.co.uk/">
     <meta property="og:title" content="Bomb Maps — where WWII bombs fell on southern England">
-    <meta property="og:description" content="203 researched WWII bombing and unexploded-ordnance records across 15 counties, plotted with dates, casualties and sources.">
+    <meta property="og:description" content="225 researched WWII bombing and unexploded-ordnance records across 16 counties, plotted with dates, casualties and sources.">
     <meta property="og:image" content="https://bombmaps.co.uk/og-image.png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
@@ -41,7 +41,7 @@
           "@type": "Dataset",
           "@id": "https://bombmaps.co.uk/#dataset",
           "name": "WWII bombing and unexploded-ordnance records, southern England",
-          "description": "203 individually researched and sourced records of Second World War bombing incidents and modern unexploded-ordnance finds across 15 English counties, from Devon and Cornwall to Merseyside, the West Midlands, South Yorkshire, Hull and Tyne and Wear, plus bulk layers of digitised bomb-census points for Plymouth and V-weapon impact sites for London.",
+          "description": "225 individually researched and sourced records of Second World War bombing incidents and modern unexploded-ordnance finds across 16 English counties, from Devon and Cornwall to Merseyside, the West Midlands, York, South Yorkshire, Hull and Tyne and Wear, plus bulk layers of digitised bomb-census points for Plymouth and V-weapon impact sites for London.",
           "url": "https://bombmaps.co.uk/",
           "isAccessibleForFree": true,
           "creator": { "@type": "Organization", "name": "Bomb Maps", "url": "https://bombmaps.co.uk/" },
@@ -97,49 +97,38 @@
          loads at all, so a half-finished setup can't send data to the
          wrong property.
 
-         Analytics cookies are non-essential under UK PECR, so Consent
-         Mode starts denied and a banner asks. That combination matters
-         more than it looks: denied-by-default with NO banner means every
-         hit is a cookieless ping that only feeds modelled data, and a
-         low-traffic property never meets the threshold for modelling —
-         so GA reports stay permanently empty while looking correctly
-         installed. If you ever remove the banner, remove the denied
-         default with it. tools/smoke-test.js checks for exactly this.
+         Consent Mode is granted by default and there is no banner.
+         The previous denied-by-default + banner arrangement was the
+         cautious reading of UK PECR, but it left GA reporting on
+         cookieless pings only, which a low-traffic property never has
+         enough volume to model from — the reports stayed empty while
+         looking correctly installed.
+
+         What still applies: IP anonymisation is on, no advertising
+         storage is ever granted, and the privacy note in the footer
+         explains what is collected and how to opt out with a browser
+         setting or an extension. If a formal consent prompt is ever
+         wanted again, restore the denied defaults AND the banner
+         together — denied defaults without a banner is the one
+         combination that collects nothing useful.
          ============================================================ -->
     <script>
       window.GA_ID = "G-909MJHFEHN";
       (function () {
         if (!window.GA_ID || window.GA_ID.indexOf("G-X") === 0) return;
 
-        var CONSENT_KEY = "pbm-analytics-consent";
         window.dataLayer = window.dataLayer || [];
         window.gtag = function () { dataLayer.push(arguments); };
 
-        // Denied until the visitor says otherwise. Analytics cookies are
-        // non-essential under UK PECR, so this has to be the starting state
-        // — but note what it costs: while denied, GA sends cookieless pings
-        // that only feed modelled data, and a low-traffic property never
-        // meets the threshold for that to appear. No banner, no numbers.
+        // Analytics on; advertising storage stays denied in every case.
+        // This site has no ads and never will, so there is nothing for
+        // those signals to do except widen what gets collected.
         gtag("consent", "default", {
           ad_storage: "denied",
           ad_user_data: "denied",
           ad_personalization: "denied",
-          analytics_storage: "denied"
+          analytics_storage: "granted"
         });
-
-        var stored = null;
-        try { stored = localStorage.getItem(CONSENT_KEY); } catch (e) { /* private mode */ }
-        if (stored === "granted") gtag("consent", "update", { analytics_storage: "granted" });
-
-        function remember(value) {
-          try { localStorage.setItem(CONSENT_KEY, value); } catch (e) { /* session only */ }
-        }
-
-        window.grantAnalyticsConsent = function () {
-          remember("granted");
-          gtag("consent", "update", { analytics_storage: "granted" });
-        };
-        window.denyAnalyticsConsent = function () { remember("denied"); };
 
         gtag("js", new Date());
         gtag("config", window.GA_ID, { anonymize_ip: true });
@@ -147,44 +136,6 @@
         s.async = true;
         s.src = "https://www.googletagmanager.com/gtag/js?id=" + window.GA_ID;
         document.head.appendChild(s);
-
-        /* ---------- Consent banner ----------
-           Built here rather than in the page markup so the whole analytics
-           concern stays in one copy-paste block across both pages.
-
-           Accept and Decline are given equal visual weight. Nudging people
-           towards Accept with a greyed-out Decline is a dark pattern, and on
-           a site about civilian casualties it would be a poor trade for a
-           few percent more traffic data. Asked once, then never again. */
-        if (stored === "granted" || stored === "denied") return;
-
-        function buildBanner() {
-          var wrap = document.createElement("div");
-          wrap.className = "consent-banner";
-          wrap.setAttribute("role", "dialog");
-          wrap.setAttribute("aria-label", "Analytics cookies");
-          wrap.innerHTML =
-            '<p class="consent-text">This site can use Google Analytics to count visits. ' +
-            'It sets a cookie and is entirely optional &mdash; the map works the same either way.</p>' +
-            '<div class="consent-actions">' +
-            '<button type="button" class="consent-btn" data-consent="denied">Decline</button>' +
-            '<button type="button" class="consent-btn" data-consent="granted">Accept</button>' +
-            "</div>";
-
-          wrap.addEventListener("click", function (e) {
-            var btn = e.target.closest("[data-consent]");
-            if (!btn) return;
-            if (btn.dataset.consent === "granted") window.grantAnalyticsConsent();
-            else window.denyAnalyticsConsent();
-            wrap.remove();
-          });
-
-          document.body.appendChild(wrap);
-        }
-
-        if (document.readyState === "loading") {
-          document.addEventListener("DOMContentLoaded", buildBanner);
-        } else buildBanner();
       })();
     </script>
 
@@ -199,12 +150,44 @@
          old files until the cache expires. Changing the query string makes
          the URL new, so the browser has no choice but to fetch it.
 
-         To release: find and replace ?v=1.12.0 with the next number in BOTH
-         index.html and news.html. Nothing else needs touching.
+         To release: find and replace ?v=1.13.0 with the next number in BOTH
+         index.html and news.html, and set DATA_VERSION in js/app.js to the
+         same number — the data files it fetches on demand (county slices,
+         the potential-sites layer, the V-weapon impacts) get their ?v= from
+         there, not from this file.
          ============================================================ -->
-    <link rel="stylesheet" href="css/style.css?v=1.12.0">
+    <link rel="stylesheet" href="css/style.css?v=1.13.0">
   </head>
   <body>
+    <!-- ============================================================
+         PERSISTENT USE-OF-DATA WARNING
+         ------------------------------------------------------------
+         Deliberately not dismissible, and deliberately above the header
+         rather than floating over the map. A dismissible notice is read
+         once by the people who least need it and never again by anyone
+         else; the risk here is that someone treats an indicative pin as
+         a survey and skips a real UXO desk study before breaking ground.
+
+         Its height is measured at runtime and published as
+         --use-warning-h / --header-h (see syncTopStackHeights in
+         js/app.js), because the strip wraps to two lines on narrow
+         screens and everything sticky below it is positioned off those
+         variables.
+         ============================================================ -->
+    <div class="use-warning is-sticky" role="note" aria-label="Data use warning">
+      <div class="use-warning-inner">
+        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor"
+             stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+          <path d="M12 9v4M12 17h.01"/>
+        </svg>
+        <p class="use-warning-text">
+          <strong>For archival and historical use only.</strong>
+          Do not use for land development or construction risk assessment.
+        </p>
+      </div>
+    </div>
+
     <header class="site-header">
       <nav class="nav" aria-label="Primary">
         <!-- Brand mark is the favicon, inlined: same concentric target, same
@@ -333,6 +316,24 @@
           </div>
 
           <aside class="control-panel" aria-label="Map controls">
+            <!-- Guided tours. First thing in the panel, because it is the
+                 only control here that answers "where do I even start" — the
+                 rest all assume you already know what you are looking for.
+                 Deliberately not floating over the map: every free corner
+                 either collides with the hero headline at desktop width or
+                 with the stats row below 1100px. -->
+            <div class="tour-launch" id="tourLaunch">
+              <button type="button" class="tour-launch-btn" id="tourLauncher"
+                      aria-haspopup="listbox" aria-expanded="false" aria-controls="tourMenu" hidden>
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+                <span>Guided tours</span>
+                <svg class="tour-launch-caret" viewBox="0 0 24 24" width="13" height="13" fill="none"
+                     stroke="currentColor" stroke-width="2.4" stroke-linecap="round"
+                     stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="tour-menu" id="tourMenu" role="listbox" aria-label="Choose a guided tour" hidden></div>
+            </div>
+
             <!-- Search. Two things in one box, in this order: the site's own
                  records (instant, offline, no request) and — only if you press
                  Enter with no record chosen — a general place lookup via
@@ -490,6 +491,98 @@
           <button type="button" class="detail-close" id="detailClose" aria-label="Close record detail">&times;</button>
           <div class="detail-body" id="detailBody"></div>
         </aside>
+
+        <!-- ============================================================
+             REPORT A CORRECTION
+             ------------------------------------------------------------
+             Opened from the button in a record's detail panel. Local
+             historians, families and residents routinely know things the
+             published sources do not, and until now there was nowhere for
+             that to go except a dead end.
+
+             GitHub Pages is static, so there is no server to post to. The
+             form therefore always produces a formatted, self-describing
+             report, and then offers whichever routes are configured in
+             js/app.js (CORRECTIONS_* near the bottom): a form endpoint if
+             one is set, a prefilled GitHub issue on the site's own repo,
+             and copy-to-clipboard, which needs no account at all.
+             ============================================================ -->
+        <!-- ============================================================
+             GUIDED TOURS
+             ------------------------------------------------------------
+             Launcher sits with the other map chrome; the player is a
+             separate card so the two never fight for the same space. Both
+             start hidden and are shown by js/app.js only if there is at
+             least one tour with more than one surviving stop.
+             ============================================================ -->
+        <div class="tour-player" id="tourPlayer" role="region" aria-label="Guided tour" hidden>
+          <div class="tour-player-head">
+            <span class="tour-player-title" id="tourTitle"></span>
+            <span class="tour-step" id="tourStepLabel"></span>
+            <button type="button" class="tour-exit" id="tourExit" aria-label="End tour">&times;</button>
+          </div>
+          <p class="tour-caption" id="tourCaption"></p>
+          <div class="tour-controls">
+            <button type="button" class="tour-ctrl" id="tourPrev" aria-label="Previous stop">&#8592;</button>
+            <button type="button" class="tour-ctrl tour-playpause" id="tourPlayPause" aria-label="Pause tour">&#10074;&#10074;</button>
+            <button type="button" class="tour-ctrl" id="tourNext" aria-label="Next stop">&#8594;</button>
+            <div class="tour-progress" id="tourProgress" aria-hidden="true"></div>
+            <button type="button" class="tour-record-link" id="tourRecordLink">Open full record</button>
+          </div>
+        </div>
+
+        <div class="correction-modal" id="correctionModal" role="dialog" aria-modal="true"
+             aria-labelledby="correctionTitle" hidden>
+          <div class="correction-backdrop" id="correctionBackdrop"></div>
+          <div class="correction-dialog">
+            <button type="button" class="correction-close" id="correctionClose"
+                    aria-label="Close correction form">&times;</button>
+            <h3 id="correctionTitle">Report a correction</h3>
+            <p class="correction-record" id="correctionRecord"></p>
+            <p class="correction-intro">
+              Every record here is only as good as the sources behind it. If you know
+              something is wrong &mdash; a street, a date, a name, a figure &mdash;
+              please say so, and say where it comes from.
+            </p>
+
+            <form class="correction-form" id="correctionForm">
+              <label class="correction-field">
+                <span>What needs correcting</span>
+                <select id="correctionKind" required>
+                  <option value="Location / position">Location or position on the map</option>
+                  <option value="Date">Date of the incident</option>
+                  <option value="Casualties">Casualty figures</option>
+                  <option value="Bomb type or weight">Bomb type or weight</option>
+                  <option value="Historical detail">Historical detail in the description</option>
+                  <option value="Source or attribution">Source or attribution</option>
+                  <option value="Something else">Something else</option>
+                </select>
+              </label>
+
+              <label class="correction-field">
+                <span>What is wrong, and what should it say?</span>
+                <textarea id="correctionDetail" rows="4" required
+                          placeholder="e.g. The bomb fell at the junction with Albert Road, not outside number 42."></textarea>
+              </label>
+
+              <label class="correction-field">
+                <span>Where does this come from?</span>
+                <textarea id="correctionSource" rows="2"
+                          placeholder="A book and page, an archive reference, a newspaper date, a family account — anything that lets it be checked."></textarea>
+                <small>Not required, but a correction with a source can be published; one without has to stay a note.</small>
+              </label>
+
+              <label class="correction-field">
+                <span>Your name or contact (optional)</span>
+                <input type="text" id="correctionFrom" autocomplete="name"
+                       placeholder="So you can be credited or asked a follow-up">
+              </label>
+
+              <div class="correction-actions" id="correctionActions"></div>
+              <p class="correction-status" id="correctionStatus" role="status"></p>
+            </form>
+          </div>
+        </div>
 
         <div class="cordon-card" id="cordonCard" hidden>
           <!-- Collapsed state. On a phone the cordon checker and a record
@@ -783,6 +876,7 @@
             <li><a href="/counties/south-yorkshire/">WWII bombs in South Yorkshire</a></li>
             <li><a href="/counties/east-riding-of-yorkshire/">WWII bombs in East Riding of Yorkshire</a></li>
             <li><a href="/counties/tyne-and-wear/">WWII bombs in Tyne and Wear</a></li>
+            <li><a href="/counties/north-yorkshire/">WWII bombs in North Yorkshire</a></li>
           </ul>
         </div>
       </section>
@@ -799,12 +893,27 @@
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="https://unpkg.com/leaflet.heat@0.2.0/dist/leaflet-heat.js"></script>
-    <script src="data/potential-bomb-sites.js?v=1.12.0"></script>
-    <!-- Optional, generated by tools/fetch-county-boundaries.js. Ships empty;
-         until it's populated the app fetches outlines from OSM at runtime. -->
-    <script src="data/county-boundaries.js?v=1.12.0"></script>
-    <!-- V1/V2 impact points, London. CC-BY-4.0, see the file header. -->
-    <script src="data/v-weapon-impacts.js?v=1.12.0"></script>
-    <script src="js/app.js?v=1.12.0"></script>
+    <!-- ============================================================
+         DATA — CRITICAL PATH ONLY
+         ------------------------------------------------------------
+         Only county-index.js loads up front now: a couple of kilobytes
+         of per-county bounding boxes plus the short list of records
+         whose real county differs from the region they are filed under.
+         Generated by tools/build-county-slices.js.
+
+         Everything else is fetched by js/app.js when the map is about
+         to need it — see the PROGRESSIVE DATA LOADING block there:
+
+           data/counties/<county>.js    the selected county's outline
+           data/potential-bomb-sites.js 210 kB, Plymouth, zoom 11+, opt-in
+           data/v-weapon-impacts.js     London V1/V2 impacts, CC-BY-4.0
+
+         data/county-boundaries.js is still generated and still the
+         master file, but it is no longer served to the browser: it is
+         the input tools/build-county-slices.js slices. Do not add it
+         back as a script tag.
+         ============================================================ -->
+    <script src="data/county-index.js?v=1.13.0"></script>
+    <script src="js/app.js?v=1.13.0"></script>
   </body>
 </html>
