@@ -181,6 +181,40 @@ ${body}
 
 /* ---------- Record pages ---------- */
 
+/* Photographs. Mirrors detailPhotosHtml() in js/app.js, including the rule
+   that a photo without BOTH a credit and a licence is not published at all —
+   if that rule only lived in the app, every one of these static pages would
+   be the hole it leaked through. Where there is no image we may republish but
+   there is an archive that holds one, link to the archive instead. */
+function photosSection(record) {
+  const photos = (record.photos || []).filter((p) => p && p.src && p.credit && p.licence);
+
+  if (photos.length) {
+    const figures = photos
+      .map((p) => {
+        const rights = p.licenceUrl
+          ? `<a href="${escapeHtml(p.licenceUrl)}" target="_blank" rel="noopener">${escapeHtml(p.licence)}</a>`
+          : escapeHtml(p.licence);
+        return `      <figure class="detail-photo">
+        <img src="${escapeHtml(p.src)}" alt="${escapeHtml(p.alt || p.caption || record.title)}" loading="lazy" decoding="async">
+        <figcaption>
+${p.caption ? `          <span class="detail-photo-caption">${escapeHtml(p.caption)}</span>\n` : ""}          <span class="detail-photo-credit">${escapeHtml(p.credit)} &middot; ${rights}</span>
+        </figcaption>
+      </figure>`;
+      })
+      .join("\n");
+    return `      <h2>Photographs</h2>\n${figures}\n`;
+  }
+
+  if (record.photoLink && record.photoLink.url) {
+    return `      <h2>Photographs</h2>
+      <p><a class="detail-photo-link" href="${escapeHtml(record.photoLink.url)}" target="_blank" rel="noopener nofollow">${escapeHtml(record.photoLink.label || "Photographs of this incident")}</a></p>
+      <p class="detail-photo-note">${escapeHtml(record.photoLink.note || "Held by the archive that took or collected them, and not ours to republish — the link goes to where they are.")}</p>\n`;
+  }
+
+  return "";
+}
+
 function recordBody(record, region, countySlug) {
   const facts = [];
   if (record.date) facts.push(["Date", record.date]);
@@ -213,7 +247,7 @@ function recordBody(record, region, countySlug) {
       <dl class="record-page-facts">
 ${facts.map(([k, v]) => `        <div><dt>${escapeHtml(k)}</dt><dd>${escapeHtml(v)}</dd></div>`).join("\n")}
       </dl>
-${section("What happened", record.summary)}${section("How it was made safe", record.disposal)}${section("Evacuation", record.evacuationNote)}${section("Casualty note", record.casualtiesNote)}${section("Also worth knowing", record.note)}
+${section("What happened", record.summary)}${section("How it was made safe", record.disposal)}${section("Evacuation", record.evacuationNote)}${section("Casualty note", record.casualtiesNote)}${section("Also worth knowing", record.note)}${photosSection(record)}
 ${sources ? `      <h2>Sources</h2>\n      <ul class="record-page-sources">\n${sources}\n      </ul>\n` : ""}`;
 }
 

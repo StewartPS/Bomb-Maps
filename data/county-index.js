@@ -2,7 +2,7 @@
    COUNTY INDEX — GENERATED FILE, DO NOT EDIT BY HAND
    ------------------------------------------------------------
    Rebuild with: node tools/build-county-slices.js
-   Generated:    2026-08-17T10:30:49.204Z
+   Generated:    2026-08-17T11:36:13.356Z
 
    Small enough to load on every page. Two things:
 

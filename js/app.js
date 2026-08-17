@@ -4206,6 +4206,11 @@ const yorkRecords = [
     status: "historic",
     statusLabel: "Historic bombing area",
     date: "29 April 1942",
+    photoLink: {
+      label: "Photographs of the Baedeker raid",
+      url: "https://raidsoveryork.co.uk/raid8-29-apr-1942/",
+      note: "Raids Over York has a large photographic record of this night. The images belong to the York Press, Explore York, the National Railway Museum and private collectors — not to us, and not to the project either — so this links to them rather than copying them."
+    },
     sortYear: 1942,
     confidence: "Confirmed event, area-level point only (exact site not verified)",
     lat: 53.95995,
@@ -4225,6 +4230,11 @@ const yorkRecords = [
     status: "historic",
     statusLabel: "Historic bombing site",
     date: "29 April 1942",
+    photoLink: {
+      label: "Photographs of the Baedeker raid",
+      url: "https://raidsoveryork.co.uk/raid8-29-apr-1942/",
+      note: "Raids Over York has a large photographic record of this night. The images belong to the York Press, Explore York, the National Railway Museum and private collectors — not to us, and not to the project either — so this links to them rather than copying them."
+    },
     sortYear: 1942,
     confidence: "Confirmed site, building-level",
     lat: 53.95528,
@@ -4245,6 +4255,11 @@ const yorkRecords = [
     status: "historic",
     statusLabel: "Historic bombing site",
     date: "29 April 1942",
+    photoLink: {
+      label: "Photographs of the Baedeker raid",
+      url: "https://raidsoveryork.co.uk/raid8-29-apr-1942/",
+      note: "Raids Over York has a large photographic record of this night. The images belong to the York Press, Explore York, the National Railway Museum and private collectors — not to us, and not to the project either — so this links to them rather than copying them."
+    },
     sortYear: 1942,
     confidence: "Confirmed site, building-level",
     lat: 53.95727,
@@ -4265,6 +4280,11 @@ const yorkRecords = [
     status: "historic",
     statusLabel: "Historic bombing site",
     date: "29 April 1942",
+    photoLink: {
+      label: "Photographs of the Baedeker raid",
+      url: "https://raidsoveryork.co.uk/raid8-29-apr-1942/",
+      note: "Raids Over York has a large photographic record of this night. The images belong to the York Press, Explore York, the National Railway Museum and private collectors — not to us, and not to the project either — so this links to them rather than copying them."
+    },
     sortYear: 1942,
     confidence: "Confirmed site (fixed, well-known landmark)",
     lat: 53.95963,
@@ -4283,6 +4303,11 @@ const yorkRecords = [
     status: "historic",
     statusLabel: "Historic bombing site",
     date: "29 April 1942",
+    photoLink: {
+      label: "Photographs of the Baedeker raid",
+      url: "https://raidsoveryork.co.uk/raid8-29-apr-1942/",
+      note: "Raids Over York has a large photographic record of this night. The images belong to the York Press, Explore York, the National Railway Museum and private collectors — not to us, and not to the project either — so this links to them rather than copying them."
+    },
     sortYear: 1942,
     confidence: "Confirmed site, building-level",
     lat: 53.95930,
@@ -4301,6 +4326,11 @@ const yorkRecords = [
     status: "historic",
     statusLabel: "Historic bombing site",
     date: "29 April 1942",
+    photoLink: {
+      label: "Photographs of the Baedeker raid",
+      url: "https://raidsoveryork.co.uk/raid8-29-apr-1942/",
+      note: "Raids Over York has a large photographic record of this night. The images belong to the York Press, Explore York, the National Railway Museum and private collectors — not to us, and not to the project either — so this links to them rather than copying them."
+    },
     sortYear: 1942,
     confidence: "Confirmed event, street-derived point",
     lat: 53.96133,
@@ -4320,6 +4350,11 @@ const yorkRecords = [
     status: "historic",
     statusLabel: "Historic bombing site",
     date: "29 April 1942",
+    photoLink: {
+      label: "Photographs of the Baedeker raid",
+      url: "https://raidsoveryork.co.uk/raid8-29-apr-1942/",
+      note: "Raids Over York has a large photographic record of this night. The images belong to the York Press, Explore York, the National Railway Museum and private collectors — not to us, and not to the project either — so this links to them rather than copying them."
+    },
     sortYear: 1942,
     confidence: "Confirmed event, street-derived point",
     lat: 53.97523,
@@ -4339,6 +4374,11 @@ const yorkRecords = [
     status: "historic",
     statusLabel: "Historic bombing site",
     date: "29 April 1942",
+    photoLink: {
+      label: "Photographs of the Baedeker raid",
+      url: "https://raidsoveryork.co.uk/raid8-29-apr-1942/",
+      note: "Raids Over York has a large photographic record of this night. The images belong to the York Press, Explore York, the National Railway Museum and private collectors — not to us, and not to the project either — so this links to them rather than copying them."
+    },
     sortYear: 1942,
     confidence: "Confirmed event, street-derived point (a run of houses, not one address)",
     lat: 53.96654,
@@ -4358,6 +4398,11 @@ const yorkRecords = [
     status: "historic",
     statusLabel: "Historic bombing site",
     date: "29 April 1942",
+    photoLink: {
+      label: "Photographs of the Baedeker raid",
+      url: "https://raidsoveryork.co.uk/raid8-29-apr-1942/",
+      note: "Raids Over York has a large photographic record of this night. The images belong to the York Press, Explore York, the National Railway Museum and private collectors — not to us, and not to the project either — so this links to them rather than copying them."
+    },
     sortYear: 1942,
     confidence: "Confirmed event, street-derived point",
     lat: 53.96024,
@@ -4377,6 +4422,11 @@ const yorkRecords = [
     status: "historic",
     statusLabel: "Historic bombing site",
     date: "29 April 1942",
+    photoLink: {
+      label: "Photographs of the Baedeker raid",
+      url: "https://raidsoveryork.co.uk/raid8-29-apr-1942/",
+      note: "Raids Over York has a large photographic record of this night. The images belong to the York Press, Explore York, the National Railway Museum and private collectors — not to us, and not to the project either — so this links to them rather than copying them."
+    },
     sortYear: 1942,
     confidence: "Confirmed event, street-derived point",
     lat: 53.96764,
@@ -4395,6 +4445,11 @@ const yorkRecords = [
     status: "historic",
     statusLabel: "Historic bombing site",
     date: "29 April 1942",
+    photoLink: {
+      label: "Photographs of the Baedeker raid",
+      url: "https://raidsoveryork.co.uk/raid8-29-apr-1942/",
+      note: "Raids Over York has a large photographic record of this night. The images belong to the York Press, Explore York, the National Railway Museum and private collectors — not to us, and not to the project either — so this links to them rather than copying them."
+    },
     sortYear: 1942,
     confidence: "Confirmed event, street-derived point",
     lat: 53.95224,
@@ -4413,6 +4468,11 @@ const yorkRecords = [
     status: "historic",
     statusLabel: "Historic bombing site",
     date: "29 April 1942",
+    photoLink: {
+      label: "Photographs of the Baedeker raid",
+      url: "https://raidsoveryork.co.uk/raid8-29-apr-1942/",
+      note: "Raids Over York has a large photographic record of this night. The images belong to the York Press, Explore York, the National Railway Museum and private collectors — not to us, and not to the project either — so this links to them rather than copying them."
+    },
     sortYear: 1942,
     confidence: "Confirmed event, street-derived point (the site has been redeveloped)",
     lat: 53.96973,
@@ -4431,6 +4491,11 @@ const yorkRecords = [
     status: "historic",
     statusLabel: "Historic bombing site",
     date: "29 April 1942",
+    photoLink: {
+      label: "Photographs of the Baedeker raid",
+      url: "https://raidsoveryork.co.uk/raid8-29-apr-1942/",
+      note: "Raids Over York has a large photographic record of this night. The images belong to the York Press, Explore York, the National Railway Museum and private collectors — not to us, and not to the project either — so this links to them rather than copying them."
+    },
     sortYear: 1942,
     confidence: "Confirmed event, street-derived point (two separate streets)",
     lat: 53.96802,
@@ -4449,6 +4514,11 @@ const yorkRecords = [
     status: "historic",
     statusLabel: "Historic bombing site",
     date: "29 April 1942",
+    photoLink: {
+      label: "Photographs of the Baedeker raid",
+      url: "https://raidsoveryork.co.uk/raid8-29-apr-1942/",
+      note: "Raids Over York has a large photographic record of this night. The images belong to the York Press, Explore York, the National Railway Museum and private collectors — not to us, and not to the project either — so this links to them rather than copying them."
+    },
     sortYear: 1942,
     confidence: "Confirmed event, street-derived point (the site has been redeveloped)",
     lat: 53.96168,
@@ -4468,6 +4538,11 @@ const yorkRecords = [
     status: "historic",
     statusLabel: "Historic bombing site",
     date: "29 April 1942",
+    photoLink: {
+      label: "Photographs of the Baedeker raid",
+      url: "https://raidsoveryork.co.uk/raid8-29-apr-1942/",
+      note: "Raids Over York has a large photographic record of this night. The images belong to the York Press, Explore York, the National Railway Museum and private collectors — not to us, and not to the project either — so this links to them rather than copying them."
+    },
     sortYear: 1942,
     confidence: "Confirmed event, landmark point",
     lat: 53.96395,
@@ -4487,6 +4562,11 @@ const yorkRecords = [
     status: "historic",
     statusLabel: "Historic bombing site",
     date: "29 April 1942",
+    photoLink: {
+      label: "Photographs of the Baedeker raid",
+      url: "https://raidsoveryork.co.uk/raid8-29-apr-1942/",
+      note: "Raids Over York has a large photographic record of this night. The images belong to the York Press, Explore York, the National Railway Museum and private collectors — not to us, and not to the project either — so this links to them rather than copying them."
+    },
     sortYear: 1942,
     confidence: "Confirmed site, building-level",
     lat: 53.95940,
@@ -4505,6 +4585,11 @@ const yorkRecords = [
     status: "historic",
     statusLabel: "Historic bombing site",
     date: "29 April 1942",
+    photoLink: {
+      label: "Photographs of the Baedeker raid",
+      url: "https://raidsoveryork.co.uk/raid8-29-apr-1942/",
+      note: "Raids Over York has a large photographic record of this night. The images belong to the York Press, Explore York, the National Railway Museum and private collectors — not to us, and not to the project either — so this links to them rather than copying them."
+    },
     sortYear: 1942,
     confidence: "Confirmed site, building-level",
     lat: 53.96622,
@@ -4522,6 +4607,11 @@ const yorkRecords = [
     status: "historic",
     statusLabel: "Historic bombing site",
     date: "29 April 1942",
+    photoLink: {
+      label: "Photographs of the Baedeker raid",
+      url: "https://raidsoveryork.co.uk/raid8-29-apr-1942/",
+      note: "Raids Over York has a large photographic record of this night. The images belong to the York Press, Explore York, the National Railway Museum and private collectors — not to us, and not to the project either — so this links to them rather than copying them."
+    },
     sortYear: 1942,
     confidence: "Confirmed event, approximate point",
     lat: 53.94627,
@@ -4539,6 +4629,11 @@ const yorkRecords = [
     status: "historic",
     statusLabel: "Historic bombing site",
     date: "2 August 1942",
+    photoLink: {
+      label: "Photographs of the raid of 2 August 1942",
+      url: "https://raidsoveryork.co.uk/raid9-2-aug-1942/",
+      note: "Raids Over York has a large photographic record of this night. The images belong to the York Press, Explore York, the National Railway Museum and private collectors — not to us, and not to the project either — so this links to them rather than copying them."
+    },
     sortYear: 1942,
     confidence: "Confirmed event, street-derived point",
     lat: 53.95618,
@@ -4558,6 +4653,11 @@ const yorkRecords = [
     status: "historic",
     statusLabel: "Historic bombing site",
     date: "2 August 1942",
+    photoLink: {
+      label: "Photographs of the raid of 2 August 1942",
+      url: "https://raidsoveryork.co.uk/raid9-2-aug-1942/",
+      note: "Raids Over York has a large photographic record of this night. The images belong to the York Press, Explore York, the National Railway Museum and private collectors — not to us, and not to the project either — so this links to them rather than copying them."
+    },
     sortYear: 1942,
     confidence: "Confirmed site (fixed, well-known landmark)",
     lat: 53.95576,
@@ -4576,6 +4676,11 @@ const yorkRecords = [
     status: "historic",
     statusLabel: "Historic bombing site",
     date: "24 September 1942",
+    photoLink: {
+      label: "Photographs of the raid of 24 September 1942",
+      url: "https://raidsoveryork.co.uk/raid10-24-sept-1942/",
+      note: "Raids Over York has a large photographic record of this night. The images belong to the York Press, Explore York, the National Railway Museum and private collectors — not to us, and not to the project either — so this links to them rather than copying them."
+    },
     sortYear: 1942,
     confidence: "Confirmed event, street-derived point",
     lat: 53.95127,
@@ -5435,7 +5540,7 @@ let activeCounty = COUNTY_ALL;
    the same cache-busting reason — these files are fetched by script and
    would otherwise be served stale from cache long after a data update.
    ============================================================ */
-const DATA_VERSION = "1.13.0";
+const DATA_VERSION = "1.13.1";
 
 // Prebuilt county bounding boxes from data/county-index.js. Tiny, always
 // loaded, and enough to frame a county before its outline arrives.
@@ -6374,6 +6479,106 @@ function detailKeyHtml(record) {
   `;
 }
 
+/* ============================================================
+   PHOTOGRAPHS
+   ------------------------------------------------------------
+   A record may carry a `photos` array. Every entry MUST have both
+   a `credit` and a `licence`; one without either is dropped and
+   logged rather than shown. That rule is enforced here, in code,
+   on purpose: an uncredited archive photograph on a public site
+   is somebody's copyright, and "we'll add the credit later" is
+   exactly the promise that never gets kept.
+
+     photos: [{
+       src:        "images/york/bar-convent-1942.jpg",
+       alt:        "Rubble being cleared from the corner of a stone building",
+       caption:    "The clean-up at the Bar Convent, 5 May 1942.",
+       credit:     "© IWM (CM 5105)",            // REQUIRED
+       licence:    "IWM Non-Commercial Licence", // REQUIRED
+       licenceUrl: "https://www.iwm.org.uk/corporate/policies/non-commercial-licence",
+       sourceUrl:  "https://www.iwm.org.uk/collections/item/object/205202546"
+     }]
+
+   WHERE PHOTOGRAPHS CAN COME FROM
+   - IWM, under the IWM Non-Commercial Licence. Note its terms: no
+     cropping or alteration, no watermark removal, and NOT for a
+     site carrying advertising or running a fundraising appeal.
+     The "Buy me a coffee" button in the footer is arguably the
+     latter — settle that before relying on this licence.
+   - Wikimedia Commons, where the file's own licence template says
+     PD-UKGov, PD-old or a CC licence. Check each file; Commons
+     hosting is not itself a guarantee.
+   - Crown copyright photographs taken before 1 June 1957 — the
+     1956 Act's 50-year term was preserved, so a 1942 official
+     photograph passed into the public domain at the end of 1992.
+     Ministry of Home Security bomb-census extracts and Air
+     Ministry reconnaissance are the useful cases.
+   - Anything else, only with written permission from the holder.
+
+   WHERE THEY CANNOT
+   Not from raidsoveryork.co.uk or its ArcGIS story. That project
+   publishes no licence at all, and most of the photographs in it
+   are marked "Copyright @YorkCityPress" — the York Press, which
+   is Newsquest, which is a commercial picture archive. Others
+   belong to Explore York, the National Railway Museum / SSPL, and
+   private collectors. None of it was the project's to pass on.
+   Linking to their page is not reproduction; copying the image is.
+   That is what `photoLink` below is for.
+   ============================================================ */
+function usablePhotos(record) {
+  return (record.photos || []).filter((photo) => {
+    if (photo && photo.src && photo.credit && photo.licence) return true;
+    console.warn(
+      `[photos] "${record.id}" has a photo without a credit or licence — not shown. ` +
+        "Both are required; see the PHOTOGRAPHS block in js/app.js."
+    );
+    return false;
+  });
+}
+
+function detailPhotosHtml(record) {
+  const photos = usablePhotos(record);
+
+  if (photos.length) {
+    const figures = photos
+      .map((photo) => {
+        const rights = photo.licenceUrl
+          ? `<a href="${photo.licenceUrl}" target="_blank" rel="noopener">${photo.licence}</a>`
+          : photo.licence;
+        const img = `<img src="${photo.src}" alt="${photo.alt || photo.caption || record.title}" loading="lazy" decoding="async">`;
+        return `
+          <figure class="detail-photo">
+            ${photo.sourceUrl ? `<a href="${photo.sourceUrl}" target="_blank" rel="noopener">${img}</a>` : img}
+            <figcaption>
+              ${photo.caption ? `<span class="detail-photo-caption">${photo.caption}</span>` : ""}
+              <span class="detail-photo-credit">${photo.credit} · ${rights}</span>
+            </figcaption>
+          </figure>`;
+      })
+      .join("");
+    return `<div class="detail-section"><span class="detail-section-label">Photographs</span>${figures}</div>`;
+  }
+
+  // No image we are entitled to publish — but often there IS one, somewhere
+  // we are entitled to point at. Sending someone to the archive that holds it
+  // is more use than a greyed-out box saying "coming soon".
+  if (record.photoLink && record.photoLink.url) {
+    return `
+      <div class="detail-section">
+        <span class="detail-section-label">Photographs</span>
+        <a class="detail-photo-link" href="${record.photoLink.url}" target="_blank" rel="noopener">
+          ${record.photoLink.label || "Photographs of this incident"} ↗
+        </a>
+        <p class="detail-photo-note">${
+          record.photoLink.note ||
+          "Held by the archive that took or collected them, and not ours to republish — the link goes to where they are."
+        }</p>
+      </div>`;
+  }
+
+  return "";
+}
+
 function detailContent(record) {
   const sourceLinks = (record.sources || [])
     .map((s) => `<a href="${s.url}" target="_blank" rel="noopener">${s.label} ↗</a>`)
@@ -6391,11 +6596,8 @@ function detailContent(record) {
     ${detailSectionHtml("Evacuation", evacuationText)}
     ${detailSectionHtml("Also worth knowing", record.note)}
     ${detailSectionHtml("Casualty note", record.casualtiesNote)}
-    <div class="detail-section">
-      <span class="detail-section-label">Then &amp; now</span>
-      <div class="detail-photo-placeholder">Street View / archival photo comparison — planned for a future update. Any archival images used here will need clear copyright/licensing from their holder (e.g. The Box, Plymouth) before publishing.</div>
-    </div>
     ${sourceLinks ? `<div class="detail-section"><span class="detail-section-label">Sources</span><div class="detail-sources">${sourceLinks}</div></div>` : ""}
+    ${detailPhotosHtml(record)}
     <div class="detail-section detail-correct">
       <button type="button" class="detail-correct-btn" data-correct-record="${record.id}">
         <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>
