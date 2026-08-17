@@ -5540,7 +5540,7 @@ let activeCounty = COUNTY_ALL;
    the same cache-busting reason — these files are fetched by script and
    would otherwise be served stale from cache long after a data update.
    ============================================================ */
-const DATA_VERSION = "1.13.1";
+const DATA_VERSION = "1.13.2";
 
 // Prebuilt county bounding boxes from data/county-index.js. Tiny, always
 // loaded, and enough to frame a county before its outline arrives.
@@ -5846,11 +5846,70 @@ function readThemePref() {
 let themePref = readThemePref();
 const resolveTheme = () => (themePref === "system" ? (darkQuery.matches ? "dark" : "light") : themePref);
 
-const tileLayer = L.tileLayer(TILE_URLS[resolveTheme()], {
+/* ============================================================
+   BASEMAP, AND WHY THE THEME SWITCH REPLACES THE LAYER
+   ------------------------------------------------------------
+   The obvious way to change basemap is tileLayer.setUrl(newUrl).
+   Do not. On this map it sends the view to Australia.
+
+   Why: setUrl() calls GridLayer.redraw(), and redraw() does
+
+       this._tileZoom = this._clampZoom(this._map.getZoom());
+
+   _clampZoom only clamps to min/max — it does NOT round. Every
+   other path into GridLayer goes through _setView(), which sets
+   the tile zoom to Math.round(zoom). That difference is invisible
+   on a normal map, because the zoom is always a whole number
+   anyway. This map sets zoomSnap: 0 so a county can be framed at
+   a fractional zoom, so map.getZoom() is something like 5.7854.
+
+   After a setUrl the layer therefore holds _tileZoom = 5.7854 and
+   asks for tiles like
+
+       .../dark_all/5.7854681.../26/16.png
+
+   CARTO parses that z as 5 and serves zoom-5 tiles — but the x/y
+   were computed on the zoom-5.7854 grid, so they address a
+   completely different part of the world. The markers stay
+   correctly placed over the UK while the basemap underneath them
+   is Western Australia, which is exactly as broken as it sounds.
+
+   Replacing the layer avoids the whole thing: addTo() runs onAdd
+   -> _resetView -> _setView, which rounds properly. The outgoing
+   layer is held until the new one has painted so the switch does
+   not flash grey, with a timeout so two basemaps can never end up
+   stacked permanently.
+
+   If you ever need redraw() on a tile layer here, remember this.
+   ============================================================ */
+const TILE_OPTIONS = {
   maxZoom: 19,
   subdomains: "abcd",
   attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; CARTO'
-}).addTo(map);
+};
+
+let tileLayer = L.tileLayer(TILE_URLS[resolveTheme()], TILE_OPTIONS).addTo(map);
+
+function setBasemapTheme(resolved) {
+  const url = TILE_URLS[resolved] || TILE_URLS.light;
+  if (!tileLayer || tileLayer._url === url) return;
+
+  const outgoing = tileLayer;
+  const incoming = L.tileLayer(url, TILE_OPTIONS);
+  tileLayer = incoming;
+  // Appended after the outgoing layer, so it paints over it while loading.
+  incoming.addTo(map);
+
+  let dropped = false;
+  const dropOutgoing = () => {
+    if (dropped) return;
+    dropped = true;
+    if (map.hasLayer(outgoing)) map.removeLayer(outgoing);
+  };
+  incoming.once("load", dropOutgoing);
+  // A tile server that never answers must not leave both layers on the map.
+  setTimeout(dropOutgoing, 2500);
+}
 
 const themeToggle = document.getElementById("themeToggle");
 const themeOptions = themeToggle ? [...themeToggle.querySelectorAll(".theme-opt")] : [];
@@ -5860,7 +5919,7 @@ function applyTheme() {
   document.documentElement.setAttribute("data-theme", resolved);
   document.documentElement.setAttribute("data-theme-pref", themePref);
 
-  tileLayer.setUrl(TILE_URLS[resolved]);
+  setBasemapTheme(resolved);
 
   themeOptions.forEach((btn) => {
     const selected = btn.dataset.themeSet === themePref;
@@ -6023,6 +6082,9 @@ function ensureVWeaponData() {
 }
 let potentialLayer = null;
 let potentialSitesData = [];
+// Declared up here, not beside ensurePotentialData() below, because
+// updatePotentialCounts() reads it and runs before that point.
+let potentialDataFailed = false;
 const potentialToggle = document.getElementById("potentialToggle");
 const potentialCount = document.getElementById("potentialCount");
 const potentialGroup = document.querySelector(".potential-group");
@@ -6197,7 +6259,21 @@ function updatePotentialAvailability() {
 // instead of advertising a total the map isn't showing.
 function updatePotentialCounts() {
   if (!potentialSitesData.length) {
-    potentialCount.textContent = "unavailable";
+    /* Three states here, and they are not the same thing:
+
+         failed     the file could not be fetched — "unavailable" is true
+         not yet    it loads when the map reaches Plymouth at zoom 11+
+         empty      the dataset itself is gone
+
+       Before progressive loading these collapsed into one, because the
+       data was always present by the time anything asked. Now the normal
+       state on first paint is "not fetched yet", and labelling that
+       "unavailable" tells a visitor the layer is broken when it is
+       simply waiting for them to zoom in. */
+    potentialCount.textContent = potentialDataFailed
+      ? "unavailable"
+      : potentialZoomAllowed() ? "loading…" : "zoom in";
+    if (potentialGroup) potentialGroup.classList.toggle("is-zoom-gated", !potentialZoomAllowed());
     return;
   }
   // Say "zoom in" rather than a count the map isn't currently honouring —
@@ -6229,8 +6305,6 @@ function updatePotentialCounts() {
    so it is rebuilt after the load. resetTimelineBounds() would fight a
    visitor who has already scrubbed the slider, so the domain is recomputed
    and the slider's position preserved. */
-let potentialDataFailed = false;
-
 function ensurePotentialData() {
   if (potentialSitesData.length || potentialDataFailed) return;
   loadDataScript(POTENTIAL_DATA_SRC)
