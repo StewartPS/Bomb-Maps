@@ -11,6 +11,61 @@
     <priority>0.6</priority>
   </url>
   <url>
+    <loc>https://bombmaps.co.uk/records/belfast-blitz-1941/</loc>
+    <lastmod>2026-08-17</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://bombmaps.co.uk/records/belfast-clonard-monastery-1941/</loc>
+    <lastmod>2026-08-17</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://bombmaps.co.uk/records/belfast-st-georges-market-1941/</loc>
+    <lastmod>2026-08-17</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://bombmaps.co.uk/records/belfast-city-hall-1941/</loc>
+    <lastmod>2026-08-17</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://bombmaps.co.uk/records/belfast-harland-wolff-1941/</loc>
+    <lastmod>2026-08-17</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://bombmaps.co.uk/records/clydebank-blitz-1941/</loc>
+    <lastmod>2026-08-17</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://bombmaps.co.uk/records/clydebank-john-browns-1941/</loc>
+    <lastmod>2026-08-17</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://bombmaps.co.uk/records/clydebank-singer-1941/</loc>
+    <lastmod>2026-08-17</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://bombmaps.co.uk/records/swansea-three-nights-1941/</loc>
+    <lastmod>2026-08-17</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://bombmaps.co.uk/records/swansea-kings-dock-1941/</loc>
+    <lastmod>2026-08-17</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://bombmaps.co.uk/records/swansea-castle-1941/</loc>
+    <lastmod>2026-08-17</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://bombmaps.co.uk/records/york-baedeker-raid-1942/</loc>
     <lastmod>2026-08-17</lastmod>
     <priority>0.7</priority>
@@ -1134,6 +1189,26 @@
     <loc>https://bombmaps.co.uk/records/bodmin-mill-street-1942/</loc>
     <lastmod>2026-08-17</lastmod>
     <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://bombmaps.co.uk/counties/county-antrim/</loc>
+    <lastmod>2026-08-17</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://bombmaps.co.uk/counties/county-down/</loc>
+    <lastmod>2026-08-17</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://bombmaps.co.uk/counties/dunbartonshire/</loc>
+    <lastmod>2026-08-17</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://bombmaps.co.uk/counties/west-glamorgan/</loc>
+    <lastmod>2026-08-17</lastmod>
+    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://bombmaps.co.uk/counties/north-yorkshire/</loc>

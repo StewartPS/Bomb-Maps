@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Bomb Maps — where WWII bombs fell on southern England | Interactive map</title>
-    <meta name="description" content="An interactive map of 225 researched Second World War bombing and unexploded-ordnance records across 16 English counties — Devon to Tyne and Wear — with dates, casualties and sources for each.">
+    <meta name="description" content="An interactive map of 236 researched Second World War bombing and unexploded-ordnance records across 20 counties of the UK — Devon to Belfast, Clydebank and Swansea — with dates, casualties and sources for each.">
     <link rel="canonical" href="https://bombmaps.co.uk/">
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
 
@@ -12,7 +12,7 @@
     <meta property="og:site_name" content="Bomb Maps">
     <meta property="og:url" content="https://bombmaps.co.uk/">
     <meta property="og:title" content="Bomb Maps — where WWII bombs fell on southern England">
-    <meta property="og:description" content="225 researched WWII bombing and unexploded-ordnance records across 16 counties, plotted with dates, casualties and sources.">
+    <meta property="og:description" content="236 researched WWII bombing and unexploded-ordnance records across 20 counties of England, Scotland, Wales and Northern Ireland, plotted with dates, casualties and sources.">
     <meta property="og:image" content="https://bombmaps.co.uk/og-image.png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
@@ -41,7 +41,7 @@
           "@type": "Dataset",
           "@id": "https://bombmaps.co.uk/#dataset",
           "name": "WWII bombing and unexploded-ordnance records, southern England",
-          "description": "225 individually researched and sourced records of Second World War bombing incidents and modern unexploded-ordnance finds across 16 English counties, from Devon and Cornwall to Merseyside, the West Midlands, York, South Yorkshire, Hull and Tyne and Wear, plus bulk layers of digitised bomb-census points for Plymouth and V-weapon impact sites for London.",
+          "description": "236 individually researched and sourced records of Second World War bombing incidents and modern unexploded-ordnance finds across 20 counties of the United Kingdom, from Devon and Cornwall to Merseyside, the West Midlands, York and Tyne and Wear, and now the Belfast Blitz, the Clydebank Blitz and the Swansea Three Nights' Blitz, plus bulk layers of digitised bomb-census points for Plymouth and V-weapon impact sites for London.",
           "url": "https://bombmaps.co.uk/",
           "isAccessibleForFree": true,
           "creator": { "@type": "Organization", "name": "Bomb Maps", "url": "https://bombmaps.co.uk/" },
@@ -50,7 +50,7 @@
             "name": "Southern England",
             "geo": {
               "@type": "GeoShape",
-              "box": "49.85 -6.5 55.10 1.80"
+              "box": "49.85 -10.90 59.40 1.80"
             }
           },
           "temporalCoverage": "1939/2026",
@@ -150,13 +150,13 @@
          old files until the cache expires. Changing the query string makes
          the URL new, so the browser has no choice but to fetch it.
 
-         To release: find and replace ?v=1.13.3 with the next number in BOTH
+         To release: find and replace ?v=1.14.0 with the next number in BOTH
          index.html and news.html, and set DATA_VERSION in js/app.js to the
          same number — the data files it fetches on demand (county slices,
          the potential-sites layer, the V-weapon impacts) get their ?v= from
          there, not from this file.
          ============================================================ -->
-    <link rel="stylesheet" href="css/style.css?v=1.13.3">
+    <link rel="stylesheet" href="css/style.css?v=1.14.0">
   </head>
   <body>
     <!-- ============================================================
@@ -911,6 +911,10 @@
             <li><a href="/counties/east-riding-of-yorkshire/">WWII bombs in East Riding of Yorkshire</a></li>
             <li><a href="/counties/tyne-and-wear/">WWII bombs in Tyne and Wear</a></li>
             <li><a href="/counties/north-yorkshire/">WWII bombs in North Yorkshire</a></li>
+            <li><a href="/counties/county-antrim/">WWII bombs in County Antrim</a></li>
+            <li><a href="/counties/county-down/">WWII bombs in County Down</a></li>
+            <li><a href="/counties/dunbartonshire/">WWII bombs in Dunbartonshire</a></li>
+            <li><a href="/counties/west-glamorgan/">WWII bombs in West Glamorgan</a></li>
           </ul>
         </div>
       </section>
@@ -947,7 +951,7 @@
          the input tools/build-county-slices.js slices. Do not add it
          back as a script tag.
          ============================================================ -->
-    <script src="data/county-index.js?v=1.13.3"></script>
-    <script src="js/app.js?v=1.13.3"></script>
+    <script src="data/county-index.js?v=1.14.0"></script>
+    <script src="js/app.js?v=1.14.0"></script>
   </body>
 </html>

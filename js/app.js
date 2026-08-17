@@ -4713,7 +4713,310 @@ const yorkRecords = [
   }
 ];
 
+/* ============================================================
+   NORTHERN IRELAND — the Belfast Blitz
+   ------------------------------------------------------------
+   The single biggest omission this site had. Roughly 900 people
+   died in Belfast on the night of 15-16 April 1941 — the greatest
+   loss of life in any single night's raid on any city in the
+   United Kingdom outside London — and until now the map showed
+   nothing at all.
+
+   COUNTY FILING. The boundary between County Antrim and County
+   Down runs through Belfast along the River Lagan. Everything
+   west of it is Antrim; Queen's Island and the Harbour Estate on
+   the east bank are Down. So the shipyard and the city centre are
+   in different counties, which is correct and will look odd if
+   you don't know why.
+
+   COORDINATES. Every point below is either a published Wikipedia
+   infobox coordinate or an official grid reference converted from
+   the Irish Grid (EPSG:29903) or the British National Grid
+   (EPSG:27700) to WGS84. None was estimated off a map. Sites for
+   which no coordinate could be obtained by those means — Burke
+   Street, Hallidays Road, Percy Street, the York Street Mill —
+   are deliberately NOT plotted, and are recorded in the raid
+   record's casualty note instead of being given invented pins.
+   Several of those streets no longer exist.
+   ============================================================ */
+const belfastRecords = [
+  {
+    id: "belfast-blitz-1941",
+    title: "Belfast — the Blitz of April and May 1941",
+    status: "historic",
+    statusLabel: "Historic bombing area",
+    date: "7 April – 5 May 1941",
+    sortYear: 1941,
+    confidence: "Confirmed event, area-level point only (exact site not verified)",
+    lat: 54.5974,
+    lng: -5.93632,
+    bombType: "mixed",
+    summary: "Belfast was raided four times in 1941. The Easter Tuesday attack of 15–16 April was the worst: around 180 bombers struck a city with almost no anti-aircraft defence, no night fighters and one of the lowest shelter provisions in the United Kingdom. On the night of 4–5 May the Luftwaffe returned with 203 tonnes of high explosive, 80 parachute mines and 96,000 incendiaries, and burned the Harbour Estate.",
+    note: "Éire was neutral, but on the morning of 16 April Taoiseach Éamon de Valera sent fire brigades north from Dublin, Dún Laoghaire, Drogheda and Dundalk to help. Belfast's own defences were so thin that the city had only around 20 anti-aircraft guns in place on Easter Tuesday.",
+    casualtiesNote: "Published totals for 15–16 April 1941 conflict and are recorded here rather than resolved: approximately 987 dead (Wikipedia), over 900 (WartimeNI archives), and almost 750 killed or later died of wounds (NI War Memorial). More than 1,500 were injured, 55,000 houses damaged and 100,000 people left temporarily homeless. The Fire Raid of 4–5 May killed over 200 more. ALL of these are city-wide totals and belong to no single location. Individual sites with published tolls that could not be plotted because no coordinate was obtainable and several of the streets no longer exist: Hogarth Street, 70; Ohio Street and Heather Street, 60 or more; Percy Street shelter, possibly 40; Atlantic Avenue shelter, 38; Church of the Holy Trinity, Unity Street, 17 to a parachute mine; 4 Ballynure Street, 14 in one house, eight of them one family; Burke Street, all twenty houses flattened and all occupants killed, number unstated. A mill wall collapse killed around 35 — sources place this at the York Street Mill and in the New Lodge, and it may be one incident counted twice.",
+    sources: [
+      { label: "Wikipedia: Belfast Blitz", url: "https://en.wikipedia.org/wiki/Belfast_Blitz" },
+      { label: "NI War Memorial: The Easter Tuesday Raid", url: "https://www.niwarmemorial.org/the-easter-tuesday-raid" },
+      { label: "WartimeNI: Belfast Blitz — the Easter Raid", url: "https://archives.wartimeni.com/article/belfast-blitz-the-easter-raid/" }
+    ]
+  },
+  {
+    id: "belfast-clonard-monastery-1941",
+    title: "Clonard Monastery, Clonard Street",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "15–16 April 1941",
+    sortYear: 1941,
+    confidence: "Confirmed site, building-level",
+    lat: 54.59998,
+    lng: -5.95694,
+    bombType: "mixed",
+    summary: "Around 300 people sheltered in the crypt and cellars of the Redemptorist monastery on the Falls Road during the Easter Tuesday raid. Many of them were Protestants who had come down from the Shankill, a few streets away.",
+    note: "In a city where the two communities lived largely apart, the shelters did not. It is one of the details of that night that Belfast has kept.",
+    casualtiesNote: "No deaths are recorded among those sheltering here.",
+    sources: [
+      { label: "Wikipedia: Belfast Blitz", url: "https://en.wikipedia.org/wiki/Belfast_Blitz" },
+      { label: "NI Historic Buildings Database: Clonard Church (HB26/31/001 A)", url: "https://apps.communities-ni.gov.uk/Buildings/buildview.aspx?id=4115" }
+    ]
+  },
+  {
+    id: "belfast-st-georges-market-1941",
+    title: "St George's Market, May Street",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "16–21 April 1941",
+    sortYear: 1941,
+    confidence: "Confirmed site, building-level",
+    lat: 54.59582,
+    lng: -5.92203,
+    bombType: "unspecified",
+    summary: "The Victorian covered market was turned into an emergency mortuary after the Easter Tuesday raid. Two hundred and fifty-five bodies were brought here, laid out for relatives to identify. Many could not be.",
+    note: "On 21 April the unclaimed and unidentified dead were buried together in a public funeral. The Falls Road Baths served as a second mortuary, where 150 bodies lay for three days before a mass burial.",
+    casualtiesNote: "The figure of 255 is bodies BROUGHT to this building from across the city. Nobody was killed here. It is recorded on this pin only because the building is where the city counted its dead.",
+    sources: [
+      { label: "Wikipedia: St George's Market", url: "https://en.wikipedia.org/wiki/St_George%27s_Market" },
+      { label: "Wikipedia: Belfast Blitz", url: "https://en.wikipedia.org/wiki/Belfast_Blitz" }
+    ]
+  },
+  {
+    id: "belfast-city-hall-1941",
+    title: "Belfast City Hall, Donegall Square",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "4–5 May 1941",
+    sortYear: 1941,
+    confidence: "Confirmed site (fixed, well-known landmark)",
+    lat: 54.59639,
+    lng: -5.93,
+    bombType: "incendiary",
+    summary: "During the Fire Raid the roof above the City Hall's Banqueting Hall was destroyed. The building itself survived and still stands.",
+    casualtiesNote: "No deaths recorded at this building.",
+    sources: [
+      { label: "Wikipedia: Belfast City Hall", url: "https://en.wikipedia.org/wiki/Belfast_City_Hall" },
+      { label: "Wikipedia: Belfast Blitz", url: "https://en.wikipedia.org/wiki/Belfast_Blitz" }
+    ]
+  }
+];
+
+/* Queen's Island sits on the County Down side of the Lagan. */
+const belfastHarbourRecords = [
+  {
+    id: "belfast-harland-wolff-1941",
+    title: "Harland & Wolff, East Yard, Queen's Island",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "15 April – 5 May 1941",
+    sortYear: 1941,
+    confidence: "Confirmed event, approximate point (the point locates the East Yard, not the whole works)",
+    lat: 54.608,
+    lng: -5.89306,
+    bombType: "mixed",
+    summary: "The shipyard was the reason Belfast was worth bombing. On 15–16 April three ships nearing completion were hit and the yard's own power station was struck. The Fire Raid of 4–5 May concentrated on the Harbour Estate and Queen's Island, and did the damage to war production that the Easter raid had largely missed.",
+    note: "The point is the archive location for the East Yard rather than a survey point for a works covering most of an island, so treat it as accurate to a couple of hundred metres. Short & Harland's aircraft factory, building Stirling bombers on the same island, lost a four-and-a-half acre factory floor in the raid of 7 April and is not separately plotted because no coordinate could be obtained.",
+    casualtiesNote: "No per-site death toll is published for the yard. The city-wide totals for these raids are carried on the Belfast Blitz record and belong to no single location.",
+    sources: [
+      { label: "Wikipedia: Belfast Blitz", url: "https://en.wikipedia.org/wiki/Belfast_Blitz" },
+      { label: "Britain from Above: Harland & Wolff new East Shipyard (XPW008422)", url: "https://www.britainfromabove.org.uk/en/image/XPW008422" }
+    ]
+  }
+];
+
+/* ============================================================
+   SCOTLAND — Clydebank
+   ------------------------------------------------------------
+   Filed under Dunbartonshire, the lieutenancy area, rather than
+   West Dunbartonshire, the council area — because Dunbartonshire
+   is what a reader looks for and what the wartime records say.
+   ============================================================ */
+const clydebankRecords = [
+  {
+    id: "clydebank-blitz-1941",
+    title: "Clydebank — the raids of 13–15 March 1941",
+    status: "historic",
+    statusLabel: "Historic bombing area",
+    date: "13–15 March 1941",
+    sortYear: 1941,
+    confidence: "Confirmed event, area-level point only (exact site not verified)",
+    lat: 55.9014,
+    lng: -4.40867,
+    bombType: "mixed",
+    summary: "Two nights of bombing aimed at the shipyards and the munitions works destroyed the town around them instead. On 13 March 236 aircraft dropped 272 tons of high explosive and over 1,650 incendiary canisters; the following night 203 aircraft dropped 231 tons more. Of roughly 12,000 houses in Clydebank, seven were left undamaged.",
+    note: "Proportionally the most completely destroyed town in the United Kingdom. Some 35,000 people out of a population of about 47,000 were made homeless, and most of them left — the town's own fire service and rescue crews went on working through it.",
+    casualtiesNote: "528 killed and 617 seriously injured in Clydebank itself, the official count made in 1942. Beware the figure of 1,200 dead that appears in many accounts including Wikipedia's: that is the CLYDESIDE total, taking in Glasgow's roughly 647, and is not a Clydebank figure. Individual streets with published tolls that could not be plotted for want of a coordinate: Second Avenue, Radnor Park, 80 dead from direct hits on houses; 78 Jellicoe Street, Dalmuir, 31 dead, fifteen of them members of the Rocks family. All of these are area figures, not figures for this pin.",
+    sources: [
+      { label: "National Records of Scotland: The Clydebank Blitz", url: "https://nrscotland.gov.uk/learning-and-events/all-features-and-articles/the-clydebank-blitz-13-15-march-1941" },
+      { label: "1st Line Defence: UXO risk in Clydebank", url: "https://www.1stlinedefence.co.uk/resources/uxo-city-guides/clydebank/" }
+    ]
+  },
+  {
+    id: "clydebank-john-browns-1941",
+    title: "John Brown's shipyard",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "13–15 March 1941",
+    sortYear: 1941,
+    confidence: "Confirmed site, building-level",
+    lat: 55.89726,
+    lng: -4.40929,
+    bombType: "mixed",
+    summary: "The yard that built the Queen Mary and, at that moment, the battleship Duke of York was one of the two targets the raids were aimed at. It was hit, but it kept working.",
+    note: "The point is the Titan cantilever crane, a listed structure still standing on the site. The striking thing about both nights is how much less damage the yards took than the tenements around them.",
+    casualtiesNote: "No per-site death toll published. The town-wide figure of 528 is carried on the Clydebank raids record.",
+    sources: [
+      { label: "Historic Environment Scotland listing LB22993: Titan Cantilever Crane", url: "https://britishlistedbuildings.co.uk/200358733-titan-cantilever-crane-john-browns-shipyard-clydebank-clydebank" },
+      { label: "National Records of Scotland: The Clydebank Blitz", url: "https://nrscotland.gov.uk/learning-and-events/all-features-and-articles/the-clydebank-blitz-13-15-march-1941" }
+    ]
+  },
+  {
+    id: "clydebank-singer-1941",
+    title: "Singer sewing machine factory, Kilbowie",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "13–15 March 1941",
+    sortYear: 1941,
+    confidence: "Confirmed event, approximate point (46-acre works, point locates the factory not a specific building)",
+    lat: 55.90555,
+    lng: -4.40804,
+    bombType: "mixed",
+    summary: "The Singer works had turned from sewing machines to munitions, and its 46-acre site lost over 390,000 square feet of floor space across the two nights. The fire in its timber yard was among the largest of the raids.",
+    note: "No separate grid reference is published for the timber yard, so it is not plotted apart from the factory.",
+    casualtiesNote: "No per-site death toll published.",
+    sources: [
+      { label: "Britain from Above: Singer Sewing Machine Factory, Clydebank (SPW045856)", url: "https://www.britainfromabove.org.uk/en/image/SPW045856" },
+      { label: "National Records of Scotland: The Clydebank Blitz", url: "https://nrscotland.gov.uk/learning-and-events/all-features-and-articles/the-clydebank-blitz-13-15-march-1941" }
+    ]
+  }
+];
+
+/* ============================================================
+   WALES — Swansea
+   ------------------------------------------------------------
+   Filed under West Glamorgan, the preserved county.
+   ============================================================ */
+const swanseaRecords = [
+  {
+    id: "swansea-three-nights-1941",
+    title: "Swansea — the Three Nights' Blitz",
+    status: "historic",
+    statusLabel: "Historic bombing area",
+    date: "19–21 February 1941",
+    sortYear: 1941,
+    confidence: "Confirmed event, area-level point only (exact site not verified)",
+    lat: 51.61803,
+    lng: -3.92693,
+    bombType: "mixed",
+    summary: "Over three consecutive nights the Luftwaffe dropped 1,273 high-explosive bombs and around 56,000 incendiaries on Swansea. Forty-one acres of the town centre were destroyed. The docks were the strategic objective; the shopping streets were what burned.",
+    note: "The centre was never rebuilt as it had been. Ben Evans, the department store that had served the town for over fifty years, was destroyed and never reopened — its site is now Castle Square.",
+    casualtiesNote: "230 people were killed. Injured figures differ between sources: 409 (Swansea Museum) and 397 (Visit Swansea Bay). Properties destroyed given as 857 or 850, with 11,000 damaged. These are town-wide totals for the three nights and belong to no single location.",
+    sources: [
+      { label: "Swansea Museum: The Blitz", url: "http://www.swanseamuseum.co.uk/swansea-a-brief-history/world-war-two/the-blitz/" },
+      { label: "Visit Swansea Bay: The Three Nights' Blitz", url: "https://www.visitswanseabay.com/blog/post/the-three-nights-blitz/" }
+    ]
+  },
+  {
+    id: "swansea-kings-dock-1941",
+    title: "King's Dock, Swansea Docks",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "19–21 February 1941",
+    sortYear: 1941,
+    confidence: "Confirmed site, building-level",
+    lat: 51.61659,
+    lng: -3.91517,
+    bombType: "mixed",
+    summary: "The docks, and the oil and metals traffic through them, were why Swansea was attacked at all. They were the aiming point across all three nights.",
+    casualtiesNote: "No per-site death toll published. The town-wide figure of 230 is carried on the Three Nights' Blitz record.",
+    sources: [
+      { label: "Coflein 419502: King's Dock, Swansea", url: "https://coflein.gov.uk/en/site/419502/" },
+      { label: "Swansea Museum: The Blitz", url: "http://www.swanseamuseum.co.uk/swansea-a-brief-history/world-war-two/the-blitz/" }
+    ]
+  },
+  {
+    id: "swansea-castle-1941",
+    title: "Swansea Castle, Castle Square",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "19–21 February 1941",
+    sortYear: 1941,
+    confidence: "Confirmed site (fixed, well-known landmark)",
+    lat: 51.62021,
+    lng: -3.94061,
+    bombType: "mixed",
+    summary: "The medieval castle stood in the middle of the burning town centre and came through the three nights. The buildings around it did not.",
+    note: "Like York Minster and Canterbury Cathedral, it is plotted here for surviving rather than for being hit. Surviving stonework in nearby Castle Street still shows changes in colour and texture where bomb damage was patched with concrete.",
+    casualtiesNote: "No deaths recorded at this site.",
+    sources: [
+      { label: "Cadw scheduled monument record: Swansea Castle", url: "https://ancientmonuments.uk/131674-swansea-castle-castle" },
+      { label: "Swansea Museum: The Blitz", url: "http://www.swanseamuseum.co.uk/swansea-a-brief-history/world-war-two/the-blitz/" }
+    ]
+  }
+];
+
 const regionData = {
+  belfast: {
+    label: "Belfast, County Antrim",
+    short: "Belfast",
+    county: "County Antrim",
+    accent: "var(--amber)",
+    records: belfastRecords,
+    center: [54.5974, -5.93632],
+    zoom: 13,
+    raidNights: null,
+    hasPotential: false
+  },
+  belfastHarbour: {
+    label: "Belfast Harbour & Queen's Island, County Down",
+    short: "Belfast Harbour",
+    county: "County Down",
+    accent: "var(--amber)",
+    records: belfastHarbourRecords,
+    center: [54.608, -5.89306],
+    zoom: 14,
+    raidNights: null,
+    hasPotential: false
+  },
+  clydebank: {
+    label: "Clydebank, Dunbartonshire",
+    short: "Clydebank",
+    county: "Dunbartonshire",
+    accent: "var(--amber)",
+    records: clydebankRecords,
+    center: [55.9014, -4.40867],
+    zoom: 14,
+    raidNights: null,
+    hasPotential: false
+  },
+  swansea: {
+    label: "Swansea, West Glamorgan",
+    short: "Swansea",
+    county: "West Glamorgan",
+    accent: "var(--amber)",
+    records: swanseaRecords,
+    center: [51.61803, -3.92693],
+    zoom: 14,
+    raidNights: null,
+    hasPotential: false
+  },
   york: {
     label: "York, North Yorkshire",
     short: "York",
@@ -5438,7 +5741,15 @@ const ALL_BOUNDS = L.latLngBounds(ALL_RECORDS.map((r) => [r.lat, r.lng])).pad(0.
    everything else shrinks to fit — the whole country ends up smaller on
    screen for the sake of a corner nobody is looking at. West edge clears
    Northern Ireland. */
-const UK_BOUNDS = L.latLngBounds([49.85, -8.65], [59.4, 1.78]);
+/* Britain AND Ireland. The west edge used to stop at -8.65, which was
+   described as clearing Northern Ireland; it does, but it also cuts off
+   most of the Republic, whose west coast runs out past -10.5. Now that
+   Belfast and the neutral-Ireland bombings are plotted, the frame has to
+   hold both islands or "all counties" quietly excludes some of them.
+   North edge still stops at Orkney rather than Shetland, for the same
+   reason as before: Shetland is another 100 miles out and including it
+   shrinks everything else to fit. */
+const UK_BOUNDS = L.latLngBounds([49.85, -10.9], [59.4, 1.78]);
 
 /* Pseudo-region meaning "no town selected". It sits in regionData so the
    selector, hero copy and stats pills can treat it like any other entry,
@@ -5540,7 +5851,7 @@ let activeCounty = COUNTY_ALL;
    the same cache-busting reason — these files are fetched by script and
    would otherwise be served stale from cache long after a data update.
    ============================================================ */
-const DATA_VERSION = "1.13.3";
+const DATA_VERSION = "1.14.0";
 
 // Prebuilt county bounding boxes from data/county-index.js. Tiny, always
 // loaded, and enough to frame a county before its outline arrives.
