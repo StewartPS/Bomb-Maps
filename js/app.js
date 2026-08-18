@@ -5851,7 +5851,7 @@ let activeCounty = COUNTY_ALL;
    the same cache-busting reason — these files are fetched by script and
    would otherwise be served stale from cache long after a data update.
    ============================================================ */
-const DATA_VERSION = "1.14.1";
+const DATA_VERSION = "1.14.2";
 
 // Prebuilt county bounding boxes from data/county-index.js. Tiny, always
 // loaded, and enough to frame a county before its outline arrives.
@@ -7557,7 +7557,36 @@ function mapViewInsets() {
   return insets;
 }
 
+/* ---------- Composing the fit ----------
+   mapViewInsets() answers "how much of the map is covered by furniture".
+   Feeding that straight to fitBounds answers a subtly different question —
+   "centre the target in whatever is left over" — and those are not the
+   same picture.
+
+   Measured at 1400x900: the control panel claims 336px on the left and
+   nothing balances it on the right, so the free area's centre sat 168px
+   right of the map's own centre. The fit was working exactly as written
+   and the result still read as "the map isn't centred", because a viewer
+   judges centring against the window, not against the leftovers.
+
+   But simply ignoring the chrome is wrong too — a small county fitted
+   dead-centre can end up half behind the panel.
+
+   So: aim for the WINDOW centre, then shift only as far as is actually
+   needed to keep the fitted box clear of the furniture. On the national
+   view Britain is nowhere near the panel once fitted, so it stays centred;
+   on a small south-western county the shift kicks in and does the job the
+   insets were always meant to do. Nothing is reserved speculatively.
+
+   The small upward rise is taste: a landmass centred exactly sits a little
+   low under the title block above it.
+------------------------------------------------------------------- */
+const MAP_FIT_RISE = 0.05; // share of map height to lift the fit by
+
 function fitOptionsForChrome(extra) {
+  // Kept for callers that still want plain Leaflet padding (and as the
+  // fallback below). Uses the full insets, deliberately: as a guarantee it
+  // is correct, it is only the composition that needed loosening.
   const i = mapViewInsets();
   return Object.assign(
     {
@@ -7568,8 +7597,78 @@ function fitOptionsForChrome(extra) {
   );
 }
 
+/* Works out the centre and zoom for a bounds fit, rather than handing
+   Leaflet a padding and accepting wherever that lands. Returns null if the
+   map has no size yet, so callers can fall back. */
+function viewForBounds(bounds) {
+  const rect = map.getContainer().getBoundingClientRect();
+  if (!rect.width || !rect.height) return null;
+
+  const i = mapViewInsets();
+  const gap = MAP_FIT_GAP;
+  const rise = Math.round(rect.height * MAP_FIT_RISE);
+
+  /* Zoom is chosen against the free area: the target has to FIT beside the
+     furniture even if it then gets recentred over it.
+
+     The rise is reserved HERE as well as applied below. Fit the box to
+     exactly the free height and it fills it, so the lift has nowhere to go
+     and every county comes out pinned at the free-area centre — which is
+     what the first attempt did. Costing the rise into the zoom leaves the
+     slack the lift then uses. */
+  const padTL = L.point(i.left + gap, i.top + gap);
+  const padBR = L.point(i.right + gap, i.bottom + gap + rise);
+  const zoom = map.getBoundsZoom(bounds, false, padTL.add(padBR));
+
+  const nw = map.project(bounds.getNorthWest(), zoom);
+  const se = map.project(bounds.getSouthEast(), zoom);
+  const boxW = Math.abs(se.x - nw.x);
+  const boxH = Math.abs(se.y - nw.y);
+  const boxCentre = L.point((nw.x + se.x) / 2, (nw.y + se.y) / 2);
+
+  // Where we would LIKE the box's centre to sit on screen.
+  let px = rect.width / 2;
+  let py = rect.height / 2 - rise;
+
+  /* Then push it only as far as it must go to clear the chrome.
+
+     When the box is simply too big to clear the furniture on both sides —
+     which is the normal case for the national view, since Britain fills
+     the height — the ideal is kept rather than compromised. The panels are
+     translucent glass and the map stays readable under them, so a
+     centred-and-slightly-high country beats one shunted down to dodge a
+     notice it is showing through anyway. */
+  const clamp = (value, lo, hi) => (lo > hi ? value : Math.min(Math.max(value, lo), hi));
+  px = clamp(px, i.left + gap + boxW / 2, rect.width - i.right - gap - boxW / 2);
+
+  /* Vertically, only the TOP limit is enforced. The chrome below the map is
+     the dismissible accuracy notice — a short translucent strip that the
+     map is meant to show through, and clamping to clear it drags every fit
+     back down to the free-area centre, undoing the lift. The county
+     selector across the top is the one thing genuinely worth staying under. */
+  py = Math.max(py, i.top + gap + boxH / 2);
+
+  // Screen point P shows the projected point p when the map centre C
+  // satisfies P = p - C + size/2, so C = p + size/2 - P.
+  const centre = L.point(
+    boxCentre.x + rect.width / 2 - px,
+    boxCentre.y + rect.height / 2 - py
+  );
+  return { center: map.unproject(centre, zoom), zoom };
+}
+
 function fitBoundsInView(bounds, opts) {
-  map.flyToBounds(bounds, fitOptionsForChrome(opts));
+  const view = viewForBounds(bounds);
+  if (!view) { map.flyToBounds(bounds, fitOptionsForChrome(opts)); return; }
+  map.flyTo(view.center, view.zoom, opts || {});
+}
+
+// Same framing, no animation — for the opening view and for restoring a
+// saved county, where an animated pan on first paint reads as a glitch.
+function setBoundsInView(bounds) {
+  const view = viewForBounds(bounds);
+  if (!view) { map.fitBounds(bounds, fitOptionsForChrome({ animate: false })); return; }
+  map.setView(view.center, view.zoom, { animate: false });
 }
 
 /* A town, or a single record, has a centre and a zoom rather than bounds, so
@@ -8914,7 +9013,7 @@ function restoreUiState() {
 
   if (savedCounty && savedCounty !== activeCounty && COUNTIES.has(savedCounty)) {
     switchCounty(savedCounty, { fly: false });
-    map.fitBounds(countyViewBounds(savedCounty), fitOptionsForChrome({ animate: false }));
+    setBoundsInView(countyViewBounds(savedCounty));
     restoredView = true;
   }
 
@@ -9628,6 +9727,6 @@ if (coffeeBtn && COFFEE_URL) {
 requestAnimationFrame(() => {
   requestAnimationFrame(() => {
     if (restoredView || activeCounty !== COUNTY_ALL) return;
-    map.fitBounds(UK_BOUNDS, fitOptionsForChrome({ animate: false }));
+    setBoundsInView(UK_BOUNDS);
   });
 });
