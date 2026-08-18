@@ -25,7 +25,7 @@
    it means the picture updates itself as coverage grows — run it
    again after adding records and the map fills in.
 
-   The coastline is Natural Earth 1:50m via the world-atlas npm
+   The coastline is Natural Earth 1:10m via the world-atlas npm
    package (public domain). If that package isn't installed the
    script still runs and draws the points alone, which at this
    density already reads as Britain — it just says so on stderr.
@@ -97,7 +97,7 @@ function loadCoastline() {
   let topojson, world;
   try {
     topojson = require("topojson-client");
-    world = require("world-atlas/countries-50m.json");
+    world = require("world-atlas/countries-10m.json");
   } catch (e) {
     console.error("  note: world-atlas/topojson-client not installed — drawing points only");
     return [];
@@ -136,25 +136,34 @@ function mercY(lat) {
   return Math.log(Math.tan(r) + 1 / Math.cos(r));
 }
 
-function makeProjector(w, h, pad) {
+/* Projects into an explicit BOX rather than the whole canvas. The first
+   version fitted the map to the full frame, which pushed the south coast
+   under the stat pills and ran Britain straight through the subtitle. The
+   layout is text-left / map-right, so the map should be told that. */
+function makeProjector(box) {
   const x0 = mercX(FRAME.minLng), x1 = mercX(FRAME.maxLng);
   const y0 = mercY(FRAME.minLat), y1 = mercY(FRAME.maxLat);
-  const sx = (w - pad.left - pad.right) / (x1 - x0);
-  const sy = (h - pad.top - pad.bottom) / (y1 - y0);
-  const s = Math.min(sx, sy);
-  const ox = pad.left + ((w - pad.left - pad.right) - (x1 - x0) * s) / 2;
-  const oy = pad.top + ((h - pad.top - pad.bottom) - (y1 - y0) * s) / 2;
-  return (lng, lat) => [
+  const s = Math.min(box.w / (x1 - x0), box.h / (y1 - y0));
+  const ox = box.x + (box.w - (x1 - x0) * s) / 2;
+  const oy = box.y + (box.h - (y1 - y0) * s) / 2;
+  const project = (lng, lat) => [
     ox + (mercX(lng) - x0) * s,
     oy + (y1 - mercY(lat)) * s
   ];
+  // Metres-per-pixel at 55N, so a real-world radius can be drawn to scale.
+  project.pxPerKm = (s * Math.PI) / 180 / 111.32 * Math.cos((55 * Math.PI) / 180) ** 0;
+  project.scale = s;
+  return project;
 }
 
 /* ---------- SVG ---------- */
 const COLOURS = { found: "#ff5252", historic: "#00f2fe", reported: "#ff9f43" };
 
-function buildSvg({ w, h, headline, sub, stats, pad, coast, records, potential }) {
-  const project = makeProjector(w, h, pad);
+function buildSvg({ w, h, headline, sub, stats, pad, mapBox, coast, records, potential }) {
+  const project = makeProjector(mapBox);
+  // Rough advance width for the URL pill — no font metrics available here,
+  // so it is measured off the font size rather than guessed at a fixed px.
+  const urlWidth = Math.round("bombmaps.co.uk".length * 13.4 + 52);
   const inFrame = ([x, y]) => x > -50 && x < w + 50 && y > -50 && y < h + 50;
 
   const land = coast
@@ -165,11 +174,29 @@ function buildSvg({ w, h, headline, sub, stats, pad, coast, records, potential }
     })
     .join("");
 
-  // Potential sites first, small and faint: they read as a glow over Plymouth.
+  /* The census layer is 3,043 points inside one town. At national scale
+     that is about four pixels across, so plotting them literally renders
+     an invisible smudge — technically honest, visually nothing. They get a
+     halo sized to their ACTUAL bounding box instead, so the thing a reader
+     sees is the real extent of the Plymouth bomb census rather than a
+     decorative blob. The individual points are still drawn inside it. */
+  let hotspot = "";
+  if (potential.length) {
+    const lats = potential.map((p) => p.lat);
+    const lngs = potential.map((p) => p.lng);
+    const c = project((Math.min(...lngs) + Math.max(...lngs)) / 2, (Math.min(...lats) + Math.max(...lats)) / 2);
+    const edge = project(Math.max(...lngs), (Math.min(...lats) + Math.max(...lats)) / 2);
+    const r = Math.max(14, Math.abs(edge[0] - c[0]));
+    hotspot = `
+    <circle cx="${c[0].toFixed(1)}" cy="${c[1].toFixed(1)}" r="${(r * 2.6).toFixed(1)}" fill="url(#hot)"/>
+    <circle cx="${c[0].toFixed(1)}" cy="${c[1].toFixed(1)}" r="${r.toFixed(1)}" fill="none"
+            stroke="#ff9f43" stroke-opacity="0.55" stroke-width="1.4"/>`;
+  }
+
   const potentialDots = potential
     .map((p) => project(p.lng, p.lat))
     .filter(inFrame)
-    .map((p) => `<circle cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="1.1"/>`)
+    .map((p) => `<circle cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="0.9"/>`)
     .join("");
 
   const dots = records
@@ -184,10 +211,10 @@ function buildSvg({ w, h, headline, sub, stats, pad, coast, records, potential }
 
   const pills = stats
     .map((s, i) => {
-      const x = pad.left + i * 232;
+      const x = pad.left + i * 190;
       return `
         <g transform="translate(${x}, ${h - 96})">
-          <rect width="214" height="60" rx="10" fill="rgba(22,30,46,0.82)" stroke="rgba(255,255,255,0.10)"/>
+          <rect width="176" height="60" rx="10" fill="rgba(22,30,46,0.86)" stroke="rgba(255,255,255,0.10)"/>
           <text x="16" y="24" font-family="Inter, Helvetica, Arial, sans-serif" font-size="11.5"
                 letter-spacing="1.6" fill="#9ca3af">${s.label.toUpperCase()}</text>
           <text x="16" y="47" font-family="Inter, Helvetica, Arial, sans-serif" font-size="21"
@@ -205,6 +232,11 @@ function buildSvg({ w, h, headline, sub, stats, pad, coast, records, potential }
     <filter id="softglow" x="-260%" y="-260%" width="620%" height="620%">
       <feGaussianBlur stdDeviation="6"/>
     </filter>
+    <radialGradient id="hot">
+      <stop offset="0%" stop-color="#ff9f43" stop-opacity="0.55"/>
+      <stop offset="45%" stop-color="#ff9f43" stop-opacity="0.16"/>
+      <stop offset="100%" stop-color="#ff9f43" stop-opacity="0"/>
+    </radialGradient>
     <radialGradient id="vign" cx="62%" cy="42%" r="78%">
       <stop offset="0%" stop-color="#131b28"/>
       <stop offset="100%" stop-color="#0b0f17"/>
@@ -222,14 +254,15 @@ function buildSvg({ w, h, headline, sub, stats, pad, coast, records, potential }
   <g fill="#1a2434">${land}</g>
   <g fill="none" stroke="rgba(0,242,254,0.16)" stroke-width="1">${land}</g>
 
-  <!-- Plymouth bomb-census points, faint -->
-  <g fill="#ff9f43" fill-opacity="0.5" filter="url(#softglow)">${potentialDots}</g>
+  <!-- Plymouth bomb-census layer: to-scale halo, then the points themselves -->
+  ${hotspot}
+  <g fill="#ff9f43" fill-opacity="0.85">${potentialDots}</g>
 
   <!-- Researched records -->
   <g>${dots}</g>
 
   <!-- Left scrim so the type stays legible over the map -->
-  <rect width="${Math.round(w * 0.62)}" height="${h}" fill="url(#scrim)"/>
+  <rect width="${Math.round(mapBox.x + 90)}" height="${h}" fill="url(#scrim)"/>
 
   <!-- Brand mark -->
   <g transform="translate(${pad.left}, 46)">
@@ -249,13 +282,20 @@ function buildSvg({ w, h, headline, sub, stats, pad, coast, records, potential }
     )
     .join("\n  ")}
 
-  <text x="${pad.left}" y="${168 + headline.length * 62 + 18}" font-family="Inter, Helvetica, Arial, sans-serif"
-        font-size="21" fill="#9ca3af">${sub}</text>
+  ${sub
+    .map(
+      (line, i) =>
+        `<text x="${pad.left}" y="${168 + headline.length * 62 + 6 + i * 30}" font-family="Inter, Helvetica, Arial, sans-serif" font-size="20" fill="#9ca3af">${line}</text>`
+    )
+    .join("\n  ")}
 
   ${pills}
 
-  <text x="${w - pad.right}" y="${h - 34}" text-anchor="end" font-family="Inter, Helvetica, Arial, sans-serif"
-        font-size="23" font-weight="700" fill="#00f2fe">bombmaps.co.uk</text>
+  <g transform="translate(${pad.left}, ${168 + headline.length * 62 + 6 + sub.length * 30 + 34})">
+    <rect width="${urlWidth}" height="52" rx="26" fill="rgba(0,242,254,0.10)" stroke="rgba(0,242,254,0.45)"/>
+    <text x="26" y="34" font-family="Inter, Helvetica, Arial, sans-serif" font-size="25"
+          font-weight="700" fill="#00f2fe">bombmaps.co.uk</text>
+  </g>
 </svg>`;
 }
 
@@ -272,21 +312,25 @@ async function main() {
     { label: "Census points", value: potential.length.toLocaleString("en-GB"), colour: "#f3f4f6" }
   ];
 
+  /* mapBox keeps the map out of the type. Landscape puts it in the right
+     column; the square format has room to give it the whole lower half. */
   const variants = [
     {
       file: "og-image.png",
       w: 1200, h: 630,
       pad: { top: 40, right: 40, bottom: 40, left: 56 },
+      mapBox: { x: 664, y: 26, w: 518, h: 578 },
       headline: ["Where the bombs fell.", "Street by street."],
-      sub: "Researched WWII bombing and unexploded-ordnance records, with sources.",
+      sub: ["Researched WWII bombing and unexploded-ordnance", "records, with sources for every one."],
       stats
     },
     {
       file: "share-square.png",
       w: 1080, h: 1080,
       pad: { top: 40, right: 48, bottom: 40, left: 56 },
+      mapBox: { x: 288, y: 318, w: 504, h: 650 },
       headline: ["Where the", "bombs fell."],
-      sub: "Every pin researched, dated and sourced.",
+      sub: ["Every pin researched, dated and sourced."],
       stats
     }
   ];
@@ -306,7 +350,11 @@ async function main() {
 
   for (const v of variants) {
     const svg = buildSvg({ ...v, coast, records, potential });
-    const svgPath = path.join(ROOT, v.file.replace(/\.png$/, ".svg"));
+    // SVG is the intermediate, kept for inspection but out of the deployed
+    // tree — only the PNGs are site assets.
+    const svgDir = path.join(ROOT, "build");
+    fs.mkdirSync(svgDir, { recursive: true });
+    const svgPath = path.join(svgDir, v.file.replace(/\.png$/, ".svg"));
     fs.writeFileSync(svgPath, svg);
     console.log(`  ${path.basename(svgPath)}  ${v.w}x${v.h}`);
 

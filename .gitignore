@@ -1,21 +1,2 @@
-# macOS
-.DS_Store
-._*
-.Spotlight-V100
-.Trashes
-
-# Editors
-.vscode/
-.idea/
-*.swp
-
-# Node (only if tooling is added later — the site itself is dependency-free)
-node_modules/
-npm-debug.log*
-
-# Downloaded third-party datasets and ingest by-products.
-# The raw files are not ours to redistribute, and the generated output is
-# rebuilt by tools/ingest-bombing-britain.js — commit neither by accident.
-data/source/
-data/national-raids.json
-
+build/
+node_modules

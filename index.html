@@ -16,7 +16,7 @@
     <meta property="og:image" content="https://bombmaps.co.uk/og-image.png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
-    <meta property="og:image:alt" content="Bomb Maps — an interactive map of WWII bombing records across southern England">
+    <meta property="og:image:alt" content="A dark map of Britain and Ireland with 236 researched WWII bomb and unexploded-ordnance sites glowing on it, and a dense cluster of 3,043 bomb-census points over Plymouth">
     <meta property="og:locale" content="en_GB">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:image" content="https://bombmaps.co.uk/og-image.png">
@@ -150,13 +150,13 @@
          old files until the cache expires. Changing the query string makes
          the URL new, so the browser has no choice but to fetch it.
 
-         To release: find and replace ?v=1.14.0 with the next number in BOTH
+         To release: find and replace ?v=1.14.1 with the next number in BOTH
          index.html and news.html, and set DATA_VERSION in js/app.js to the
          same number — the data files it fetches on demand (county slices,
          the potential-sites layer, the V-weapon impacts) get their ?v= from
          there, not from this file.
          ============================================================ -->
-    <link rel="stylesheet" href="css/style.css?v=1.14.0">
+    <link rel="stylesheet" href="css/style.css?v=1.14.1">
   </head>
   <body>
     <!-- ============================================================
@@ -951,7 +951,7 @@
          the input tools/build-county-slices.js slices. Do not add it
          back as a script tag.
          ============================================================ -->
-    <script src="data/county-index.js?v=1.14.0"></script>
-    <script src="js/app.js?v=1.14.0"></script>
+    <script src="data/county-index.js?v=1.14.1"></script>
+    <script src="js/app.js?v=1.14.1"></script>
   </body>
 </html>
