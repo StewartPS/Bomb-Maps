@@ -1603,10 +1603,12 @@ h3 {
   font-weight: 600;
 }
 
+/* Must match potentialColors in js/app.js. "untyped" merges the census
+   map's undifferentiated dots with the overlay's unclassifiable ones —
+   see the note above potentialColors for why they are one thing here. */
 .dot.potential-he { background: #FF5252; }
 .dot.potential-incendiary { background: #4CAF50; }
-.dot.potential-unknown { background: #3F51B5; }
-.dot.potential-undiff { background: #9CA3AF; }
+.dot.potential-untyped { background: #9CA3AF; }
 
 .potential-group {
   padding: 10px 12px 12px;

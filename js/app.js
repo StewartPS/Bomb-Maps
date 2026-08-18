@@ -5851,7 +5851,7 @@ let activeCounty = COUNTY_ALL;
    the same cache-busting reason — these files are fetched by script and
    would otherwise be served stale from cache long after a data update.
    ============================================================ */
-const DATA_VERSION = "1.14.2";
+const DATA_VERSION = "1.14.3";
 
 // Prebuilt county bounding boxes from data/county-index.js. Tiny, always
 // loaded, and enough to frame a county before its outline arrives.
@@ -6407,18 +6407,37 @@ const potentialZoomNote = document.getElementById("potentialZoomNote");
 // ReferenceError at that point and halt the whole script.
 let currentWeightBand = "all"; // "all" | "min-max" (kg)
 
+/* ---------- Categories, and why two of them became one ----------
+   The layer's own data carries four categories, but only three are worth
+   showing. "undifferentiated" is the census map's dots, printed with no
+   type at all (2,397 points); "unknown" is the overlay source's pins where
+   a type was recorded but could not be read (32 points). That is a
+   distinction about PROVENANCE, not about evidence — to anyone looking at
+   the map both mean "nobody knows what this one was", and putting them in
+   two different colours in the legend just invited the question of what
+   the difference was. It came up repeatedly when the site was first shared.
+
+   So they share a colour and a legend entry. The `cat` values are left
+   untouched in the data, because they are still true and
+   potentialMatchesWeight() reads them — only the display is merged.
+------------------------------------------------------------------- */
+const POTENTIAL_UNTYPED = "untyped";
+
+function potentialDisplayCat(p) {
+  const cat = (p && p.cat) || "undifferentiated";
+  return cat === "HE" || cat === "incendiary" ? cat : POTENTIAL_UNTYPED;
+}
+
 const potentialColors = {
   HE: "#FF5252",
   incendiary: "#4CAF50",
-  unknown: "#3F51B5",
-  undifferentiated: "#9CA3AF"
+  [POTENTIAL_UNTYPED]: "#9CA3AF"
 };
 
 const potentialLabels = {
   HE: "Potential site — high explosive (approximate, undigitized)",
   incendiary: "Potential site — incendiary (approximate, undigitized)",
-  unknown: "Potential site — type unknown (approximate, undigitized)",
-  undifferentiated: "Potential bomb site — approximate, undigitized"
+  [POTENTIAL_UNTYPED]: "Potential site — type not recorded (approximate, undigitized)"
 };
 
 /* ---------- Weight filter vs the potential-sites layer ----------
@@ -6539,14 +6558,14 @@ function renderPotentialLayer() {
   if (heatmapMode) return;
   potentialLayer = L.layerGroup(
     points.map((p) => {
-      const cat = p.cat || "undifferentiated";
+      const cat = potentialDisplayCat(p);
       return L.circleMarker([p.lat, p.lng], {
         renderer: potentialPane,
         radius: 2.5,
         weight: 0,
-        fillColor: potentialColors[cat] || potentialColors.undifferentiated,
+        fillColor: potentialColors[cat],
         fillOpacity: 0.6
-      }).bindTooltip(`${potentialLabels[cat] || potentialLabels.undifferentiated} — est. ${p.estYear}`, { direction: "top", sticky: true });
+      }).bindTooltip(`${potentialLabels[cat]} — est. ${p.estYear}`, { direction: "top", sticky: true });
     })
   ).addTo(map);
 }

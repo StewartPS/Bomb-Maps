@@ -150,13 +150,13 @@
          old files until the cache expires. Changing the query string makes
          the URL new, so the browser has no choice but to fetch it.
 
-         To release: find and replace ?v=1.14.2 with the next number in BOTH
+         To release: find and replace ?v=1.14.3 with the next number in BOTH
          index.html and news.html, and set DATA_VERSION in js/app.js to the
          same number — the data files it fetches on demand (county slices,
          the potential-sites layer, the V-weapon impacts) get their ?v= from
          there, not from this file.
          ============================================================ -->
-    <link rel="stylesheet" href="css/style.css?v=1.14.2">
+    <link rel="stylesheet" href="css/style.css?v=1.14.3">
   </head>
   <body>
     <!-- ============================================================
@@ -416,8 +416,7 @@
               <div class="potential-legend">
                 <span><span class="dot potential-he"></span>High explosive</span>
                 <span><span class="dot potential-incendiary"></span>Incendiary</span>
-                <span><span class="dot potential-unknown"></span>Unknown type</span>
-                <span><span class="dot potential-undiff"></span>Undifferentiated</span>
+                <span><span class="dot potential-untyped"></span>Type not recorded</span>
               </div>
 
               <!-- Shown only while the layer is withheld for being too dense
@@ -437,6 +436,16 @@
                   georeferenced against three checkable landmarks. A further 646
                   come from a second overlay source, after 308 that fell within
                   40m of a census point were removed as probable duplicates.
+                </p>
+                <p>
+                  Only the overlay source recorded bomb types at all, which is
+                  why most of the layer is one colour: 566 points are marked
+                  high explosive and 48 incendiary, and the remaining 2,429
+                  &mdash; the 2,397 census dots, printed with no type, plus 32
+                  overlay pins whose type could not be read &mdash; are shown
+                  together as &ldquo;type not recorded&rdquo;. Those two were
+                  separate colours until people reasonably asked what the
+                  difference was; it is a difference of source, not of evidence.
                 </p>
                 <p>
                   The Dockyard basins show almost no dots on the census map &mdash;
@@ -951,7 +960,7 @@
          the input tools/build-county-slices.js slices. Do not add it
          back as a script tag.
          ============================================================ -->
-    <script src="data/county-index.js?v=1.14.2"></script>
-    <script src="js/app.js?v=1.14.2"></script>
+    <script src="data/county-index.js?v=1.14.3"></script>
+    <script src="js/app.js?v=1.14.3"></script>
   </body>
 </html>
