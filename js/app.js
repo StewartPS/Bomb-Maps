@@ -6294,7 +6294,7 @@ let activeCounty = COUNTY_ALL;
    the same cache-busting reason — these files are fetched by script and
    would otherwise be served stale from cache long after a data update.
    ============================================================ */
-const DATA_VERSION = "1.14.7";
+const DATA_VERSION = "1.14.8";
 
 // Prebuilt county bounding boxes from data/county-index.js. Tiny, always
 // loaded, and enough to frame a county before its outline arrives.
@@ -6491,9 +6491,10 @@ let heatLayer = null;
 // the floating panels once the page has laid out (see the initial fit at the
 // end of startup), because none of that furniture exists yet at this point.
 const map = L.map("map", {
-  // Plain wheel/two-finger scroll belongs to the page — the map is a
-  // full-height hero and hijacking the wheel traps the reader in it. Pinch
-  // to zoom is wired up separately below, so a trackpad still works.
+  // Off by default: the map is a full-height hero, and a plain wheel/
+  // two-finger scroll belongs to the page until the reader deliberately
+  // clicks into the map. Trackpad pinch-zoom and the click-to-arm wheel
+  // zoom are wired up separately below.
   scrollWheelZoom: false,
   zoomControl: false,
   /* Leaflet snaps fitBounds to whole zoom levels by default, and a whole
@@ -6541,16 +6542,15 @@ map.on("zoom zoomend", updateMarkerScale);
 updateMarkerScale();
 
 /* ---------- Trackpad pinch-to-zoom ----------
-   scrollWheelZoom is off so that two-finger scrolling still scrolls the
-   page rather than trapping the reader inside a full-height map. The side
-   effect was that a laptop with no mouse had no way to zoom except the +/-
-   buttons, which is a poor experience on the device most people are using.
+   scrollWheelZoom is off by default so that two-finger scrolling still
+   scrolls the page rather than trapping the reader inside a full-height map.
 
    macOS (and Windows) report a trackpad pinch as a wheel event with
    ctrlKey set — the browser's own convention for "this is a zoom gesture,
    not a scroll". Handling only that case gives pinch-to-zoom back without
-   taking the page scroll away. Zooming around the pointer rather than the
-   map centre keeps whatever you are pointing at under your fingers. */
+   taking the page scroll away, even before the map below has been clicked
+   into. Zooming around the pointer rather than the map centre keeps
+   whatever you are pointing at under your fingers. */
 map.getContainer().addEventListener(
   "wheel",
   (e) => {
@@ -6566,6 +6566,49 @@ map.getContainer().addEventListener(
   },
   { passive: false }
 );
+
+/* ---------- Click-to-arm mouse-wheel zoom ----------
+   A plain mouse wheel still belongs to the page by default, for the same
+   reason as above — otherwise a visitor scrolling down past the hero gets
+   stuck zooming the map instead. But once someone has deliberately clicked
+   into the map, the wheel is unambiguously theirs: Leaflet's own
+   scrollWheelZoom handler is armed, and disarmed again if they click
+   elsewhere on the page so scrolling past the map goes back to scrolling
+   the page. A small hint (faded in on hover/focus, before the first click)
+   tells a mouse user why the wheel isn't zooming yet. */
+const mapWheelHint = document.getElementById("mapWheelHint");
+const mapContainerEl = map.getContainer();
+let mapWheelArmed = false;
+
+function armMapWheelZoom() {
+  if (mapWheelArmed) return;
+  mapWheelArmed = true;
+  map.scrollWheelZoom.enable();
+  mapContainerEl.classList.add("wheel-armed");
+  if (mapWheelHint) mapWheelHint.classList.remove("is-visible");
+}
+
+function disarmMapWheelZoom() {
+  if (!mapWheelArmed) return;
+  mapWheelArmed = false;
+  map.scrollWheelZoom.disable();
+  mapContainerEl.classList.remove("wheel-armed");
+}
+
+mapContainerEl.addEventListener("click", armMapWheelZoom);
+
+document.addEventListener("click", (e) => {
+  if (mapWheelArmed && !mapContainerEl.contains(e.target)) disarmMapWheelZoom();
+});
+
+if (mapWheelHint) {
+  mapContainerEl.addEventListener("mouseenter", () => {
+    if (!mapWheelArmed) mapWheelHint.classList.add("is-visible");
+  });
+  mapContainerEl.addEventListener("mouseleave", () => {
+    mapWheelHint.classList.remove("is-visible");
+  });
+}
 
 /* ---------- Theme: Light / System / Dark ----------
    The <html data-theme> attribute is set before first paint by the inline

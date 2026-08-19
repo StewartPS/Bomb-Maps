@@ -942,6 +942,43 @@ h3 {
   cursor: crosshair;
 }
 
+/* ---------- "Click to zoom" hint ----------
+   Wheel-zoom on the map only arms after a click (see the JS: it stays off so
+   a visitor scrolling the page past the hero doesn't get trapped zooming the
+   map by accident). This small badge tells a mouse user why the wheel isn't
+   doing anything yet, and fades out once the map is focused/activated. */
+.map-wheel-hint {
+  position: absolute;
+  left: 50%;
+  bottom: 18px;
+  transform: translateX(-50%);
+  z-index: 400;
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(22, 30, 46, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: #f3f4f6;
+  font-size: 0.78rem;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
+}
+
+.map-wheel-hint.is-visible {
+  opacity: 1;
+}
+
+@media (hover: none) {
+  /* Touch devices pinch-zoom the map natively and never see this hint. */
+  .map-wheel-hint {
+    display: none;
+  }
+}
+
 .hero-scrim {
   position: absolute;
   inset: 0;
@@ -976,6 +1013,52 @@ h3 {
 }
 
 .hero-overlay::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* ---------- Themed scrollbars: floating glass panels ----------
+   Everywhere else a panel can overflow and scroll (the location menu, the
+   search results dropdown, the record detail / cordon bottom sheets, the
+   correction dialog, the tour menu), it was falling back to the browser's
+   default scrollbar — a solid, opaque, chrome-coloured bar that clashes with
+   the glassmorphic look the rest of the UI is going for. Reusing the same
+   thin/translucent treatment as .hero-overlay keeps every scrollable surface
+   consistent. */
+.location-menu,
+.search-results,
+.detail-panel,
+.cordon-card,
+.correction-dialog,
+.tour-menu {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 253, 247, 0.3) transparent;
+}
+
+.location-menu::-webkit-scrollbar,
+.search-results::-webkit-scrollbar,
+.detail-panel::-webkit-scrollbar,
+.cordon-card::-webkit-scrollbar,
+.correction-dialog::-webkit-scrollbar,
+.tour-menu::-webkit-scrollbar {
+  width: 6px;
+}
+
+.location-menu::-webkit-scrollbar-thumb,
+.search-results::-webkit-scrollbar-thumb,
+.detail-panel::-webkit-scrollbar-thumb,
+.cordon-card::-webkit-scrollbar-thumb,
+.correction-dialog::-webkit-scrollbar-thumb,
+.tour-menu::-webkit-scrollbar-thumb {
+  background: rgba(255, 253, 247, 0.25);
+  border-radius: 999px;
+}
+
+.location-menu::-webkit-scrollbar-track,
+.search-results::-webkit-scrollbar-track,
+.detail-panel::-webkit-scrollbar-track,
+.cordon-card::-webkit-scrollbar-track,
+.correction-dialog::-webkit-scrollbar-track,
+.tour-menu::-webkit-scrollbar-track {
   background: transparent;
 }
 

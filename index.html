@@ -150,13 +150,13 @@
          old files until the cache expires. Changing the query string makes
          the URL new, so the browser has no choice but to fetch it.
 
-         To release: find and replace ?v=1.14.7 with the next number in BOTH
+         To release: find and replace ?v=1.14.8 with the next number in BOTH
          index.html and news.html, and set DATA_VERSION in js/app.js to the
          same number — the data files it fetches on demand (county slices,
          the potential-sites layer, the V-weapon impacts) get their ?v= from
          there, not from this file.
          ============================================================ -->
-    <link rel="stylesheet" href="css/style.css?v=1.14.7">
+    <link rel="stylesheet" href="css/style.css?v=1.14.8">
   </head>
   <body>
     <!-- ============================================================
@@ -277,6 +277,7 @@
     <main id="top">
       <section id="map-section" class="hero" aria-labelledby="map-title">
         <div id="map" class="hero-map" role="application" aria-label="Map of Plymouth bombing and UXO records"></div>
+        <div class="map-wheel-hint" id="mapWheelHint" aria-hidden="true">Click the map to zoom with your scroll wheel</div>
         <div class="hero-scrim" aria-hidden="true"></div>
 
         <div class="map-stats" id="mapStats" aria-label="Live map totals">
@@ -960,7 +961,7 @@
          the input tools/build-county-slices.js slices. Do not add it
          back as a script tag.
          ============================================================ -->
-    <script src="data/county-index.js?v=1.14.7"></script>
-    <script src="js/app.js?v=1.14.7"></script>
+    <script src="data/county-index.js?v=1.14.8"></script>
+    <script src="js/app.js?v=1.14.8"></script>
   </body>
 </html>
