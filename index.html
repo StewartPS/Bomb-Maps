@@ -150,13 +150,13 @@
          old files until the cache expires. Changing the query string makes
          the URL new, so the browser has no choice but to fetch it.
 
-         To release: find and replace ?v=1.14.4 with the next number in BOTH
+         To release: find and replace ?v=1.14.5 with the next number in BOTH
          index.html and news.html, and set DATA_VERSION in js/app.js to the
          same number — the data files it fetches on demand (county slices,
          the potential-sites layer, the V-weapon impacts) get their ?v= from
          there, not from this file.
          ============================================================ -->
-    <link rel="stylesheet" href="css/style.css?v=1.14.4">
+    <link rel="stylesheet" href="css/style.css?v=1.14.5">
   </head>
   <body>
     <!-- ============================================================
@@ -960,7 +960,7 @@
          the input tools/build-county-slices.js slices. Do not add it
          back as a script tag.
          ============================================================ -->
-    <script src="data/county-index.js?v=1.14.4"></script>
-    <script src="js/app.js?v=1.14.4"></script>
+    <script src="data/county-index.js?v=1.14.5"></script>
+    <script src="js/app.js?v=1.14.5"></script>
   </body>
 </html>

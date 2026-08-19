@@ -114,6 +114,92 @@ const records = [
     ]
   },
   {
+    id: "st-john-exeter-street-1940",
+    title: "St John Street & Exeter Street",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "10 July 1940",
+    sortYear: 1940,
+    confidence: "Street-derived point, catalogue caption only (not yet examined at source)",
+    lat: 50.37149,
+    lng: -4.13300,
+    bombType: "HE",
+    summary: "Plymouth Police photographed air raid damage at St John Street, Exeter Street, the rear of Carlisle Avenue, and St James Place West during Raid 4 of the Blitz.",
+    note: "Sourced from a Plymouth Archives catalogue entry (ref AD7/4/1-7) — a caption only. The photographs themselves have not been viewed, so bomb type, casualties and the exact building(s) hit are not yet confirmed; the coordinate is a street-level estimate for Exeter Street, the best-located of the four names given. 'Carlisle Avenue' could not be matched to a present-day Plymouth street (a 'Carlisle Road' exists nearby) — treat that part of the caption as unresolved.",
+    sources: [
+      { label: "Plymouth Archives Catalogue: AD7/4/1-7, Air Raid Damage, St John Street, Exeter Street, rear of Carlisle Avenue and St James Place West", url: "https://web.plymouth.gov.uk/archivescatalogue/?criteria=bomb&operator=AND" }
+    ]
+  },
+  {
+    id: "austin-avenue-devonport-1940",
+    title: "Austin Avenue, Devonport",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "12 July 1940",
+    sortYear: 1940,
+    confidence: "Street-derived point, catalogue caption only (not yet examined at source)",
+    lat: 50.39074,
+    lng: -4.16578,
+    bombType: "HE",
+    summary: "Plymouth Police photographed air raid damage at Austin Avenue in Devonport, Cookworthy Road, and the gas works site on St Levan's Road during Raid 5 of the Blitz.",
+    note: "Sourced from a Plymouth Archives catalogue entry (ref AD7/5/1-4) — a caption only. The photographs themselves have not been viewed, so bomb type, casualties and the exact building(s) hit are not yet confirmed. Cookworthy Road (50.3929, -4.1688) and the St Levan's Road gas works site (50.3846, -4.1694) are the other two locations named in the same caption but not separately plotted here.",
+    sources: [
+      { label: "Plymouth Archives Catalogue: AD7/5/1-4, Air Raid Damage, Austin Avenue, Cookworthy Road and gas works site, St Levan's Road", url: "https://web.plymouth.gov.uk/archivescatalogue/?criteria=bomb&operator=AND" }
+    ]
+  },
+  {
+    id: "lincoln-avenue-1940",
+    title: "Lincoln Avenue",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "28 December 1940",
+    sortYear: 1940,
+    confidence: "Street-derived point, catalogue caption only (not yet examined at source)",
+    lat: 50.37931,
+    lng: -4.12288,
+    bombType: "incendiary",
+    summary: "Plymouth Police photographed an incendiary bomb at Lincoln Avenue during Raid 25 of the Blitz.",
+    note: "Sourced from a Plymouth Archives catalogue entry (ref AD7/13/3) — a caption only. The photograph itself has not been viewed, so casualties and the exact address are not yet confirmed.",
+    sources: [
+      { label: "Plymouth Archives Catalogue: AD7/13/3, Air Raid Damage, incendiary bomb, Lincoln Avenue", url: "https://web.plymouth.gov.uk/archivescatalogue/?criteria=bomb&operator=AND" }
+    ]
+  },
+  {
+    id: "victoria-park-crater-1940",
+    title: "Victoria Park, bomb crater",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "28 December 1940",
+    sortYear: 1940,
+    confidence: "Park-level point, catalogue caption only (not yet examined at source)",
+    lat: 50.37621,
+    lng: -4.15421,
+    bombType: "HE",
+    summary: "Plymouth Police photographed a bomb crater in Victoria Park during Raid 25 of the Blitz, the same night as the Lincoln Avenue incendiary.",
+    note: "Sourced from a Plymouth Archives catalogue entry (ref AD7/13/16) — a caption only. The photograph itself has not been viewed, so casualties are not confirmed (a park crater suggests none). Coordinate is the park's approximate centre, not the crater's exact position.",
+    sources: [
+      { label: "Plymouth Archives Catalogue: AD7/13/16, Air Raid Damage, bomb crater, Victoria Park", url: "https://web.plymouth.gov.uk/archivescatalogue/?criteria=bomb&operator=AND" }
+    ]
+  },
+  {
+    id: "raf-mount-batten-1940",
+    title: "RAF Mount Batten",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "28 November 1940",
+    sortYear: 1940,
+    confidence: "Site-level point, catalogue caption only (not yet examined at source)",
+    lat: 50.3553,
+    lng: -4.1247,
+    bombType: "HE",
+    summary: "Bomb damage to buildings at the RAF flying-boat station on Mount Batten during Raid 22 of the Blitz.",
+    note: "Sourced from Plymouth Archives catalogue entries (refs 3488/5458 and 3488/5463) — captions only. The photographs themselves have not been viewed, so casualties and the specific buildings hit are not yet confirmed.",
+    sources: [
+      { label: "Plymouth Archives Catalogue: 3488/5458 & 3488/5463, Bomb damage at RAF Mountbatten", url: "https://web.plymouth.gov.uk/archivescatalogue/?criteria=bomb&operator=AND" },
+      { label: "Wikipedia: RAF Mount Batten", url: "https://en.wikipedia.org/wiki/RAF_Mount_Batten" }
+    ]
+  },
+  {
     id: "city-centre-1941",
     title: "City Centre",
     status: "historic",
@@ -5886,7 +5972,7 @@ let activeCounty = COUNTY_ALL;
    the same cache-busting reason — these files are fetched by script and
    would otherwise be served stale from cache long after a data update.
    ============================================================ */
-const DATA_VERSION = "1.14.4";
+const DATA_VERSION = "1.14.5";
 
 // Prebuilt county bounding boxes from data/county-index.js. Tiny, always
 // loaded, and enough to frame a county before its outline arrives.
