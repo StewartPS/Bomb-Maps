@@ -32,12 +32,27 @@
   </url>
   <url>
     <loc>https://bombmaps.co.uk/records/belfast-harland-wolff-1941/</loc>
-    <lastmod>2026-08-18</lastmod>
+    <lastmod>2026-08-19</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://bombmaps.co.uk/records/belfast-short-harland-1941/</loc>
+    <lastmod>2026-08-19</lastmod>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://bombmaps.co.uk/records/clydebank-blitz-1941/</loc>
-    <lastmod>2026-08-18</lastmod>
+    <lastmod>2026-08-19</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://bombmaps.co.uk/records/clydebank-second-avenue-1941/</loc>
+    <lastmod>2026-08-19</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://bombmaps.co.uk/records/clydebank-jellicoe-street-1941/</loc>
+    <lastmod>2026-08-19</lastmod>
     <priority>0.7</priority>
   </url>
   <url>
@@ -48,6 +63,36 @@
   <url>
     <loc>https://bombmaps.co.uk/records/clydebank-singer-1941/</loc>
     <lastmod>2026-08-18</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://bombmaps.co.uk/records/greenock-blitz-1941/</loc>
+    <lastmod>2026-08-19</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://bombmaps.co.uk/records/greenock-east-crawford-street-1941/</loc>
+    <lastmod>2026-08-19</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://bombmaps.co.uk/records/aberdeen-blitz-1943/</loc>
+    <lastmod>2026-08-19</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://bombmaps.co.uk/records/aberdeen-bedford-place-1943/</loc>
+    <lastmod>2026-08-19</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://bombmaps.co.uk/records/wick-bank-row-1940/</loc>
+    <lastmod>2026-08-19</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://bombmaps.co.uk/records/orkney-bridge-of-waithe-1940/</loc>
+    <lastmod>2026-08-19</lastmod>
     <priority>0.7</priority>
   </url>
   <url>
@@ -1252,12 +1297,32 @@
   </url>
   <url>
     <loc>https://bombmaps.co.uk/counties/county-down/</loc>
-    <lastmod>2026-08-18</lastmod>
+    <lastmod>2026-08-19</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://bombmaps.co.uk/counties/dunbartonshire/</loc>
-    <lastmod>2026-08-18</lastmod>
+    <lastmod>2026-08-19</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://bombmaps.co.uk/counties/renfrewshire/</loc>
+    <lastmod>2026-08-19</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://bombmaps.co.uk/counties/aberdeenshire/</loc>
+    <lastmod>2026-08-19</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://bombmaps.co.uk/counties/caithness/</loc>
+    <lastmod>2026-08-19</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://bombmaps.co.uk/counties/orkney/</loc>
+    <lastmod>2026-08-19</lastmod>
     <priority>0.8</priority>
   </url>
   <url>

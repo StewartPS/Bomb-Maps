@@ -5034,11 +5034,31 @@ const belfastHarbourRecords = [
     lng: -5.89306,
     bombType: "mixed",
     summary: "The shipyard was the reason Belfast was worth bombing. On 15–16 April three ships nearing completion were hit and the yard's own power station was struck. The Fire Raid of 4–5 May concentrated on the Harbour Estate and Queen's Island, and did the damage to war production that the Easter raid had largely missed.",
-    note: "The point is the archive location for the East Yard rather than a survey point for a works covering most of an island, so treat it as accurate to a couple of hundred metres. Short & Harland's aircraft factory, building Stirling bombers on the same island, lost a four-and-a-half acre factory floor in the raid of 7 April and is not separately plotted because no coordinate could be obtained.",
+    note: "The point is the archive location for the East Yard rather than a survey point for a works covering most of an island, so treat it as accurate to a couple of hundred metres. Short & Harland's aircraft factory, building Stirling bombers on the same island, lost a four-and-a-half acre factory floor in the raid of 7 April and is separately plotted below.",
     casualtiesNote: "No per-site death toll is published for the yard. The city-wide totals for these raids are carried on the Belfast Blitz record and belong to no single location.",
     sources: [
       { label: "Wikipedia: Belfast Blitz", url: "https://en.wikipedia.org/wiki/Belfast_Blitz" },
       { label: "Britain from Above: Harland & Wolff new East Shipyard (XPW008422)", url: "https://www.britainfromabove.org.uk/en/image/XPW008422" }
+    ]
+  },
+  {
+    id: "belfast-short-harland-1941",
+    title: "Short & Harland aircraft factory, Airport Road",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "7–8 April 1941",
+    sortYear: 1941,
+    confidence: "Confirmed event, postcode-level point (no survey coordinate found; see note)",
+    lat: 54.605985,
+    lng: -5.894049,
+    bombType: "parachute-mine",
+    casualties: 6,
+    casualtiesNote: "Six night-shift workers killed when a parachute mine's blast collapsed part of the adjacent Harland & Wolff building; a seventh died of injuries on 20 April.",
+    summary: "During the Docks Raid, two parachute mines fell over Queen's Island at 03:22. One struck the Alexandra Works aeroplane fuselage factory directly; the other's blast brought down part of the neighbouring Harland & Wolff building, killing six workers. Short & Harland's own aircraft factory — building Stirling bombers on the same island — lost a four-and-a-half acre factory floor in the same raid.",
+    note: "The coordinate is a postcode centroid for Airport Road (BT3 9EU), not a surveyed site location — this site was previously left unplotted for exactly that reason (see the Harland & Wolff record above). Treat it as accurate to within a few hundred metres, not building-level.",
+    sources: [
+      { label: "WartimeNI: Short and Harland, Airport Road, Belfast", url: "https://archives.wartimeni.com/location/short-and-harland-airport-road-belfast-co-antrim/" },
+      { label: "WartimeNI: Belfast Blitz — the Docks Raid, timeline", url: "https://wartimeni.com/article/belfast-blitz/the-docks-raid/timeline/" }
     ]
   }
 ];
@@ -5064,10 +5084,48 @@ const clydebankRecords = [
     bombType: "mixed",
     summary: "Two nights of bombing aimed at the shipyards and the munitions works destroyed the town around them instead. On 13 March 236 aircraft dropped 272 tons of high explosive and over 1,650 incendiary canisters; the following night 203 aircraft dropped 231 tons more. Of roughly 12,000 houses in Clydebank, seven were left undamaged.",
     note: "Proportionally the most completely destroyed town in the United Kingdom. Some 35,000 people out of a population of about 47,000 were made homeless, and most of them left — the town's own fire service and rescue crews went on working through it.",
-    casualtiesNote: "528 killed and 617 seriously injured in Clydebank itself, the official count made in 1942. Beware the figure of 1,200 dead that appears in many accounts including Wikipedia's: that is the CLYDESIDE total, taking in Glasgow's roughly 647, and is not a Clydebank figure. Individual streets with published tolls that could not be plotted for want of a coordinate: Second Avenue, Radnor Park, 80 dead from direct hits on houses; 78 Jellicoe Street, Dalmuir, 31 dead, fifteen of them members of the Rocks family. All of these are area figures, not figures for this pin.",
+    casualtiesNote: "528 killed and 617 seriously injured in Clydebank itself, the official count made in 1942. Beware the figure of 1,200 dead that appears in many accounts including Wikipedia's: that is the CLYDESIDE total, taking in Glasgow's roughly 647, and is not a Clydebank figure. Second Avenue (80 dead from direct hits on houses) and 78 Jellicoe Street, Dalmuir (31 dead, fifteen of them members of the Rocks family) are now separately plotted below. Both remain area/street figures, not building-specific tolls except where a record below gives one.",
     sources: [
       { label: "National Records of Scotland: The Clydebank Blitz", url: "https://nrscotland.gov.uk/learning-and-events/all-features-and-articles/the-clydebank-blitz-13-15-march-1941" },
       { label: "1st Line Defence: UXO risk in Clydebank", url: "https://www.1stlinedefence.co.uk/resources/uxo-city-guides/clydebank/" }
+    ]
+  },
+  {
+    id: "clydebank-second-avenue-1941",
+    title: "76 Second Avenue",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "13 March 1941",
+    sortYear: 1941,
+    confidence: "Confirmed event, postcode-level point (no survey coordinate found; see note)",
+    lat: 55.910501,
+    lng: -4.417552,
+    bombType: "HE",
+    casualties: 11,
+    casualtiesNote: "Eleven members of the Diver family killed at this address. Second Avenue as a whole — including 72, 150 and 163 Second Avenue, where the Cahill, Dunn, Harris and Lee families and others also died — totalled around 80 dead; those other addresses are not separately plotted and this pin covers only the worst-hit single address.",
+    summary: "A direct hit on a tenement at 76 Second Avenue killed eleven members of the Diver family, part of a wider toll of roughly 80 dead along the street during the two nights of bombing.",
+    note: "The coordinate is a postcode centroid (G81 3HD), not a surveyed site location. Second Avenue's full casualty list — Ahern, Harris, Cahill, Dunn, Lee and others across several addresses — is on the source below but not individually plotted here.",
+    sources: [
+      { label: "Tom McKendrick: List of Casualties, Clydebank", url: "https://www.tommckendrick.com/code/casualties1.html" }
+    ]
+  },
+  {
+    id: "clydebank-jellicoe-street-1941",
+    title: "78 Jellicoe Street, Dalmuir",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "13 March 1941",
+    sortYear: 1941,
+    confidence: "Confirmed event, postcode-level point (no survey coordinate found; see note)",
+    lat: 55.910523,
+    lng: -4.431027,
+    bombType: "HE",
+    casualties: 31,
+    casualtiesNote: "31 dead at this single address, fifteen of them members of the Rocks family — one of the largest single-family losses of the whole Clydeside Blitz. Only Tommy Rocks is individually named in the source used here; a fuller casualty list may exist and is worth chasing.",
+    summary: "A single bomb (recorded locally as 'Bomb 187') destroyed the tenement at 78 Jellicoe Street in Dalmuir, killing 31 people including fifteen of the Rocks family.",
+    note: "The coordinate is a postcode centroid (G81 4HJ), not a surveyed site location. The project's earlier research corrected an assumption that this was in Radnor Park or 'the Holy City' — it was in Dalmuir, a separate part of Clydebank.",
+    sources: [
+      { label: "The Sunday Post: One street, one bomb, one family", url: "https://www.sundaypost.com/fp/one-street-one-bomb-one-familyblitz-remembered-survivor-tells-how-his-best-friend-and-14-relatives-died-in-just-one-devastating-explosion-in-a-night-of-horror/" }
     ]
   },
   {
@@ -5174,6 +5232,134 @@ const swanseaRecords = [
   }
 ];
 
+const greenockRecords = [
+  {
+    id: "greenock-blitz-1941",
+    title: "Greenock — the raids of 6–7 May 1941",
+    status: "historic",
+    statusLabel: "Historic bombing area",
+    date: "6–7 May 1941",
+    sortYear: 1941,
+    confidence: "Confirmed event, area-level point only (exact site not verified)",
+    lat: 55.9483,
+    lng: -4.7644,
+    bombType: "mixed",
+    summary: "Around 350 German bombers attacked over two nights, aiming for the shipyards but doing far more damage to the town around them — much as at Clydebank two months earlier. Civilian deaths were markedly lower on the second night, once people had learned to shelter in tunnels in the town's east end.",
+    note: "A decoy site behind Loch Thom successfully drew bombs away from the town — scores of large craters were found there afterwards. The shipyards, the intended target, escaped comparatively lightly; the sugar refineries, distillery and foundries did not.",
+    casualtiesNote: "271 people killed over the two nights, more than 10,200 injured. Around 25,000 homes damaged and 5,000 destroyed — that housing-stock figure is given against a town-wide total of roughly 180,000 homes in one source, which looks too high for Greenock alone and has not been cross-checked against a second source; treat the raw casualty figures as solid and the housing totals as provisional.",
+    sources: [
+      { label: "Wikipedia: Greenock Blitz", url: "https://en.wikipedia.org/wiki/Greenock_Blitz" },
+      { label: "IWM: Greenock Air Raids 1940–1941", url: "https://www.iwm.org.uk/memorials/item/memorial/53658" }
+    ]
+  },
+  {
+    id: "greenock-east-crawford-street-1941",
+    title: "East Crawford Street & Belville Street",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "6 May 1941",
+    sortYear: 1941,
+    confidence: "Confirmed event, postcode-level point (no survey coordinate found; see note)",
+    lat: 55.939365,
+    lng: -4.732764,
+    bombType: "HE",
+    summary: "Serious damage was inflicted on East Crawford Street and Belville Street on the first night of the Greenock Blitz.",
+    note: "The coordinate is a postcode centroid (PA15 2EA), not a surveyed site location. No per-site casualty figure is published; the town-wide toll of 271 is carried on the area record.",
+    sources: [
+      { label: "Wikipedia: Greenock Blitz", url: "https://en.wikipedia.org/wiki/Greenock_Blitz" }
+    ]
+  }
+];
+
+const aberdeenRecords = [
+  {
+    id: "aberdeen-blitz-1943",
+    title: "Aberdeen — the raid of 21 April 1943",
+    status: "historic",
+    statusLabel: "Historic bombing area",
+    date: "21 April 1943",
+    sortYear: 1943,
+    confidence: "Confirmed event, area-level point only (exact site not verified)",
+    lat: 57.1497,
+    lng: -2.0943,
+    bombType: "mixed",
+    casualties: 120,
+    casualtiesNote: "More than 120 killed — 98 civilians and 27 soldiers of the Gordon Highlanders at Gordon Barracks — in 127 bombs dropped over 44 minutes. Named individual casualties below (the Cox family) come from a single source and have not been cross-checked against a second.",
+    summary: "The last major Luftwaffe raid on any British city. 127 bombs fell in 44 minutes across residential and industrial Aberdeen, from Hilton in the north to the harbour, damaging or destroying more than 12,000 homes.",
+    note: "Sites damaged without a published per-site casualty figure: Middlefield School (a direct strike; a young teacher trapped and had a leg amputated), Kittybrewster railway shelter (13 railwaymen sheltering, 4 killed), Cattofield Gardens, Powis Place (the front of Causewayend Church destroyed), George Street and Hutcheon Street.",
+    sources: [
+      { label: "Press and Journal: The Aberdeen Blitz of 1943 left the city in ruins", url: "https://www.pressandjournal.co.uk/fp/past-times/4170473/blitz-aberdeen/" }
+    ]
+  },
+  {
+    id: "aberdeen-bedford-place-1943",
+    title: "60 Bedford Place",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "21 April 1943",
+    sortYear: 1943,
+    confidence: "Confirmed event, postcode-level point (no survey coordinate found; see note)",
+    lat: 57.160702,
+    lng: -2.107896,
+    bombType: "HE",
+    casualties: 4,
+    casualtiesNote: "The Cox family killed: mother Williamina, 22, and three children. Named-victim detail from a single source, not yet cross-checked against a second — treat with the same caution as the area record's casualty note.",
+    summary: "A direct hit on 60 Bedford Place killed the Cox family of four during the 21 April 1943 raid.",
+    note: "The coordinate is a postcode centroid (AB24 3NX), not a surveyed site location.",
+    sources: [
+      { label: "Press and Journal: The Aberdeen Blitz of 1943 left the city in ruins", url: "https://www.pressandjournal.co.uk/fp/past-times/4170473/blitz-aberdeen/" }
+    ]
+  }
+];
+
+const wickRecords = [
+  {
+    id: "wick-bank-row-1940",
+    title: "Bank Row",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "1 July 1940, c. 16:30",
+    sortYear: 1940,
+    confidence: "Confirmed event, postcode-level point (no survey coordinate found; see note)",
+    lat: 58.4398,
+    lng: -3.0894,
+    bombType: "HE",
+    weightKg: 50,
+    casualties: 15,
+    casualtiesNote: "15 killed (8 children, 7 adults), 30+ injured. Children: Eric Blackstock (5), John Wares (5), Betha Miller (5), Isobel Bruce (7), James Flett (7), Kenneth MacGregor (8), Amy Miller (9), Donald Thomson (16). Adults: Isobel Mackenzie (25), Pte Robert Mackenzie (30), Mary MacTavish (44), Mary Steven (44), Donald Waters (50), Bill Smith (63), Robert Mackenzie (71).",
+    summary: "A single, undetected German Ju88 dropped two 50kg bombs on Bank Row — no siren sounded and no fighters were scrambled. It is recorded as the first daylight bombing raid against civilians on mainland Britain, two months before the London Blitz began.",
+    note: "The coordinate is a postcode centroid (KW1 5EY), not a surveyed site location — a memorial garden now marks the site and may have a more precise published coordinate worth chasing later. This is one of the best individually-sourced incidents added in this batch: full names and ages for all 15 dead are published.",
+    sources: [
+      { label: "Caithness at War: Site 4, Bank Row Bombing", url: "https://caithnessatwar.com/site-4-bank-row-bombing/" },
+      { label: "IWM: Wick Bomb Victims", url: "https://www.iwm.org.uk/memorials/item/memorial/84248" },
+      { label: "John O'Groat Journal: Bank Row, 1940 — 'Those bombs just came out of the blue'", url: "https://www.johnogroat-journal.co.uk/news/bank-row-1940-those-bombs-just-came-out-of-the-blue-210618/" }
+    ]
+  }
+];
+
+const orkneyRecords = [
+  {
+    id: "orkney-bridge-of-waithe-1940",
+    title: "Bridge of Waithe (Brig o' Waithe)",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "16 March 1940",
+    sortYear: 1940,
+    confidence: "Confirmed site, coordinate stated directly by source",
+    lat: 58.9837367,
+    lng: -3.2468247,
+    bombType: "HE",
+    casualties: 1,
+    casualtiesNote: "James Isbister, 27, killed in his own doorway — the first British civilian killed by a German bomb in the Second World War. Seven other civilians were wounded; six military personnel were also killed and seven injured in the wider raid on Scapa Flow that night.",
+    summary: "A Luftwaffe aircraft returning from a raid on the Scapa Flow naval anchorage dropped nineteen bombs near the shore of Loch Stenness, on its way back out. One killed James Isbister; it was the second major Luftwaffe attack on Scapa Flow, after an earlier raid in October 1939 had damaged the battleship Iron Duke.",
+    note: "Coordinate stated directly by the source used — no geocoding was needed for this record.",
+    sources: [
+      { label: "Secret Scotland: James Isbister", url: "https://www.secretscotland.org.uk/index.php/Secrets/JamesIsbister" },
+      { label: "IWM: J W Isbister, first civilian air raid casualty in the British Empire in WW2", url: "https://www.iwm.org.uk/memorials/item/memorial/76280" }
+    ]
+  }
+];
+
 const regionData = {
   belfast: {
     label: "Belfast, County Antrim",
@@ -5204,6 +5390,50 @@ const regionData = {
     accent: "var(--amber)",
     records: clydebankRecords,
     center: [55.9014, -4.40867],
+    zoom: 14,
+    raidNights: null,
+    hasPotential: false
+  },
+  greenock: {
+    label: "Greenock, Renfrewshire",
+    short: "Greenock",
+    county: "Renfrewshire",
+    accent: "var(--amber)",
+    records: greenockRecords,
+    center: [55.9483, -4.7644],
+    zoom: 14,
+    raidNights: null,
+    hasPotential: false
+  },
+  aberdeen: {
+    label: "Aberdeen, Aberdeenshire",
+    short: "Aberdeen",
+    county: "Aberdeenshire",
+    accent: "var(--amber)",
+    records: aberdeenRecords,
+    center: [57.1497, -2.0943],
+    zoom: 13,
+    raidNights: null,
+    hasPotential: false
+  },
+  wick: {
+    label: "Wick, Caithness",
+    short: "Wick",
+    county: "Caithness",
+    accent: "var(--amber)",
+    records: wickRecords,
+    center: [58.4398, -3.0894],
+    zoom: 15,
+    raidNights: null,
+    hasPotential: false
+  },
+  orkney: {
+    label: "Bridge of Waithe, Orkney",
+    short: "Orkney",
+    county: "Orkney",
+    accent: "var(--amber)",
+    records: orkneyRecords,
+    center: [58.9837, -3.2468],
     zoom: 14,
     raidNights: null,
     hasPotential: false
@@ -6064,7 +6294,7 @@ let activeCounty = COUNTY_ALL;
    the same cache-busting reason — these files are fetched by script and
    would otherwise be served stale from cache long after a data update.
    ============================================================ */
-const DATA_VERSION = "1.14.6";
+const DATA_VERSION = "1.14.7";
 
 // Prebuilt county bounding boxes from data/county-index.js. Tiny, always
 // loaded, and enough to frame a county before its outline arrives.
