@@ -151,6 +151,23 @@ const records = [
     ]
   },
   {
+    id: "milehouse-stoke-reported-1941",
+    title: "Milehouse / Stoke, reported parachute mine and incendiary fall",
+    status: "reported",
+    statusLabel: "Reported, unconfirmed",
+    date: "1940 to 1944 (exact date not yet established)",
+    sortYear: 1941,
+    confidence: "Reader-reported, not yet corroborated against the bomb book",
+    lat: 50.38,
+    lng: -4.15,
+    bombType: "unknown",
+    summary: "A reader recalls a parachute-mine landmine coming down in the Milehouse/Stoke area, plus heavy incendiary fall across the district — including several incendiaries on their own house and garden — consistent with the thousands of incendiaries dropped on Plymouth during the Blitz.",
+    note: "Filed as a placeholder pending a specific date and street. Stoke and Milehouse sit within the area the Town Clerk's bomb book covers (held at The Box), which would be the authoritative source for pinning this to an exact site and night — see the correction routes on this site if you can supply a date, street, or bomb-book reference. The coordinate given is a rough district centre only, not an incident location.",
+    sources: [
+      { label: "The Box: Blitz 80 - The Bomb Book", url: "https://www.theboxplymouth.com/blog/archives/blitz-80-the-bomb-book" }
+    ]
+  },
+  {
     id: "devonport-park-2010",
     title: "Devonport Park, Stoke",
     status: "found",
@@ -663,6 +680,24 @@ const exeterRecords = [
     note: "The last significant raid on Exeter.",
     sources: [
       { label: "Exeter Memories: Air raids on Exeter 1940-1942", url: "https://www.exetermemories.co.uk/em/_events/airraids.php" }
+    ]
+  },
+  {
+    id: "exeter-bovemoors-mile-lane-1940",
+    title: "Bovemoors Lane & Mile Lane fields, east Exeter",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "16 August 1940, 03:25",
+    sortYear: 1940,
+    confidence: "Confirmed event, street-derived point (open-field fall, exact crater not traced)",
+    lat: 50.7186,
+    lng: -3.5031,
+    bombType: "HE",
+    summary: "Two high-explosive bombs fell in fields by Bovemoor Lane and Mile Lane on the eastern edge of the city, causing only slight damage to nearby buildings.",
+    note: "One of Exeter's earliest raids, well before the 1942 Baedeker attacks devastated the centre. A local account holds that one of these bombs killed a cow in the field — plausible for an open-field HE fall of this kind, but not yet corroborated against the primary bomb register (Devon's WW2 bomb census is held by the South West Heritage Trust at the Devon Heritage Centre and is not digitised or searchable online). Coordinate is a postcode-area estimate for Bovemoors Lane, EX2 — the exact field is not pinpointed. Treat as approximate until checked against the SW Heritage Trust register.",
+    sources: [
+      { label: "Exeter Memories: Air raids on Exeter 1940-1942", url: "https://www.exetermemories.co.uk/em/_events/airraids.php" },
+      { label: "South West Heritage Trust: Devon archives and local studies", url: "https://swheritage.org.uk/devon-archives/" }
     ]
   }
 ];
@@ -5851,7 +5886,7 @@ let activeCounty = COUNTY_ALL;
    the same cache-busting reason — these files are fetched by script and
    would otherwise be served stale from cache long after a data update.
    ============================================================ */
-const DATA_VERSION = "1.14.3";
+const DATA_VERSION = "1.14.4";
 
 // Prebuilt county bounding boxes from data/county-index.js. Tiny, always
 // loaded, and enough to frame a county before its outline arrives.
