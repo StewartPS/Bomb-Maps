@@ -386,6 +386,26 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://bombmaps.co.uk/records/grimsby-butterfly-bomb-raid-1943/</loc>
+    <lastmod>2026-08-19</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://bombmaps.co.uk/records/grimsby-canon-ainslie-school-1943/</loc>
+    <lastmod>2026-08-19</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://bombmaps.co.uk/records/grimsby-burgess-street-1943/</loc>
+    <lastmod>2026-08-19</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://bombmaps.co.uk/records/grimsby-kingsley-grove-1943/</loc>
+    <lastmod>2026-08-19</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://bombmaps.co.uk/records/wilkinsons-north-shields-1941/</loc>
     <lastmod>2026-08-18</lastmod>
     <priority>0.7</priority>
@@ -1273,6 +1293,11 @@
   <url>
     <loc>https://bombmaps.co.uk/counties/east-riding-of-yorkshire/</loc>
     <lastmod>2026-08-18</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://bombmaps.co.uk/counties/lincolnshire/</loc>
+    <lastmod>2026-08-19</lastmod>
     <priority>0.8</priority>
   </url>
   <url>

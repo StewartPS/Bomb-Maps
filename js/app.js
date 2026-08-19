@@ -3446,6 +3446,87 @@ const liverpoolRecords = [
   }
 ];
 
+const grimsbyRecords = [
+  {
+    id: "grimsby-butterfly-bomb-raid-1943",
+    title: "Grimsby & Cleethorpes — the Butterfly Bomb Raid",
+    status: "historic",
+    statusLabel: "Historic bombing area",
+    date: "13–14 June 1943",
+    sortYear: 1943,
+    confidence: "Confirmed event, area-level point (town-wide raid, not a single site)",
+    lat: 53.5675,
+    lng: -0.0798,
+    bombType: "mixed",
+    casualties: 114,
+    casualtiesNote: "114 killed in total, including deaths in the days, weeks and months after the raid from bombs with anti-disturbance fuses — more than half of all civilian deaths across 37 raids on the two towns over the war. 44 died in the raid itself and its immediate aftermath; the toll rose to 114 over time (research by James Rogers, University of Hull).",
+    summary: "Starting at 1:43am, German bombers dropped roughly 18 tonnes of high-explosive and incendiary bombs on Grimsby and Cleethorpes, followed by around 3,000 SD-2 'butterfly bombs' — small anti-personnel cluster munitions scattered across streets, gardens, allotments and rooftops. An estimated 1,350–1,500 failed to explode on impact, turning both towns into a live minefield. 332 fires were burning within two hours, with 68 more unattended; 211 houses were destroyed and around eighty fish-dock businesses burnt out.",
+    note: "A 300-strong bomb disposal team (No. 3 Bomb Disposal Company, under Major William Parker) worked from the night of the raid until 9 July 1943 to clear roughly 1,350 devices, but the area was not declared fully safe until 1948 — bombs with anti-disturbance fuses kept killing and injuring people for years: John Johnson and Sydney Russell died in May 1944 when a plough disturbed one, and nine-year-old Frank Childs was killed in a cemetery explosion in March 1944. This is a town-wide area point; individual incidents (Canon Ainslie School, Burgess Street) are recorded separately below. A permanent memorial to the 114 dead was still being campaigned for as of the sourcing below — check for an unveiling before treating the memorial as built.",
+    sources: [
+      { label: "The Butterfly Bombing of Grimsby and Cleethorpes (memorial project)", url: "https://www.butterflybombmemorial.co.uk/" },
+      { label: "Grimsby Telegraph: The day butterfly bombs brought terror to Grimsby and Cleethorpes", url: "https://www.grimsbytelegraph.co.uk/news/nostalgia/butterfly-bombs-bring-terror-morning-1683109" },
+      { label: "Grimsby Telegraph: Man's fight for memorial commemorating 114 victims", url: "https://www.grimsbytelegraph.co.uk/news/grimsby-news/mans-fight-memorial-commemorating-114-10163084" },
+      { label: "Grimsby Telegraph: Remembering the 295 people who died in Second World War air raids on Grimsby and Cleethorpes", url: "https://www.grimsbytelegraph.co.uk/news/grimsby-news/remembering-295-people-who-died-4676082" }
+    ]
+  },
+  {
+    id: "grimsby-canon-ainslie-school-1943",
+    title: "Canon Ainslie School, Ainslie Street",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "14 June 1943, 10:25am",
+    sortYear: 1943,
+    confidence: "Confirmed site, street-derived point",
+    lat: 53.560235,
+    lng: -0.083193,
+    bombType: "parachute-mine",
+    casualties: 4,
+    casualtiesNote: "Four wardens killed instantly when a butterfly bomb detonated during clearance work: Charles Heath, his son Walter Heath, George Wilson, and Harold Blundell.",
+    summary: "Hours after the main raid, an unexploded butterfly bomb detonated at the school on the corner of Ainslie Street and Abbey Road, killing four air raid wardens working to clear the site.",
+    note: "Part of the wider Grimsby & Cleethorpes butterfly bomb raid of 13–14 June 1943 — see the area record for the full raid. Bomb type recorded as 'parachute-mine' to match the site's schema for the SD-2 butterfly bomb, an anti-personnel cluster munition rather than a conventional parachute mine; treat the categorisation as the closest available fit, not a literal match.",
+    sources: [
+      { label: "Grimsby Telegraph: The day butterfly bombs brought terror to Grimsby and Cleethorpes", url: "https://www.grimsbytelegraph.co.uk/news/nostalgia/butterfly-bombs-bring-terror-morning-1683109" }
+    ]
+  },
+  {
+    id: "grimsby-burgess-street-1943",
+    title: "Burgess Street & King Edward Street",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "13–14 June 1943",
+    sortYear: 1943,
+    confidence: "Confirmed event, street-derived point",
+    lat: 53.568001,
+    lng: -0.079731,
+    bombType: "HE",
+    weightKg: 1000,
+    summary: "A 1,000kg high-explosive bomb struck Burgess Street, devastating King Edward Street, Victoria Street, Grime Street and Fotherby Street. Air raid warden John Denford and sailor Fred Dolphin rescued a young woman from a collapsed terraced house on King Edward Street.",
+    note: "Part of the wider Grimsby & Cleethorpes butterfly bomb raid of 13–14 June 1943 — see the area record for the full raid and its casualty total. No per-site death toll is published for this street cluster specifically.",
+    sources: [
+      { label: "Grimsby Telegraph: The day butterfly bombs brought terror to Grimsby and Cleethorpes", url: "https://www.grimsbytelegraph.co.uk/news/nostalgia/butterfly-bombs-bring-terror-morning-1683109" }
+    ]
+  },
+  {
+    id: "grimsby-kingsley-grove-1943",
+    title: "Kingsley Grove, Nunsthorpe",
+    status: "historic",
+    statusLabel: "Historic bombing site",
+    date: "June 1943",
+    sortYear: 1943,
+    confidence: "Confirmed event, street-derived point (exact date within the clearance period not specified in sources)",
+    lat: 53.549311,
+    lng: -0.09774,
+    bombType: "parachute-mine",
+    casualties: 1,
+    casualtiesNote: "An ARP warden was fatally injured after reportedly disturbing an unexploded butterfly bomb on Kingsley Grove.",
+    summary: "One of the butterfly bombs scattered across Grimsby and Cleethorpes on 13–14 June 1943 came down on Kingsley Grove in the Nunsthorpe estate, fatally injuring an air raid warden.",
+    note: "Part of the wider Grimsby & Cleethorpes butterfly bomb raid — see the area record. Bomb type recorded as 'parachute-mine' to match the site's schema for the SD-2 butterfly bomb; see the Canon Ainslie School record for the same note. The warden is not named in the source used.",
+    sources: [
+      { label: "The Butterfly Bombing of Grimsby and Cleethorpes (memorial project)", url: "https://www.butterflybombmemorial.co.uk/" }
+    ]
+  }
+];
+
 const bootleRecords = [
   {
     id: "bootle-coop-shelter-1941",
@@ -5281,6 +5362,17 @@ const regionData = {
     raidNights: null,
     hasPotential: false
   },
+  grimsby: {
+    label: "Grimsby & Cleethorpes, Lincolnshire",
+    short: "Grimsby",
+    county: "Lincolnshire",
+    accent: "var(--amber)",
+    records: grimsbyRecords,
+    center: [53.5675, -0.0798],
+    zoom: 13,
+    raidNights: null,
+    hasPotential: false
+  },
   northShields: {
     label: "North Shields, Tyne and Wear",
     short: "North Shields",
@@ -5972,7 +6064,7 @@ let activeCounty = COUNTY_ALL;
    the same cache-busting reason — these files are fetched by script and
    would otherwise be served stale from cache long after a data update.
    ============================================================ */
-const DATA_VERSION = "1.14.5";
+const DATA_VERSION = "1.14.6";
 
 // Prebuilt county bounding boxes from data/county-index.js. Tiny, always
 // loaded, and enough to frame a county before its outline arrives.
