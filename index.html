@@ -150,13 +150,13 @@
          old files until the cache expires. Changing the query string makes
          the URL new, so the browser has no choice but to fetch it.
 
-         To release: find and replace ?v=1.14.8 with the next number in BOTH
+         To release: find and replace ?v=1.14.9 with the next number in BOTH
          index.html and news.html, and set DATA_VERSION in js/app.js to the
          same number — the data files it fetches on demand (county slices,
          the potential-sites layer, the V-weapon impacts) get their ?v= from
          there, not from this file.
          ============================================================ -->
-    <link rel="stylesheet" href="css/style.css?v=1.14.8">
+    <link rel="stylesheet" href="css/style.css?v=1.14.9">
   </head>
   <body>
     <!-- ============================================================
@@ -896,6 +896,7 @@
           <li><a href="https://www.cornish-times.co.uk/news/saltash-pays-tribute-to-nine-killed-in-blitz-horror-85-years-ago-901579" target="_blank" rel="noopener">Cornish Times: Saltash pays tribute to nine killed in Blitz horror, 85 years on</a></li>
           <li><a href="https://www.cornish-times.co.uk/news/restored-graves-unveiled-for-firefighters-killed-in-wartime-tragedy-900335" target="_blank" rel="noopener">Cornish Times: Restored graves unveiled for firefighters killed in wartime tragedy</a></li>
           <li>London V1 &amp; V2 impact points: <a href="https://doi.org/10.5281/zenodo.14883986" target="_blank" rel="noopener">Liam Shaw, &ldquo;V1 and V2 impact sites in London&rdquo; (Zenodo, 2025)</a>, licensed CC&nbsp;BY&nbsp;4.0, transcribed from the bomb damage maps published in Laurence Ward, <em>The London County Council Bomb Damage Maps 1939&ndash;1945</em> (Thames &amp; Hudson, 2015). London County Council area only.</li>
+          <li>Satellite basemap (optional layer, toggled on the map): &copy; <a href="https://www.esri.com/" target="_blank" rel="noopener">Esri</a>, Maxar, Earthstar Geographics and the GIS User Community.</li>
         </ul>
 
         <!-- Internal links to the generated county pages. The sitemap lists
@@ -961,7 +962,7 @@
          the input tools/build-county-slices.js slices. Do not add it
          back as a script tag.
          ============================================================ -->
-    <script src="data/county-index.js?v=1.14.8"></script>
-    <script src="js/app.js?v=1.14.8"></script>
+    <script src="data/county-index.js?v=1.14.9"></script>
+    <script src="js/app.js?v=1.14.9"></script>
   </body>
 </html>

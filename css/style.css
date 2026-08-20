@@ -934,7 +934,12 @@ h3 {
 .hero-map {
   position: absolute;
   inset: 0;
-  background: #0b0f17;
+  /* Shows through wherever a tile hasn't painted yet — most visibly during
+     a fast zoom, when new tiles are still loading. A fixed dark value here
+     meant every zoom on the light theme flashed black; matching the
+     page's own --bg keeps that gap the same colour as the map around it
+     instead of a jarring flash. */
+  background: var(--bg);
   z-index: 0;
 }
 
@@ -979,6 +984,55 @@ h3 {
   }
 }
 
+/* ---------- "My location" / satellite map controls ----------
+   Sit above Leaflet's own zoom control (also bottomright), styled to match
+   the glassmorphic card look used everywhere else rather than Leaflet's
+   plain white default buttons. */
+.map-tool-control {
+  margin-bottom: 8px !important;
+}
+
+/* Leaflet's own leaflet.css ships ".leaflet-bar a" rules (white background,
+   its own border) with effectively the same specificity as a bare class
+   selector here, and it loads after this stylesheet — so this has to match
+   or beat ".leaflet-bar a" to actually win the cascade, not just add a class. */
+.leaflet-bar.map-tool-control a.map-tool-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(22, 30, 46, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: #f3f4f6;
+  transition: background-color 0.15s ease-in-out, color 0.15s ease-in-out;
+}
+
+.leaflet-bar.map-tool-control a.map-tool-btn:hover,
+.leaflet-bar.map-tool-control a.map-tool-btn:focus {
+  background: rgba(34, 44, 64, 0.92);
+  color: #00f2fe;
+}
+
+.leaflet-bar.map-tool-control a.map-tool-btn.is-active {
+  background: rgba(0, 242, 254, 0.18);
+  border-color: rgba(0, 242, 254, 0.45);
+  color: #00f2fe;
+}
+
+.leaflet-bar.map-tool-control a.map-tool-btn.is-busy {
+  color: #00f2fe;
+  animation: map-tool-pulse 1s ease-in-out infinite;
+}
+
+@keyframes map-tool-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
 .hero-scrim {
   position: absolute;
   inset: 0;
@@ -994,10 +1048,10 @@ h3 {
   left: 0;
   bottom: 0;
   width: min(360px, calc(100% - 48px));
-  padding: 36px 24px 20px;
+  padding: 24px 24px 14px;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 10px;
   overflow-y: auto;
   scrollbar-width: thin;
   scrollbar-color: rgba(255, 253, 247, 0.3) transparent;
@@ -1066,8 +1120,8 @@ h3 {
   color: var(--paper);
 }
 
-.hero-intro .eyebrow { color: var(--gold); }
-.hero-intro h1 { font-size: clamp(1.9rem, 3.4vw, 2.6rem); line-height: 1.05; margin-bottom: 0; }
+.hero-intro .eyebrow { color: var(--gold); margin-bottom: 6px; }
+.hero-intro h1 { font-size: clamp(1.4rem, 2.6vw, 2.6rem); line-height: 1.1; margin-bottom: 0; }
 
 /* ---------- Floating map stats (top-right of the map) ---------- */
 .map-stats {
@@ -1262,8 +1316,8 @@ h3 {
 .control-panel {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  padding: 14px;
+  gap: 8px;
+  padding: 12px;
   border: 1px solid rgba(255, 253, 247, 0.18);
   border-radius: 10px;
   background: rgba(11, 15, 23, 0.62);
@@ -1360,8 +1414,11 @@ h3 {
   line-height: 1.45;
 }
 
+/* Withheld at low zoom, the note below already says so — showing a
+   simultaneously-dimmed legend on top of it just doubled the height of the
+   panel for no extra information, so it's hidden outright while gated. */
 .potential-group.is-zoom-gated .potential-legend {
-  opacity: 0.4;
+  display: none;
 }
 
 /* ---------- Map search ----------
@@ -1627,13 +1684,16 @@ h3 {
   justify-content: center;
   min-height: 36px;
   gap: 8px;
+  padding: 0 6px;
   border: 1px solid rgba(247, 244, 236, 0.22);
   border-radius: 6px;
   background: transparent;
   color: var(--paper);
   cursor: pointer;
   font: inherit;
+  font-size: 0.92em;
   font-weight: 700;
+  white-space: nowrap;
 }
 
 .filter.active {
@@ -1694,7 +1754,7 @@ h3 {
 .dot.potential-untyped { background: #9CA3AF; }
 
 .potential-group {
-  padding: 10px 12px 12px;
+  padding: 8px 12px 10px;
   border: 1px solid rgba(247, 244, 236, 0.18);
   border-radius: 8px;
   background: transparent;
@@ -1772,7 +1832,7 @@ h3 {
 
 /* ---------- Heatmap toggle + legend ---------- */
 .heatmap-group {
-  padding: 10px 12px 12px;
+  padding: 8px 12px 10px;
   border: 1px solid rgba(247, 244, 236, 0.18);
   border-radius: 8px;
   background: transparent;
@@ -1982,7 +2042,7 @@ h3 {
 
 /* ---------- Bomb weight filter ---------- */
 .weight-group {
-  padding: 10px 12px 12px;
+  padding: 8px 12px 10px;
   border: 1px solid rgba(247, 244, 236, 0.18);
   border-radius: 8px;
   background: transparent;

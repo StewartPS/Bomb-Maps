@@ -6294,7 +6294,7 @@ let activeCounty = COUNTY_ALL;
    the same cache-busting reason — these files are fetched by script and
    would otherwise be served stale from cache long after a data update.
    ============================================================ */
-const DATA_VERSION = "1.14.8";
+const DATA_VERSION = "1.14.9";
 
 // Prebuilt county bounding boxes from data/county-index.js. Tiny, always
 // loaded, and enough to frame a county before its outline arrives.
@@ -6511,6 +6511,137 @@ const map = L.map("map", {
 }).fitBounds(UK_BOUNDS);
 
 L.control.zoom({ position: "bottomright" }).addTo(map);
+
+/* ---------- "My location" control ----------
+   A small round button above the zoom control, in the same style as the
+   map-chrome cards elsewhere on the site. Uses the browser's own permission
+   prompt — nothing here reads or stores a location without the visitor
+   actively clicking the button and granting it. */
+const LocateControl = L.Control.extend({
+  options: { position: "bottomright" },
+  onAdd() {
+    const container = L.DomUtil.create("div", "leaflet-bar map-tool-control");
+    const btn = L.DomUtil.create("a", "map-tool-btn", container);
+    btn.href = "#";
+    btn.title = "Show my location";
+    btn.setAttribute("role", "button");
+    btn.setAttribute("aria-label", "Show my location");
+    btn.innerHTML =
+      '<svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>';
+
+    L.DomEvent.disableClickPropagation(container);
+    L.DomEvent.on(btn, "click", (e) => {
+      L.DomEvent.preventDefault(e);
+      locateVisitor(btn);
+    });
+
+    return container;
+  }
+});
+map.addControl(new LocateControl());
+
+let locateMarker = null;
+let locateAccuracyCircle = null;
+
+function locateVisitor(btn) {
+  if (!navigator.geolocation) {
+    alert("This browser does not support location lookup.");
+    return;
+  }
+
+  btn.classList.add("is-busy");
+
+  navigator.geolocation.getCurrentPosition(
+    (pos) => {
+      btn.classList.remove("is-busy");
+      const { latitude, longitude, accuracy } = pos.coords;
+
+      if (locateMarker) map.removeLayer(locateMarker);
+      if (locateAccuracyCircle) map.removeLayer(locateAccuracyCircle);
+
+      locateAccuracyCircle = L.circle([latitude, longitude], {
+        radius: accuracy,
+        color: "#00F2FE",
+        weight: 1,
+        fillColor: "#00F2FE",
+        fillOpacity: 0.12
+      }).addTo(map);
+
+      locateMarker = L.circleMarker([latitude, longitude], {
+        radius: 7,
+        weight: 2,
+        color: "#0B0F17",
+        fillColor: "#00F2FE",
+        fillOpacity: 1
+      })
+        .addTo(map)
+        .bindTooltip("You are here (approximate)", { direction: "top" });
+
+      map.setView([latitude, longitude], Math.max(map.getZoom(), 14), { animate: true });
+    },
+    (err) => {
+      btn.classList.remove("is-busy");
+      const message =
+        err.code === err.PERMISSION_DENIED
+          ? "Location access was denied. Allow it in your browser's site settings to use this."
+          : "Couldn't determine your location. Please try again.";
+      alert(message);
+    },
+    { enableHighAccuracy: true, timeout: 10000, maximumAge: 60000 }
+  );
+}
+
+/* ---------- Satellite view toggle ----------
+   A second basemap layer, shown or hidden above the CartoDB street tiles
+   rather than replacing them via the theme machinery above — satellite is
+   an orthogonal choice to light/dark, not a third theme, so it gets its
+   own control instead of a spot in the theme radiogroup. */
+const SATELLITE_TILE_URL =
+  "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}";
+const SATELLITE_TILE_OPTIONS = {
+  maxZoom: 19,
+  attribution:
+    "Tiles &copy; Esri &mdash; Esri, Maxar, Earthstar Geographics, and the GIS User Community"
+};
+
+let satelliteLayer = null;
+let satelliteOn = false;
+
+const SatelliteControl = L.Control.extend({
+  options: { position: "bottomright" },
+  onAdd() {
+    const container = L.DomUtil.create("div", "leaflet-bar map-tool-control");
+    const btn = L.DomUtil.create("a", "map-tool-btn", container);
+    btn.href = "#";
+    btn.title = "Toggle satellite view";
+    btn.setAttribute("role", "button");
+    btn.setAttribute("aria-pressed", "false");
+    btn.setAttribute("aria-label", "Toggle satellite view");
+    // Stacked-layers glyph — the standard "change basemap" affordance,
+    // and legible at 17px unlike a literal satellite icon at this size.
+    btn.innerHTML =
+      '<svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l9 5-9 5-9-5 9-5z"/><path d="M3 13l9 5 9-5"/></svg>';
+
+    L.DomEvent.disableClickPropagation(container);
+    L.DomEvent.on(btn, "click", (e) => {
+      L.DomEvent.preventDefault(e);
+      satelliteOn = !satelliteOn;
+      btn.classList.toggle("is-active", satelliteOn);
+      btn.setAttribute("aria-pressed", String(satelliteOn));
+
+      if (satelliteOn) {
+        if (!satelliteLayer) satelliteLayer = L.tileLayer(SATELLITE_TILE_URL, SATELLITE_TILE_OPTIONS);
+        satelliteLayer.addTo(map);
+        satelliteLayer.bringToFront();
+      } else if (satelliteLayer) {
+        map.removeLayer(satelliteLayer);
+      }
+    });
+
+    return container;
+  }
+});
+map.addControl(new SatelliteControl());
 
 /* ---------- Marker size follows zoom ----------
    The record markers are a fixed 28px, which is right when you are looking at
@@ -6835,6 +6966,10 @@ function renderVWeaponLayer() {
   // Out of scope when a county other than London is selected.
   if (isOutsideSelection(V_WEAPON_COUNTY)) return;
   if (heatmapMode) return;
+  // Follows the same "Potential sites" checkbox as Plymouth's bomb-census
+  // layer — both are modelled/undigitised point layers rather than
+  // individually sourced records, so one switch covers both.
+  if (potentialToggle && !potentialToggle.checked) return;
 
   vWeaponLayer = L.layerGroup(
     V_WEAPON_DATA.map((point) => {
@@ -6855,11 +6990,11 @@ function renderVWeaponLayer() {
   ).addTo(map);
 }
 
-/* No toggle: these are simply drawn, like the record markers. A checkbox for
-   a 118-point layer added a control to the panel without adding a decision
-   worth making — the points are either relevant to what you are looking at
-   (London) or already scoped out. Attribution moved to the Sources list,
-   which is where it belongs anyway and where CC-BY needs it to stay. */
+/* Shares the "Potential sites" checkbox with Plymouth's bomb-census layer
+   (see the gate inside renderVWeaponLayer) rather than getting a control of
+   its own — both are modelled point layers, so one switch does for both.
+   Attribution lives in the Sources list, which is where it belongs anyway
+   and where CC-BY needs it to stay. */
 function initVWeaponLayer() {
   renderVWeaponLayer();
 }
@@ -7156,8 +7291,12 @@ function ensurePotentialData() {
 
 if (potentialToggle) {
   potentialToggle.addEventListener("change", () => {
-    if (potentialToggle.checked) ensurePotentialData();
+    if (potentialToggle.checked) {
+      ensurePotentialData();
+      ensureVWeaponData();
+    }
     renderPotentialLayer();
+    renderVWeaponLayer();
     refreshHeatLayer();
     saveUiState();
   });
